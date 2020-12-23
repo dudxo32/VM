@@ -1,0 +1,28 @@
+//
+//  WebThree20ViewController.h
+//  CentralECM
+//
+//  Created by HeungKyoo Han on 10. 6. 2..
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <Three20/Three20.h>
+#import "TapDetectingWindow.h"
+ 
+//http://api.three20.info/interface_t_t_view_controller.html
+
+@interface WebThree20ViewController : TTViewController <TapDetectingWindowDelegate>{
+	UIWebView	*webView;
+	NSURL		*docUrl;
+    TapDetectingWindow  *window;
+}
+
+@property (nonatomic, retain) UIWebView *webView;
+@property (nonatomic, retain) NSURL *docUrl;
+ 
+- (void)showBarsAnimationDidStop;
+- (void)hideBarsAnimationDidStop;
+- (void)showBars:(BOOL)show animated:(BOOL)animated;
+
+@end

@@ -1,0 +1,28 @@
+#main-container {
+	width: 100%;
+	height: 100%;
+	overflow: scroll; /* Overflow should scroll */
+	left: 0px;
+	-webkit-overflow-scrolling: touch; /* This gives us scrollbars. */
+	position: fixed; /* This means we don't have to worry about overflow issues */
+	-webkit-transition: left 0.2s ease-in;
+	transition: left 0.2s ease-in;
+}
+
+.slide-in {
+	width: 85%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: -85%;
+	-webkit-transition: left 0.2s ease-in;
+	transition: left 0.2s ease-in;
+}
+
+.slide-in.on {
+	left: 0px !important;
+}
+
+#main-container.on {
+	left: 85% !important;
+}

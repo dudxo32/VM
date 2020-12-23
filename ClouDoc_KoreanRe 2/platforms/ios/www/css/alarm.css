@@ -1,0 +1,596 @@
+img {
+    vertical-align: middle;
+}
+
+label {
+    vertical-align: middle;
+}
+
+.form {
+	background-color: #EEF1F3;
+	position: fixed;
+	left: 100%;
+	display: none;
+}
+
+/**********		blank	**********/
+#blank {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: black;
+	opacity: 0.3;
+	z-index: 2;
+	display: none;
+}
+
+
+/********************* alarmForm *********************/
+/* 알림함 목록 */
+.alarmList {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    display: inline-block;
+}
+
+.alarmList img {
+    margin-left: 42.3076%;
+    width: 30.7692%;
+    height: 50%;
+}
+
+#alarmList_form {
+    width: 100%;
+    height: 50%;
+    display: flex;
+}
+
+#alarm_title {
+    color: #0a71a5;
+    font-family: malgunGothic;
+    color: #6a6a6a;
+}
+
+#notice_on {
+    width: 10.8333%;
+    height: 100%;
+    background-color: #ffffff;
+    vertical-align: middle;
+}
+
+#alarmtitle_form {
+    width: 64.5833%;
+    height: 100%;
+    background-color: #ffffff;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#alarmtitle {
+    font-family: malgunGothic;
+    color: #6a6a6a;
+}
+
+#alarmdate_form {
+    width: 24.5833%;
+    height: 100%;
+    background-color: #ffffff;
+    vertical-align: middle;
+    display: inline-table;
+}
+
+#alarmdate {
+    margin-right: 3.3333%;
+    font-family: malgunGothic;
+    color: #bbbbbb;
+}
+
+#alarmcontent_form {
+    width: 100%;
+    height: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#alarmcontent {
+    margin-left: 4.5833%;
+    color: #6a6a6a;
+}
+
+
+
+#alarm_date {
+    font-size: 16px;
+    margin-right: 3.3333%;
+    font-family: malgunGothic;
+    color: #bbbbbb;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+
+#bottom_bar_return_approval {
+    width: 100%;
+    height: 9%;
+    display: flex; /* flex */
+    position: absolute;
+    bottom: 0;
+}
+
+#bottom_bar_return_form {
+    width: 50%;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+#bottom_bar_approval_form {
+    width: 50%;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+
+#alarm_ul {
+    width: 100%;
+    height: 91%;
+    overflow: scroll;
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+    display: block; /* block */
+}
+
+#alarm_li {
+    width: 100%;
+    height: 9.8901%;
+    display: flex; /* flex */
+}
+
+/**************** alarm_select_form *************/
+#alarm_select_form {
+    color: #5E5E5E;
+    background-color: #EEF1F3;
+    display: none;
+}
+
+/* 알림함_선택 눌렀을 때 */
+#titleTable_select {
+    width: 100%;
+    height: 9%;
+    background-color: #464646;
+    display: table; /* table */
+}
+
+#titleTable_select td {
+    width: 15%;
+}
+
+input[type=checkbox] {
+    display:none;
+}
+
+input[type=checkbox] + label {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: url("../img/multipleSelectOff.png") no-repeat;
+    background-size: 90%;
+}
+
+input[type=checkbox]:checked + label {
+    background: url("../img/multipleSelectOn.png") no-repeat;
+    background-size: 90%;
+}
+
+#alarm_select_ul {
+    width: 100%;
+    overflow: scroll;
+    padding: 0px;
+    margin: 0px;
+    list-style: block;
+    display: block;
+}
+
+#titleTable_select a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-decoration: none;
+}
+
+#titleTable_select img {
+    vertical-align: middle;
+    margin: 0 20%;
+}
+
+#titleTable_select span {
+    width: 0;
+    display:inline-block;
+    height:100%;
+    vertical-align:middle;
+}
+
+/* 알림함_선택 눌렀을 때 목록 */
+.alarmList_select {
+    width: 86.25%;
+    height: 100%;
+    background-color: #ffffff;
+    display: inline-block; /* inline-block */
+}
+
+#alarmList_select_title_form {
+    width: 100%;
+    height: 50%;
+    display: flex;
+}
+
+#alarm_select_icon {
+    width: 10.8333%;
+    height: 100%;
+    background-color: #ffffff;
+    vertical-align: middle;
+}
+
+.alarmList_select img {
+    margin-left: 42.3076%;
+    width: 30.7692%;
+    height: 50%;
+}
+
+#alarm_select_title_form {
+    width: 64.5833%;
+    height: 100%;
+    background-color: #ffffff;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#alarm_select_title {
+    font-family: malgunGothic;
+    color: #6a6a6a;
+}
+
+#alarm_select_date_form {
+    width: 31.5833%;
+    height: 100%;
+    background-color: #ffffff;
+    vertical-align: middle;
+    display: inline-table;
+}
+
+#alarm_select_date {
+    font-size: 16px;
+    margin-right: 3.3333%;
+    font-family: malgunGothic;
+    color: #bbbbbb;
+}
+
+#alarm_select_content_form {
+    width: 100%;
+    height: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#alarm_select_content {
+    margin-left: 4.5833%;
+    color: #6a6a6a;
+}
+
+/* 알림함_선택_체크박스 */
+#alarm_select_icon_form {
+    width: 13.75%;
+    height: 100%;
+    background-color: #ffffff;
+    display: inline-block;
+}
+
+#alarm_select_bottom_bar {
+    width: 100%;
+    height: 9%;
+    display: flex; /* flex */
+    position: absolute;
+    bottom: 0;
+}
+
+#alarm_select_read_form {
+    width: 50%;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+#alarm_select_read_img {
+    vertical-align: middle;
+    width: 12.7916%;
+    height: 83.5841%;
+}
+
+#alarm_select_delete_form {
+    width: 50%;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+#alarm_select_delete_icon {
+    width: 13.75%;
+    height: 87.9833%;
+    vertical-align: middle;
+}
+
+#alarm_select_read_label {
+    color: #0a71a5;
+}
+
+#alarm_select_delete_label {
+    color: #0a71a5;
+}
+
+/**********		Alarm 상단	**********/
+.alarmTitle {
+   width: 100%;
+   height: 9%;
+   background-color: #0a71a5;
+}
+.alarmTitle td {
+    width: 15%;
+    height: 100%;
+    text-align: center;
+}
+.alarmTitle a {
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-decoration: none;
+}
+.alarmTitle label {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+/****************************************/
+
+/**********		Alarm 중단	**********/
+.alarmContent {
+	overflow: scroll;
+}
+
+.alarmContentTopic {
+	display: flex;
+}
+.alarmContentTopic div {
+	width: 15%;
+	height: 100%;
+	text-align: center;
+}
+.alarmContentTopic img {
+	width: 33%;
+	height: 42%;
+}
+.alarmContentTopic label {
+	font-weight: bold;
+}
+
+.alarmContentItem div {
+	width: 30%;
+	height: 100%;
+}
+
+	/**********		일반 Dom	**********/
+	.alarmContentDom1 {
+		width: 100%;
+		height: 7.2%;
+		border-bottom: 1px solid #EDEBEB;
+		background-color: #FFFFFF;
+		display: flex;
+	}
+	/****************************************/
+	
+	/**********		둥근 Dom(2)	**********/
+	.alarmContentDom2 {
+		width: 93.75%;
+		height: 21.5%;
+		margin: auto;
+	}
+	.alarmContentDom2Topic {
+		width: 100%;
+		height: 32%;
+	}
+	.alarmContentDom2Content {
+		width: 100%;
+		height: 68%;
+		background-color: #FFFFFF;
+		border-radius: 10px;
+	}
+	.alarmContentDom2Content div {
+		width: 100%;
+		height: 50%;
+		border-bottom: 1px solid #EDEBEB;
+	}
+	/****************************************/
+	
+	/**********		둥근 Dom(3)	**********/
+	.alarmContentDom3 {
+		width: 93.75%;
+		height: 28%;
+		margin: auto;
+	}
+	.alarmContentDom3Topic {
+		width: 100%;
+		height: 25%;
+	}
+	.alarmContentDom3Content {
+		width: 100%;
+		height: 75%;
+		background-color: #FFFFFF;
+		border-radius: 10px;
+	}
+	.alarmContentDom3Content div {
+		width: 100%;
+		height: 33%;
+		border-bottom: 1px solid #EDEBEB;
+	}
+	/****************************************/
+	
+	/**********		둥근 Dom(4)	**********/
+	.alarmContentDom4 {
+		width: 93.75%;
+		height: 35%;
+		margin: auto;
+	}
+	.alarmContentDom4Topic {
+		width: 100%;
+		height: 20%;
+	}
+	.alarmContentDom4Content {
+		width: 100%;
+		height: 80%;
+		background-color: #FFFFFF;
+		border-radius: 10px;
+	}
+	.alarmContentDom4Content div {
+		width: 100%;
+		height: 25%;
+		border-bottom: 1px solid #EDEBEB;
+	}
+	/****************************************/
+
+.attachBox {
+	width: 100%;
+	height: 14%;
+	background-color: #FFFFFF;
+}
+/****************************************/
+
+/**********		Alarm 하단	**********/
+.alarmFooter {
+    width: 100%;
+    height: 9.375%;
+    box-shadow: 0 0 20px #888888;
+    text-align: center;
+    background-color: #FFFFFF;
+    position: absolute;
+    display: flex;
+}
+.alarmFooter div {
+    width: 50%;
+    height: 100%;
+}
+.alarmFooter label {
+    width: 100%;
+    height: 100%;
+}
+/****************************************/
+
+/**********		일반 승인 다이얼로그	**********/
+.confirmDialog {
+	width: 83%;
+	height: 16%;
+	position: fixed;
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	z-index: 3;
+	text-align: center;
+	box-shadow: 10px 10px 10px #888888;
+	display: none;
+}
+
+.confirmDialogContent {
+	width: 100%;
+	height: 50%;
+	border-bottom: 1px solid #EDEBEB;
+}
+
+.confirmDialogButton {
+	width: 100%;
+	height: 50%;
+	display: flex;
+}
+.confirmDialogButton div {
+	width: 50%;
+	height: 100%;
+}
+.confirmDialogButton label {
+	color: #0A71A5;
+}
+/****************************************/
+
+/**********		메시지 승인 다이얼로그	**********/
+.messageConfirmDialog {
+	width: 83%;
+	height: 38%;
+	position: fixed;
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	z-index: 3;
+	text-align: center;
+	box-shadow: 10px 10px 10px #888888;
+	display: none;
+}
+
+.messageConfirmDialogTitle {
+	width: 100%;
+	height: 18.5%;
+	background-color: #0A71A5;
+	color: #FFFFFF;
+}
+
+.messageConfirmDialogContent {
+	width: 100%;
+	height: 63%;
+	border-bottom: 1px solid #EDEBEB;
+}
+.messageConfirmDialogContent input {
+	width: 90%;
+	height: 90%;
+	border: none;
+	overflow: scroll;
+	vertical-align: middle;
+}
+
+.messageConfirmDialogButton {
+	width: 100%;
+	height: 18.5%;
+	display: flex;
+}
+.messageConfirmDialogButton div {
+	width: 50%;
+	height: 100%;
+}
+.messageConfirmDialogButton label {
+	color: #0A71A5;
+}
+/****************************************/
+
+/**********		메시지 승인 다이얼로그	**********/
+.fileInfoDialog {
+	width: 84%;
+	height: 27%;
+	position: fixed;
+	z-index: 3;
+	border-radius: 10px;
+	box-shadow: 10px 10px 10px #888888;
+	display: none;
+}
+
+.fileInfoDialogTitle {
+	width: 100%;
+	height: 20%;
+	text-align: center;
+	background-color: #0A71A5;
+	color: #FFFFFF;
+}
+
+.fileInfoDialogContent {
+	width: 100%;
+	height: 80%;
+}
+/****************************************/

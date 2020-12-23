@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+<title>CentralECM</title>
+
+<!-- external css files -->
+<link rel="stylesheet" type="text/css" href="css/autoTextResize.css" />
+
+<!-- internal css files -->
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+<link rel="stylesheet" type="text/css" href="css/login.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/login.js"></script>
+<script type="text/javascript" src="js/manager/alertMessage.js"></script>
+<script type="text/javascript" src="js/util/webstorage.js"></script>
+<script type="text/javascript" src="js/plugin/CryptUtil.js"></script>
+<script type="text/javascript" src="js/plugin/DeviceUtil.js"></script>
+<script type="text/javascript" src="js/plugin/AppManager.js"></script>
+<script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+<script type="text/javascript" src="js/plugin/PushNotification.js"></script>
+<script type="text/javascript" src="js/plugin/MQTTPlugin.js"></script>
+<script type="text/javascript" src="js/plugin/ProxyConnect.js"></script>
+<script type="text/javascript" src="js/util/utilsocket.js"></script>
+<script type="text/javascript" src="js/manager/getserverinfo.js"></script>
+<script type="text/javascript" src="js/manager/mobile/loginmanager.js"></script>
+<script type="text/javascript">
+    // 첫 자동로그인 설정 후 로그인 비밀번호를 입력 안헀을 시, 비밀번호 입력 알림창 띄우기
+var firstAutoSet = "true";
+
+/*
+ * html 로드 시, 실행 기능
+ */
+$(document).ready(function() {
+	// 화면 사이즈 조정
+	document.getElementById('loginForm').style.height = $(window).height()+ 'px';
+	document.getElementById('loginForm').style.width = $(window).width()+ 'px';
+	
+	// 화면 오픈시 fade효과
+	$('#loginForm').fadeIn(500);
+	
+	// 로그인 유형 설정
+	loginType = GetlocalStorage("setLoginType");
+	if(loginType == null)	$('#login_type').val('login').attr('selected', 'selected');
+	else					$('#login_type').val(loginType).attr('selected', 'selected');
+});
+
+/*
+ * ~.onkeydown: '엔터/확인'키를 눌렀을 시 수행 기능 설정
+ *				ID입력 라벨에 focus일 경우, PW입력 라벨로 자동 focus
+ *				PW입력 라벨에 focus일 경우, 로그인 기능 수행
+ */
+window.document.onkeydown = function(e) {
+	if(e.keyCode == 13) {
+		if($('#login_id').is(':focus'))	document.getElementById('login_pw').focus();
+		else							logincheck();
+	}
+}
+
+// 아이디, 패스워드 입력 유무에따른 로그인 버튼 활성화/비활성화
+window.document.onkeyup = function(e) {
+	if($('#login_server').text() != "") {
+		if($('#login_id').val() == "" || $('#login_pw').val() == "")	$('#loginBtn').css('color', '#EEF1F3');	// Gray
+		else															$('#loginBtn').css('color', '#0A71A5');	// Blue
+	}
+}
+
+// 기존 저장된 서버정보 & 사용자 계정 불러오기
+function onBodyLoad() {
+	server = GetlocalStorage("webserver");
+	port = GetlocalStorage("port");
+	id = GetlocalStorage("id");
+
+	// Server IP load
+	/* if(server != null && server != "" && port != null && port != "") {
+		if(port == "80" || port == "443")	document.getElementById('login_server').innerHTML = server;
+		else								document.getElementById('login_server').innerHTML = server + ":" + port;
+	} */
+	document.getElementById('login_server').innerHTML = server;
+
+	// User ID load
+	if(id != null && id != "")
+		$('#login_id').val(id);
+
+	document.addEventListener("deviceready", init, false);
+}
+
+/* onBodyLoad() -> init()
+ * OS 언어 지정, Officesuite 존재 여부 판단, 디바이스 정보 저장
+ */
+function init() {
+	document.addEventListener("backbutton", onBackKeyDown, false);
+
+    DeviceUtil = new DeviceUtil();
+	DeviceUtil.langID(function(r) {
+		retValueArr = new Array();
+		retValueArr = r.split("\t");
+		SetlocalStorage("OSLang", retValueArr[0]);
+		if(retValueArr[1] != "" && retValueArr[1] != null)	SetlocalStorage("Officesuite", retValueArr[1]);
+		else												SetlocalStorage("Officesuite", "nonexistent");
+
+		getLoginLang();
+		}, function(r) {alert("init ERR: "+ r);});
+
+	DeviceUtil.DevicePlatform(SetDeviceInfo, function(r){alert("Set deivce info ERR: "+ r);});
+}
+
+/* onBodyLoad() -> init() -> SetDeviceInfo()
+ * 디바이스 정보 저장
+ */
+function SetDeviceInfo(r) {
+    try{
+	RetArr = new Array();
+	RetArr = r.split("\t");
+
+	SetlocalStorage("Platform", RetArr[0]);	// 값이 '12'로 고정되었다.
+	SetlocalStorage("PUSHID", RetArr[1]);	// CommonPack.java의 RegID값
+	SetlocalStorage("DeviceID", device.uuid);	// 기기 고유 번호
+    }catch(e){
+        alert('SetDeviceInfo err = ' + e);
+    }
+}
+
+// 로그인에 필요한 값들 확인/지정
+function logincheck() {
+	// 키보드 가리기
+	$('#login_pw').blur();
+	
+	var server = $('#login_server').text();
+	var id = $('#login_id').val();
+	var password = $('#login_pw').val();
+	var secure = GetlocalStorage("secureStatus");
+	var auto = GetlocalStorage("auto");
+
+	// 입력값들 확인
+	if(server == "") {
+		navigator.notification.confirm(login_alert_insert_server, goSerInfoFormMsg, login_alert_title, 'Cancel, OK');
+		return;
+	}
+	if(id == "") {
+		navigator.notification.alert(login_alert_insert_id, function(){}, login_alert_title, 'OK');
+		return;
+	}
+	if(auto == "true") {
+		var autoPassword = GetlocalStorage("autoPassword");
+		if(autoPassword == null || autoPassword == "null" || autoPassword == "") {
+			if(firstAutoSet == "true") {
+				firstAutoSet = "false";
+				return;
+			} else {
+				if(password == "") {
+					navigator.notification.alert(login_alert_insert_password, function(){}, login_alert_title, 'OK');
+					return;
+				}
+			}
+		}
+		/* autoPassword = GetlocalStorage("autoPassword");
+		if(autoPassword == null || autoPassword == "" || autoPassword == "null") {
+			if(password == "") {
+				// 자동로그인을 처음 설정 후 비밀번호가 비었다는 알림창이 뜨지 않도록 설정
+				if(firstAutoSet == "true") {
+					firstAutoSet= "false";
+					return;
+				} else {
+					navigator.notification.alert(login_alert_insert_password, function(){}, login_alert_title, 'OK');
+					return;
+				}
+			}
+		} else {
+			password = autoPassword;
+		} */
+	} else {
+		if(password == "") {
+			navigator.notification.alert(login_alert_insert_password, function(){}, login_alert_title, 'OK');
+			return;
+		}
+	}
+	
+	// Login type 확인
+	LoginType = "Normal";
+	sel = document.getElementById('login_type');
+	if(sel.options[sel.selectedIndex].value != "login") {
+		if(GetlocalStorage("auto") == "true") {
+			navigator.notification.alert(login_alert_not_support_auto, function(){}, login_alert_title, 'OK');
+			SetlocalStorage("auto", "false");
+		}
+
+		if(sel.options[sel.selectedIndex].value == "guest") LoginType= "GuestID";
+		else if(sel.options[sel.selectedIndex].value == "offline") {
+			// explorer.html의 타이틀 로드 시간이 걸리기 때문에, setTimeout 설정
+			setTimeout(function() {offlineLogin(id, password);}, 400);
+			return;
+		}
+	}
+
+	// 보안접속 여부 확인
+	if(secure == "true")	secure= "yes";
+	else					secure= "no";
+	protocol= "http";
+	port= GetlocalStorage("port");
+	SSLPort= GetlocalStorage("securityPort");
+	var clientconfigs= GetlocalStorage("nClientConfigs");
+	var hide_ssl= "";
+	if(clientconfigs != null && clientconfigs != "") {
+		clientconfigArr= clientconfigs.split(",");
+		hide_ssl= clientconfigArr[0] & 1024;
+		if(hide_ssl != 0 && hide_ssl != "" && hide_ssl != null)
+			SetlocalStorage("SSL", "no");
+		else if(secure == "yes") {
+			SetlocalStorage("SSL", "yes");
+			SetlocalStorage("SSLPort", SSLPort);
+		} else
+			SetlocalStorage("SSL", "no");
+	} else
+		SetlocalStorage("SSL", "no");
+
+    gettabletinfo(protocol, port, server);
+    getserverinfo(protocol, port, server);
+   	login(id, password, LoginType);
+}
+
+// '취소'키 입력시, 앱 종료 다이얼로그
+function onBackKeyDown() {
+	navigator.notification.confirm(lang_alert_closeApp, onBackKeyDownMsg, lang_alert_closeApp_title, 'Cancel, OK');
+}
+
+// 앱 종료
+function onBackKeyDownMsg(button) {
+	if(button == 2) {
+        AppManager = new AppManager();
+		AppManager.finishapp("", "");
+    }
+}
+
+// 언어 불러오기
+function getLoginLang() {
+	langfile = "./lang/kor.xml";
+
+	OSLang= GetlocalStorage("OSLang");
+	if(OSLang == "eng") langfile = "./lang/eng.xml";
+	else if(OSLang == "jpn") langfile = "./lang/jpn.xml";
+	else if(OSLang == "chn") langfile = "./lang/chn.xml";
+	
+	$.ajax({
+		type: "get",
+		dataType: "xml",
+		url: langfile,
+		success: function(xml) {
+			lang = $(xml).find("lang");
+			
+			/*	UI	*/
+			$("#login_lang_server").text(lang.find("login_lang_server").text());
+			$("#login_lang_id").text(lang.find("login_lang_id").text());
+			$("#login_lang_pw").text(lang.find("login_lang_pw").text());
+			$("#login_lang_type").text(lang.find("login_lang_type").text());
+			$("#login_lang_preference").text(lang.find("login_lang_preference").text());
+			document.getElementById('loginBtn').value= lang.find("login_lang_loginBtn").text();
+
+			/*	alert	*/
+			lang_alert_closeApp_title= lang.find("lang_alert_closeApp_title").text();
+			login_alert_title= lang.find("login_alert_title").text();
+			login_alert_insert_server= lang.find("login_alert_insert_server").text();
+			login_alert_insert_id= lang.find("login_alert_insert_id").text();
+			login_alert_insert_password= lang.find("login_alert_insert_password").text();
+			lang_alert_closeApp= lang.find("lang_alert_closeApp").text();
+			login_alert_change_server= lang.find("login_alert_change_server").text();
+			login_alert_input_server= lang.find("login_alert_input_server").text();
+			lang_parameter_missing= lang.find("lang_parameter_missing").text();
+			lang_server_error= lang.find("lang_server_error").text();
+			lang_login_need_approval= lang.find("lang_login_need_approval").text();
+			lang_status_stop= lang.find("lang_status_stop").text();
+			lang_login_incorrect_password= lang.find("lang_login_incorrect_password").text();
+			lang_login_password_expire= lang.find("lang_login_password_expire").text();
+			lang_login_domain_disk_overflow= lang.find("lang_login_domain_disk_overflow").text();
+			lang_login_guest_expire= lang.find("lang_login_guest_expire").text();
+			lang_login_not_allowed_agent= lang.find("lang_login_not_allowed_agent").text();
+			lang_exception_error= lang.find("lang_exception_error").text();
+			lang_ip_filtered= lang.find("lang_ip_filtered").text();
+			lang_server_busy= lang.find("lang_server_busy").text();
+			lang_user_busy= lang.find("lang_user_busy").text();
+			lang_access_denied= lang.find("lang_access_denied").text();
+			lang_invalid_parameter= lang.find("lang_invalid_parameter").text();
+			lang_disk_overflow= lang.find("lang_disk_overflow").text();
+			lang_already_folder_exists= lang.find("lang_already_folder_exists").text();
+			lang_already_file_error= lang.find("lang_already_file_error").text();
+			lang_guest_root= lang.find("lang_guest_root").text();
+			lang_sharing_violation= lang.find("lang_sharing_violation").text();
+			lang_guest_data_root= lang.find("lang_guest_data_root").text();
+			lang_already_file_exists= lang.find("lang_already_file_exists").text();
+			lang_already_folder_error= lang.find("lang_already_folder_error").text();
+			lang_has_acl_folder= lang.find("lang_has_acl_folder").text();
+			lang_has_share_folder= lang.find("lang_has_share_folder").text();
+			lang_substree_exists= lang.find("lang_substree_exists").text();
+			lang_filename_filtered= lang.find("lang_filename_filtered").text();
+			lang_upload_limit= lang.find("lang_upload_limit").text();
+			lang_upload_busy= lang.find("lang_upload_busy").text();
+			lang_partial_success= lang.find("lang_partial_success").text();
+			lang_download_busy= lang.find("lang_download_busy").text();
+			lang_license_expired= lang.find("lang_license_expired").text();
+			lang_download_limit= lang.find("lang_download_limit").text();
+			lang_login_not_exist_device= lang.find("lang_login_not_exist_device").text();
+			lang_login_stop_device= lang.find("lang_login_stop_device").text();
+			lang_login_lost_device= lang.find("lang_login_lost_device").text();
+			lang_alert_not_exists_Officesuite= lang.find("lang_alert_not_exists_Officesuite").text();
+			lang_alert_can_not_use = lang.find("lang_alert_can_not_use").text();
+			lang_alert_check_network= lang.find("lang_alert_check_network").text();
+			network_alert_title= lang.find("network_alert_title").text();
+			login_alert_not_support_auto= lang.find("login_alert_not_support_auto").text();
+			login_alert_not_exist= lang.find("login_alert_not_exist").text();
+		},
+		error: function(xhr, status, error) {
+            navigator.notification.alert("Get language ERR: "+ status, null, login_alert_title, 'OK');
+            navigator.notification.alert("Get language ERR: "+ error, null, login_alert_title, 'OK');
+		}
+	});
+	
+	// 자동 로그인 TRUE일 경우 logincheck()호출
+	if(GetlocalStorage("auto") == "true")
+		logincheck();
+}
+</script>
+<style type="text/css">
+</style>
+</head>
+
+<body onload="onBodyLoad()">
+	<div id="loginForm">
+        <div style="width: 100%; height: 3%;">
+        </div>
+		<!-- 메인화면 로고 -->
+		<div id="logo">
+			<img src="./img/logo.png"><span></span>
+		</div>
+		
+		<div id="input" style="width: 65%; height: 27.5%; margin-left: 17.5%; text-align: left;">
+			<div style="width: 100%; height: 25%; display: flex; color: #FFFFFF;">
+				<div style="width: 40%; height: 100%;">
+					<label id="login_lang_type"></label><span></span>
+				</div>
+				<div style="width: 60%; height: 100%;">
+					<select id="login_type" style="width: 95%; height: 100%; background-color: #0A71A5; color: #FFFFFF; border: none;">
+						<option value="login">Login</option>
+						<script type="text/javascript">
+							temp= GetlocalStorage("ServerInfo");
+							if(temp != null) {
+								$("#login_type").append("<option value=\"offline\">Offline</option>");
+							}
+						</script>
+						<option value="guest">Guest</option>
+					</select>
+				</div>
+			</div>
+			<div style="width: 100%; height: 25%; display: flex;" onclick="changeServer()">
+				<div style="width: 40%; height: 100%;">
+					<label id="login_lang_server"></label><span></span>
+				</div>
+				<div style="width: 60%; height: 100%;">
+					<label id="login_server"></label><span></span>
+				</div>
+			</div>
+			<div style="width: 100%; height: 25%; display: flex;" onclick="login_id_focus()">
+				<div style="width: 40%; height: 100%;">
+					<label id="login_lang_id"></label><span></span>
+				</div>
+				<div style="width: 60%; height: 100%;">
+					<input style="width: 95%; height: 50%; vertical-align: middle; background-color: #0A71A5; border: none; border-bottom: 1px solid #FFFFFF; color: #FFFFFF;" id="login_id" type="text" placeholder="Input ClouDoc ID"><span></span>
+				</div>
+			</div>
+			<div style="width: 100%; height: 25%; display: flex;" onclick="login_pw_focus()">
+				<div style="width: 40%; height: 100%;">
+					<label id="login_lang_pw"></label><span></span>
+				</div>
+				<div style="width: 60%; height: 100%;">
+					<input style="width: 95%; height: 50%; vertical-align: middle; background-color: #0A71A5; border: none; border-bottom: 1px solid #FFFFFF; color: #FFFFFF;" id="login_pw" type="password" placeholder="Input Password"><span></span>
+				</div>
+			</div>
+		</div>
+		
+		<div style="width: 100%; height: 9%;">
+		</div>
+		
+		<!-- 로그인 버튼 -->
+		<div id="loginBtn_mold">
+			<input id="loginBtn" style="padding: 0;" type="button" onclick="logincheck()">
+		</div>
+		
+		<div style="width: 100%; height: 6%;">
+		</div>
+		
+		<!-- 환경설정 -->
+		<div id="settingHref">
+			<a href="login_setting.html" style="width: 8.335%;"><img src="./img/setting.png"><span></span></a>
+			<a href="login_setting.html"><label id="login_lang_preference"></label><span></span></a>
+		</div>
+	</div>
+</body>
+</html>

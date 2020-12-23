@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+<title>CentralECM</title>
+
+<!-- external css files -->
+<link rel="stylesheet" type="text/css" href="css/autoTextResize.css" />
+<link rel="stylesheet" type="text/css" href="css/onOffSwitch.css" />
+
+<!-- internal css files -->
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+<link rel="stylesheet" type="text/css" href="css/login_setting.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/multi-screen.js"></script>
+<script type="text/javascript" src="js/login_setting.js"></script>
+<script type="text/javascript" src="js/plugin/DeviceUtil.js"></script>
+<script type="text/javascript" src="js/util/webstorage.js"></script>
+<script type="text/javascript" src="js/manager/getdrivelist.js"></script>
+<script type="text/javascript" src="js/plugin/CryptUtil.js"></script>
+<script type="text/javascript" src="js/plugin/AppManager.js"></script>
+<script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+<script type="text/javascript" src="js/plugin/ProxyPlugin.js"></script>
+<script type="text/javascript" src="js/plugin/ProxyConnect.js"></script>
+<script type="text/javascript" src="js/util/utilsocket.js"></script>
+<script type="text/javascript" src="js/manager/getserverinfo.js"></script>
+<script type="text/javascript" src="js/manager/mobile/loginmanager.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+	// 화면 사이즈 조정
+	document.getElementById('settingForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('settingForm').style.width=		$(window).width()+ 'px';
+	document.getElementById('logSettingForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('logSettingForm').style.width=	$(window).width()+ 'px';
+	document.getElementById('serInfoForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('serInfoForm').style.width=		$(window).width()+ 'px';
+	document.getElementById('regDeviceForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('regDeviceForm').style.width=	$(window).width()+ 'px';
+	document.getElementById('extConfoForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('extConfoForm').style.width=	$(window).width()+ 'px';
+	
+	// 토스트 위치 조정
+	$('#toast').css('left', ($(window).width() -$('#toast').width())/2 + 'px');
+	$('#toast').css('top', ($(window).height() -$('#toast').height())*0.85 + 'px');
+	
+	// 화면 오픈시 fade효과
+	$('#settingForm').fadeIn(300);
+
+	// 로그인 유형 불러오기
+	loginType= GetlocalStorage("setLoginType");
+	loginTypeList= document.getElementsByName('loginType');
+	if(loginType == null) {
+		loginTypeList[0].checked= true;
+		document.getElementById('loginType_online').style.backgroundColor= '#70CAFD';
+	} else {
+		for(index= 0; index < document.getElementsByName('loginType').length; index++) {
+			if(loginTypeList[index].value == loginType) {
+				loginTypeList[index].checked= true;
+				// 선택 유형 배경색 변경
+				if(index == 2)		document.getElementById('loginType_guest').style.backgroundColor= '#70CAFD';
+				else if(index == 1)	document.getElementById('loginType_offline').style.backgroundColor= '#70CAFD';
+				else 				document.getElementById('loginType_online').style.backgroundColor= '#70CAFD';
+			}
+		}
+	}
+	
+	// 로그인 유형 선택시 색깔 변경
+	$('.loginType').click(function(e) {
+		$('.loginType').css("background", "none");
+		$(this).css("background", "#70CAFD");
+	});
+	
+	// 언어 불러오기
+	getLoginLang();
+	
+	// server입력칸 눌렀을 시, 자동 '서버 정보'로 이동
+	if(window.location.hash.length > 1) {
+		document.getElementById('goSerInfoForm').click();
+	}
+});
+
+function onBodyLoad() {
+	document.addEventListener("deviceready", init, false);
+}
+
+function init() {
+	document.addEventListener("backbutton", onBackKeyDown, false);
+}
+
+// '취소'키 입력시
+function onBackKeyDown() {
+	if($('#settingForm').css('display') == "block")			document.getElementById('backBtn').click();
+	else if($('#logSettingForm').css('display') == "block")	document.getElementById('backFromLogSettingForm').click();
+	else if($('#serInfoForm').css('display') == "block")	document.getElementById('backFromSerInfoForm').click();
+	else if($('#regDeviceForm').css('display') == "block")	document.getElementById('backFromRegDeviceForm').click();
+	else if($('#extConfoForm').css('display') == "block")	document.getElementById('backFromExtConfoForm').click();
+}
+
+// 언어 불러오기
+function getLoginLang() {
+	langfile = "./lang/kor.xml";
+
+	OSLang= GetlocalStorage("OSLang");
+	if(OSLang == "eng") langfile = "./lang/eng.xml";
+	else if(OSLang == "jpn") langfile = "./lang/jpn.xml";
+	else if(OSLang == "chn") langfile = "./lang/chn.xml";
+
+	$.ajax({
+		type: "get",
+		dataType: "xml",
+		url: langfile,
+		success: function(xml) {
+			lang = $(xml).find("lang");
+		
+			$("#subscribe").text(lang.find("subscribe").text());
+			// settingForm
+			$("#setting_lang_title").text(lang.find("setting_lang_title").text());
+			$("#setting_lang_logSet").text(lang.find("setting_lang_logSet").text());
+			$("#setting_lang_serInfo").text(lang.find("setting_lang_serInfo").text());
+			$("#setting_lang_regDevice").text(lang.find("setting_lang_regDevice").text());
+			$("#setting_lang_extConfo").text(lang.find("setting_lang_extConfo").text());
+			// logSettingForm
+			$("#logSetting_lang_title").text(lang.find("logSetting_lang_title").text());
+			$("#logSetting_lang_auto").text(lang.find("logSetting_lang_auto").text());
+			$("#logSetting_lang_security").text(lang.find("logSetting_lang_security").text());
+			$("#logSetting_lang_online").text(lang.find("logSetting_lang_online").text());
+			$("#logSetting_lang_offline").text(lang.find("logSetting_lang_offline").text());
+			$("#logSetting_lang_guest").text(lang.find("logSetting_lang_guest").text());
+			// serInfoForm
+			$("#serInfo_lang_title").text(lang.find("serInfo_lang_title").text());
+			$("#serInfo_lang_ip").text(lang.find("serInfo_lang_ip").text());
+			$("#serInfo_lang_port").text(lang.find("serInfo_lang_port").text());
+			$("#serInfo_lang_securityPort").text(lang.find("serInfo_lang_securityPort").text());
+			// regDeviceForm
+			$("#regDevice_lang_title").text(lang.find("regDevice_lang_title").text());
+			$("#regDevice_lang_devSetTitle").text(lang.find("regDevice_lang_devSetTitle").text());
+			$("#regDevice_lang_ip").text(lang.find("regDevice_lang_ip").text());
+			$("#regDevice_lang_id").text(lang.find("regDevice_lang_id").text());
+			$("#regDevice_lang_passwd").text(lang.find("regDevice_lang_passwd").text());
+			$("#regDevice_lang_devInfoTitle").text(lang.find("regDevice_lang_devInfoTitle").text());
+			$("#deviceInfo_lang_model").text(lang.find("deviceInfo_lang_model").text());
+			$("#deviceInfo_lang_id").text(lang.find("deviceInfo_lang_id").text());
+			// extConfoForm
+			$("#extConfo_lang_title").text(lang.find("extConfo_lang_title").text());
+			$("#extConfo_lang_extConfoSet").text(lang.find("extConfo_lang_extConfoSet").text());
+			$("#extConfo_lang_ip").text(lang.find("extConfo_lang_ip").text());
+			$("#extConfo_lang_port").text(lang.find("extConfo_lang_port").text());
+			
+			extConfo_alert_save_success= lang.find("extConfo_alert_save_success").text();
+			extConfo_alert_save_fail= lang.find("extConfo_alert_save_fail").text();
+			extConfo_alert_load_fail= lang.find("extConfo_alert_load_fail").text();
+			regDev_alert_insert_server= lang.find("regDev_alert_insert_server").text();
+			regDev_alert_insert_id= lang.find("regDev_alert_insert_id").text();
+			regDev_alert_insert_password= lang.find("regDev_alert_insert_password").text();
+			regDev_alert_success= lang.find("regDev_alert_success").text();
+			regDev_alert_needs_approval= lang.find("regDev_alert_needs_approval").text();
+			regDev_alert_already_exist= lang.find("regDev_alert_already_exist").text();
+			regDev_alert_not_exist_user= lang.find("regDev_alert_not_exist_user").text();
+			regDev_alert_exceeds_number= lang.find("regDev_alert_exceeds_number").text();
+			regDev_alert_wrong_user_iofo= lang.find("regDev_alert_wrong_user_iofo").text();
+			lang_alert_check_network= lang.find("lang_alert_check_network").text();
+			network_alert_title= lang.find("network_alert_title").text();
+			
+			/*	toast	*/
+			toast_lang_logSetting = lang.find("toast_lang_logSetting").text();
+			toast_lang_serInfo = lang.find("toast_lang_serInfo").text();
+			toast_lang_regDevice = lang.find("toast_lang_regDevice").text();
+			toast_lang_extConfo = lang.find("toast_lang_extConfo").text();
+		},
+		error: function(xhr, status, error) {
+			navigator.notification.alert("Get language ERR: "+ status, null, 'Login', 'OK');
+            navigator.notification.alert("Get language ERR: "+ error, null, 'Login', 'OK');
+		}
+	});
+}
+
+</script>
+</head>
+
+<body onload="onBodyLoad()">
+	<!-- TOAST -->
+	<div id="toast">
+		<div>
+			<label id="toastContent"></label><span></span>
+		</div>
+	</div>
+
+	<!-- 환경설정 화면 -->
+	<div id="settingForm" style="display: none;">
+		<!-- 환경설정 타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<a id="backBtn" href="login.html" style="text-decoration: none;"><img src="./img/backBtnWhite.png"></a>
+				</td>
+				<td style="width: auto; text-align: center;">
+					<label id="setting_lang_title"></label><span></span>
+				</td>
+				<td>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 환경설정 목록 -->
+		<table id="settingListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="settingListTableTitle" colspan="2" >
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 90%;" onclick="getLogInfo()">
+					<div>
+						<label id="setting_lang_logSet"></label>
+					</div>
+				</td>
+				<td onclick="getLogInfo()">
+					<img src="./img/goBtn.png">
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 90%;" onclick="getSerInfo()">
+					<div id="goSerInfoForm">
+						<label id="setting_lang_serInfo"></label>
+					</div>
+				</td>
+				<td onclick="getSerInfo()">
+					<img src="./img/goBtn.png">
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 90%;" onclick="getRegDevInfo()">
+					<div>
+						<label id="setting_lang_regDevice"></label>
+					</div>
+				</td>
+				<td onclick="getRegDevInfo()">
+					<img src="./img/goBtn.png">
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 90%;" onclick="getExtConfo()">
+					<div>
+						<label id="setting_lang_extConfo"></label>
+					</div>
+				</td>
+				<td onclick="getExtConfo()">
+					<img src="./img/goBtn.png">
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<!-- 로그인 설정 화면 -->
+	<div id="logSettingForm">
+		<!-- 로그인 설정 타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<img id="backFromLogSettingForm" src="./img/backBtnWhite.png" onclick="saveLogSet()">
+				</td>
+				<td style="width: 70%; text-align: center;">
+					<label id="logSetting_lang_title"></label>
+				</td>
+				<td>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 로그인 설정 목록 -->
+		<table id="logSettingListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="logSettingListTableTitle" colspan="2" >
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 90%;">
+					<label id="logSetting_lang_auto"></label>
+				</td>
+				<td>
+					<div class="onoffswitch">
+					    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="auto">
+					    <label class="onoffswitch-label" for="auto"></label>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 90%;">
+					<label id="logSetting_lang_security"></label>
+				</td>
+				<td>
+					<div class="onoffswitch">
+					    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="security">
+					    <label class="onoffswitch-label" for="security"></label>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<!-- 로그인 계정 유형 -->
+		<table id="logSettingListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="logSettingListTableTitle" colspan="2" >
+				</td>
+			</tr>
+			<tr>
+				<td id="loginType_online" class="loginType">
+					<input id="radio_online" type="radio" name="loginType" value="login">
+						<label id="logSetting_lang_online" for="radio_online" style="display: block; width: 100%;"></label>
+				</td>
+			</tr>
+			<tr>
+				<td id="loginType_offline" class="loginType">
+					<input id="radio_offline" type="radio" name="loginType" value="offline">
+						<label id="logSetting_lang_offline" for="radio_offline" style="display: block; width: 100%;"></label>
+				</td>
+			</tr>
+			<tr>
+				<td id="loginType_guest" class="loginType">
+					<input id="radio_guest" type="radio" name="loginType" value="guest">
+						<label id="logSetting_lang_guest" for="radio_guest" style="display: block; width: 100%;"></label>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<!-- 서버 정보 화면 -->
+	<div id="serInfoForm">
+		<!-- 서버정보 타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<img id="backFromSerInfoForm" src="./img/backBtnWhite.png" onclick="saveServer()">
+				</td>
+				<td style="width: 70%; text-align: center;">
+					<label id="serInfo_lang_title"></label>
+				</td>
+				<td>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 서버정보 목록 -->
+		<table id="serInfoListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="serInfoListTableTitle" colspan="2" >
+				</td>
+			</tr>
+			<tr onclick="serInfo_ip_focus()">
+				<td style="width: 45%;">
+					<label id="serInfo_lang_ip"></label>
+				</td>
+				<td>
+					<input id="serInfo_ip" type="text">
+				</td>
+			</tr>
+			<tr onclick="serInfo_port_focus()">
+				<td style="width: 45%;">
+					<label id="serInfo_lang_port"></label>
+				</td>
+				<td>
+					<input id="serInfo_port" type="text">
+				</td>
+			</tr>
+			<tr onclick="serInfo_securityPort_focus()">
+				<td style="width: 45%;">
+					<label id="serInfo_lang_securityPort"></label>
+				</td>
+				<td>
+					<input id="serInfo_securityPort" type="text">
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<!-- 디바이스 등록 화면 -->
+	<div id="regDeviceForm">
+		<!-- 디바이스 등록  타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<img id="backFromRegDeviceForm" src="./img/backBtnWhite.png" onclick="regDeviceCancel()">
+				</td>
+				<td style="width: 70%; text-align: center;">
+					<label id="regDevice_lang_title"></label>
+				</td>
+				<td>
+					<label id="subscribe" onclick="regDevice()"></label>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 디바이스 등록 목록 -->
+		<!-- 디바이스 설정 목록 -->
+		<table id="setDeviceListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="setDeviceListTableTitle" class="subheading" colspan="2"><label id="regDevice_lang_devSetTitle" style="padding-left: 0;"></label></td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="regDevice_lang_ip"></label>
+				</td>
+				<td>
+					<div id="regDevice_ip"></div>
+				</td>
+			</tr>
+			<tr onclick="regDevice_id_focus()">
+				<td style="width: 45%;">
+					<label id="regDevice_lang_id"></label>
+				</td>
+				<td>
+					<input id="regDevice_id" type="text">
+				</td>
+			</tr>
+			<tr onclick="regDevice_passwd_focus()">
+				<td style="width: 45%;">
+					<label id="regDevice_lang_passwd"></label>
+				</td>
+				<td>
+					<input id="regDevice_passwd" type="password">
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 디바이스 정보 목록 -->
+		<table id="deviceInfoListTable" cellpadding="0" cellspacing="0">
+			<tr style="height: 18.64%;">
+				<td id="deviceInfoListTableTitle" class="subheading" colspan="2"><label id="regDevice_lang_devInfoTitle" style="padding-left: 0;"></label></td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="deviceInfo_lang_model"></label>
+				</td>
+				<td>
+					<div id="deviceInfo_model"></div>
+				</td>
+			</tr>
+			<tr style="height: 33.92%;">
+				<td style="width: 45%;">
+					<label id="deviceInfo_lang_id"></label>
+				</td>
+				<td>
+					<div id="deviceInfo_id"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<!-- 외부접속 정보 화면 -->
+	<div id="extConfoForm">
+		<!-- 외부접속 정보 타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<img id="backFromExtConfoForm" src="./img/backBtnWhite.png" onclick="saveExtSet()">
+				</td>
+				<td style="width: 70%; text-align: center;">
+					<label id="extConfo_lang_title"></label>
+				</td>
+				<td>
+					<label></label>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 외부접속 정보 목록 -->
+		<table id="extConfoListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="extConfoListTableTitle" colspan="3" >
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="width: 90%;">
+					<label id="extConfo_lang_extConfoSet" style="padding-left: 5%;"></label>
+				</td>
+				<td>
+					<div class="onoffswitch">
+					    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="ext">
+					    <label class="onoffswitch-label" for="ext" style="padding-left: 5%;"></label>
+					</div>
+				</td>
+			</tr>
+			<tr onclick="extConfo_ip_focus()">
+				<td style="width: 45%;">
+					<label id="extConfo_lang_ip"></label>
+				</td>
+				<td colspan="2">
+					<input id="extConfo_ip" type="text">
+				</td>
+			</tr>
+			<tr onclick="extConfo_port_focus()">
+				<td style="width: 45%;">
+					<label id="extConfo_lang_port"></label>
+				</td>
+				<td colspan="2">
+					<input id="extConfo_port" type="text">
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id='log' style="position: fixed; top: 0; left: 0; background-color: black; color: white;">
+	</div>
+</body>
+</html>

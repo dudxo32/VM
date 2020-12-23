@@ -1,0 +1,184 @@
+@charset "utf-8";
+
+* { zoom: 1.0; }
+.BM-bottom input[type=button] { zoom: 1.0; }
+
+/*input[type=button] { font-size: 15.2px; }*/
+/*.nav-title label { font-size: 15.2px; }*/
+/*.tree-drive > label { font-size: 15.2px; }*/
+/*.tree-folder { font-size: 14.5px; }*/
+/*.BM-title label { font-size:15.2px; }*/
+/*.BM-folder { font-size: 14.5px; }*/
+/*.BM-editBtn { font-size: 15.2px; }*/
+/*.contents-title > div:nth-child(2) label:nth-child(2) { font-size: 14px; }*/
+/*.contents-title > div:nth-child(2) label:nth-child(3) { font-size: 14.5px; }*/
+/*.contents-title > div:nth-child(3) label,*/
+/*.bookmark-title > div:nth-child(4) label { font-size: 15.2px; }*/
+/*.contents-search button { font-size: 15.2px; }*/
+/*.list > div div:first-child { font-size: 13.8px; }*/
+/*.list > div div:last-child { font-size: 12.4px; }*/
+/*.dialog { font-size: 15.2px; }*/
+/*.dialog-setting { font-size: 18px; }*/
+/*.dialog-setting li div:last-child { font-size: 15.2px; }*/
+/*.dialog-setting input[type=button] { font-size: 18px; }*/
+/*.dialog-title { font-size: 18px; }*/
+/*.dialog-confirm > div:first-child { font-size: 15.2px; }*/
+/*.dialog-fixed li { font-size: 15.2px; }*/
+/**/
+/*input[type=button] { padding: 3.5px 8.4px; margin: 0px 10.5px; }*/
+/********** Contents **********/
+/*.main-contents { width: 64%; height: 100%; position: relative; left: 36%; background-color: #F4F9FE; }*/
+
+/********** Left menu *********/
+/*section > nav {*/
+/*    width: 36%; height: 100%;*/
+/*    position: absolute; left: 0%; z-index: 300;*/
+/*    color: #FFFFFF; background-color: #2A8FC5;*/
+/*    border-right:1px solid #000;*/
+/*    display: block;*/
+/*    float: left; overflow: hidden;*/
+/*    box-shadow: 3px 10px 10px #888888;*/
+/*}*/
+
+/* Menu contents : Tree area */
+/* Folder list */
+.tree-folder { padding-left: 7px; }
+.tree-drive label:nth-child(1),
+.tree-folder label:nth-child(1) { width: 23px; }
+.tree-folder label:nth-child(2) { width: 25.1px; }
+/* Menu contents : Bookmark area */
+.BM-folder img { width: 25.1px; }
+/********** /Left menu **********/
+
+/********** Main contents(file lists) **********/
+/* Contents title : Close menu button *****/
+.contents-title > img:nth-child(1) { width: 15.4px; }
+/* Contents title : Current route */
+.contents-title > div:nth-child(2) { margin-left: 27.3px; padding-right: 89.8px; }
+.bookmark-title > div:nth-child(2) { padding-right: 170.8px; }
+.contents-title > div:nth-child(2) img { width: 25.6px; }
+.contents-title > div:nth-child(2) label:nth-child(2) { padding: 0 3.5px 0 7px; }
+/* Contents title : Sort button */
+.bookmark-title > div:nth-child(4) { width: 73px; right: 73px; }
+.contents-title > div:nth-child(3) img,
+.bookmark-title > div:nth-child(4) img { width: 17.5px; margin-left: 7px; }
+.contents-title > div:nth-child(3) { width: 73px; }
+
+.main-contents { width: 64%; height: 100%; position: relative; left: 36%; }
+
+section > nav {
+    width: 36%; height: 100%;
+    position: relative; z-index: 300;
+    color: #FFFFFF;
+    border-right:1px solid #000;
+    display: block;
+    float: left; overflow: hidden;
+    box-shadow: 3px 10px 10px #888888;
+}
+
+nav > div:nth-child(1) { height: 6.3%; }
+nav > div:nth-child(2) { height: 62.1%; }
+nav > div:nth-child(3) { height: 6.3%; }
+nav > div:nth-child(4) { height: 19%; }
+
+nav.openedMenu { left: 0%; }
+nav.closedMenu { left: -36%; }
+
+header { height: 6.3%; }
+section { height: 93.7%; }
+.contents-title { height: 6.3%; top: 6.3%; }
+.contents-search { height: 6.3%; top: 12.6%; }
+.contents-list { height: 81.1%; top: 18.9%; }
+
+header label:nth-child(1) { width: 20%; background: url("../images/img/logo.png") no-repeat; background-size: 100%; background-position-y: 80%; }
+header div:nth-child(2) { width: 6.3%; right: 28%; }
+header div:nth-child(2) img { width: 80%; content: url("../images/icon/document.png"); }
+header div:nth-child(3) { width: 6.3%; right: 16%; }
+header div:nth-child(3) img { width: 80%; content: url("../images/icon/backToViewer.png"); }
+header div:nth-child(4) { width: 6%; right: 7%; }
+header div:nth-child(4) img { width: 80%; content: url("../images/icon/header_afresh.png");  margin-bottom : 5px; }
+header div:nth-child(5) { width: 6.2%; right: 1%; text-align: right; }
+header div:nth-child(5) img { width: 80%; content: url("../images/icon/header_set.png");  margin-bottom : 5px; }
+header div:nth-child(6) { width: 6.3%; right: 11.5%; }
+header div:nth-child(6) img { width: 90%; content: url("../images/icon/ebook.png"); }
+header div:nth-child(7) { width: 6.3%; right: 1%; }
+header div:nth-child(7) img { width: 90%; content: url("../images/icon/close.png"); }
+
+.tree-drive > img { width: 23px; }
+.nav-title img { width: 28px; }
+.recentBtn { height: 6.3%; }
+.recentBtn img { width: 27px; }
+.BM-editBtn2 { padding-top: 7%; }
+
+.dialog { width: 100%; z-index: 999; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; margin: auto; border: 1px solid #C3C3C3; border-radius: 6px; box-shadow: 10px 15px 15px #333333; font-weight: bold; text-align: center; display: none; }
+
+.main-contents { height: 100%; position: relative; transition: all 0.5s ease; }
+.main-contents.openedMenu { width: 64%; left: 36%; }
+.main-contents.closedMenu { width: 100%; left: 0%; }
+
+.dialog-title label:last-child { background-position-x: 45%; }
+
+input[type=button] { padding: 5px 12px; margin: 0px 15px; }
+/* Contents file list */
+/* Contents file list - list */
+/*.list > label:nth-child(1) { width: 22.6px; left: 15.4px; }*/
+/*.list > div { padding: 0px 49px; }*/
+/*.list > div div:last-child label:nth-child(2) { padding-left: 14px; }*/
+/*.list > label:nth-child(3) { width: 49px; }*/
+/*.list-BM-unchecked { background-position-x: 15.4px; }*/
+/*.list-BM-checked { background-position-x: 15.4px; }*/
+.list img:nth-child(1) { height: 70%; left: 22px; }
+.list img:nth-child(4) { height: 60%; right: 22px; }
+.list img:nth-child(5) { height: 80%; right: 15px; }
+.list img:nth-child(6) { height: 80%; right: 15px; }
+.recent_list img:nth-child(4) { height: 80%; right: 15px; }
+/*.list { height: 50px; }*/
+/*.list img:nth-child(1) { width: 50px; padding-left: 22px; }*/
+/*.list label:nth-child(2) { left: 70px; line-height: 50px; }*/
+/*.list label:nth-child(2).openedMenu { width: 45%; }*/
+/*.list label:nth-child(2).closedMenu { width: 65%; }*/
+/*.list-drive label:nth-child(2) { width: calc(100% - 70px); }*/
+/*.list label:nth-child(3) { width: auto; right: 70px; line-height: 50px; display: block; }*/
+/*.list img:nth-child(4) { width: 50px; padding-right: 22px; }*/
+/* Contents file list - bookmark list */
+/*.BM-list > label:nth-child(3).personal { background-position-x: 15.4px; }*/
+/*.BM-list > label:nth-child(3).orgcowork { background-position-x: 15.4px; }*/
+/*.BM-list input { width: 14px; margin-right: 14px; }*/
+.BM-list input { width: 20px; height: 20px; right: 25px;}
+.BM-bottom.openedMenu { width: 64%; }
+/********** /Contents **********/
+
+.dialog-setting { width: 70%; height: 62%; zoom: 0.8; }
+.dialog-BM-edit > div:last-child { height: 50px; }
+
+.contents-title.openedMenu { width: 64%; left: 36%; }
+.contents-title.closedMenu { width: 100%; left: 0%; }
+
+.contents-search.openedMenu { width: 64%; left: 36%; }
+.contents-search.closedMenu { width: 100%; left: 0%; }
+
+.contents-list.openedMenu { width: 64%; left: 36%; }
+.contents-list.closedMenu { width: 100%; left: 0%; }
+
+.dialog-fixed li { height: 50px;}
+
+.tree-open > label:nth-child(2),
+.tree-close > label:nth-child(2) { margin: 0 7px 0 5px; }
+
+.dialog-BM-edit li > label:nth-child(3){ margin-right: -5px; }
+
+.recent-clear > img { height:40%; width:50% !important; }
+
+@media screen and (orientation: portrait) {
+    /********** Main contents(file lists) **********/
+    /* Contents title : Sort button */
+    .contents-title > div:nth-child(3) { padding-right: 11px; }
+    .contents-search { padding: 0 15.4px; }
+}
+
+@media screen and (orientation: landscape) {
+    /********** Main contents(file lists) **********/
+    /* Contents title : Sort button */
+    .contents-title > div:nth-child(3) { padding-right: 9px; }
+    .contents-search { padding: 0 12.6px; }
+}

@@ -1,0 +1,17 @@
+#import <Three20/Three20.h>
+#import <Three20UI/TTPhotoViewController.h>
+
+@interface PhotoViewController : TTPhotoViewController
+{
+	BOOL			m_bFinished;
+	BOOL			m_bCancel;
+	NSUInteger		m_nPhotoIndex;
+	NSMutableArray *m_photoArray;
+}
+
+@property (nonatomic, assign) NSUInteger m_nPhotoIndex;
+
+- (void) cancel;
+- (void) preLoad;
+
+@end

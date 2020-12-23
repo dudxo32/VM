@@ -1,0 +1,78 @@
+@charset "utf-8";
+
+input[type=button] { font-size: 8px; }
+.nav-title label { font-size: 8px; }
+.tree-drive > label { font-size: 8px; }
+.tree-folder { font-size: 7.5px; }
+.BM-title label { font-size:8px; }
+.BM-folder { font-size: 7.5px; }
+.recentBtn { font-size: 8px; }
+.BM-editBtn2 { padding-top: 9%; }
+.contents-title > div:nth-child(2) label:nth-child(2) { font-size: 10px; }
+.contents-title > div:nth-child(2) label:nth-child(3) { font-size: 7.5px; }
+.contents-title > div:nth-child(3) label,
+.bookmark-title > div:nth-child(4) label { font-size: 8px; }
+.contents-search button { font-size: 8px; }
+.list > div div:first-child { font-size: 7px; }
+.list > div div:last-child { font-size: 6px; }
+.dialog { font-size: 8px; }
+.dialog-setting { font-size: 10px; }
+.dialog-setting li div:last-child { font-size: 8px; }
+.dialog-setting input[type=button] { font-size: 10px; }
+.dialog-title { font-size: 10px; }
+.dialog-confirm > div:first-child { font-size: 8px; }
+.dialog-fixed li { font-size: 8px; }
+
+input[type=button] { padding: 2.5px 6px; margin: 0px 7.5px; }
+/********** Contents **********/
+    /********** Left menu **********/
+    /* Menu contents : Tree area */
+        /* Folder list */
+        .tree-folder { padding-left: 5px; }
+        .tree-folder label:nth-child(1) { width: 10px; }
+        .tree-folder label:nth-child(2) { width: 11.5px; }
+    /* Menu contents : Bookmark area */
+        .BM-folder img { width: 11.5px; }
+    /********** /Left menu **********/
+
+    /********** Main contents(file lists) **********/
+        /* Contents title : Close menu button *****/
+        .contents-title > img:nth-child(1) { width: 11px; }
+        /* Contents title : Current route */
+        .contents-title > div:nth-child(2) { margin-left: 19.5px; padding-right: 72px; }
+        .bookmark-title > div:nth-child(2) { padding-right: 122px; }
+        .contents-title > div:nth-child(2) img { width: 14px; }
+        .contents-title > div:nth-child(2) label:nth-child(2) { padding: 0 2.5px 0 5px; }
+        /* Contents title : Sort button */
+        .bookmark-title > div:nth-child(4) { width: 45px; right: 45px; }
+        .contents-title > div:nth-child(3) img,
+        .bookmark-title > div:nth-child(4) img { width: 12.5px; margin-left: 5px; }
+        .contents-title > div:nth-child(3) { width: 45px; }
+
+    /* Contents file list */
+        /* Contents file list - list */
+        .list > label:nth-child(1) { width: 14px; left: 11px; }
+        .list > div { padding: 0px 35px; }
+        .list > div div:last-child label:nth-child(2) { padding-left: 10px; }
+        .list > label:nth-child(3) { width: 35px; }
+        .list-BM-unchecked { background-position-x: 11px; }
+        .list-BM-checked { background-position-x: 11px; }
+        /* Contents file list - bookmark list */
+        .BM-list > label:nth-child(3).personal { background-position-x: 11px; }
+        .BM-list > label:nth-child(3).orgcowork { background-position-x: 11px; }
+        .BM-list input { width: 10px; margin-right: 10px; }
+/********** /Contents **********/
+
+@media screen and (orientation: portrait) {
+    /********** Main contents(file lists) **********/
+        /* Contents title : Sort button */
+        .contents-title > div:nth-child(3) { padding-right: 11px; }
+        .contents-search { padding: 0 11px; }
+}
+
+@media screen and (orientation: landscape) {
+    /********** Main contents(file lists) **********/
+        /* Contents title : Sort button */
+        .contents-title > div:nth-child(3) { padding-right: 9px; }
+        .contents-search { padding: 0 9px; }
+}

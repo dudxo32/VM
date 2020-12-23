@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+<title>CentralECM</title>
+
+<!-- external css files -->
+<link rel="stylesheet" type="text/css" href="css/autoTextResize.css" />
+
+<!-- internal css files -->
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+<link rel="stylesheet" type="text/css" href="css/alarm.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/alarm.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#alarm_form').fadeIn(200);
+	$('#alarm_form').css({'width' : $(window).width() + 'px', 'height' : $(window).height() + 'px'});
+});
+</script>
+</head>
+
+<body>
+	<div id="blank"></div>
+
+	<!-- 알림 목록(기본) -->
+	<div class="form" id="alarm_form" style="left: 0;">
+		<table class="alarmTitle" id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<a href="explorer.html"><img src="./img/backBtnWhite.png" style="width: 18.75%; height: 38.6666%;"></img><span></span></a>
+				</td>
+				<td style="width: auto;">
+                    <label id="alarm_lang_title">알림함</label>
+				</td>
+				<td onclick="multiple_mode()">
+                    <img src="./img/multipleBtn_off.png" style="width: 36.4583%; height: 38.6666%;"></img><span></span>
+				</td>
+			</tr>
+		</table>
+		
+        <!-- 알림 목록 -->
+		<ul id="alarm_ul">
+			<li id="alarm_li" onclick="openServerAlert()">
+				<div class="alarmList">
+					<div id="alarmList_form">
+						<div id="notice_on">
+							<img src="img/alarm/notice_on.png"></img><span></span>
+						</div>
+						<div id="alarmtitle_form">
+							<label id="alarmtitle">[공지]제목이 들어갈 곳 입니다.</label><span></span>
+						</div>
+						<div id="alarmdate_form">
+							<label id="alarm_date">2016.12.12 22:25</label><span></span>
+						</div>
+					</div>
+					<div id="alarmcontent_form">
+						<label id="alarmcontent">내용은 프리뷰 형식으로 한 줄이 보이며 그 뒤의 내용은 생략 됩니다...</label>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<!-- 알림 목록(선택) -->
+	<div id="alarm_select_form">
+		<table class="alarmTitle" id="titleTable_select" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<img src="./img/closeBtnWhite.png" style="width: 36.4583%; height: 45.6666%;" onclick="multiple_mode_cancel()"></img><span></span>
+				</td>
+				<td style="width: auto; text-align: center; color: #ffffff; padding-left: 5%;">
+					<label id="alarm_lang_title">메시지 선택</label>
+				</td>
+				<td style="width: 20%;" onclick="select_all()">
+					<label id="alarm_lang_title" style="font-size: 21px; color: #ffffff; text-align: center;">전체선택</label><span></span>
+				</td>
+			</tr>
+		</table>
+
+		<!-- 알림 목록 -->
+		<ul id="alarm_select_ul">
+			<li style="width: 100%; height: 10.9756%; display: flex;">
+				<div class="alarmList_select">
+					<div id="alarmList_select_title_form">
+						<div id="alarm_select_icon">
+							<img src="img/alarm/notice_on.png"></img><span></span>
+						</div>
+						<div id="alarm_select_title_form">
+							<label id="alarm_select_title">[공지]제목이 들어갈 곳 입니다.</label><span></span>
+						</div>
+						<div id="alarm_select_date_form">
+							<label id="alarm_select_date">2016.12.12 22:25</label><span></span>
+						</div>
+					</div>
+					<div id="alarm_select_content_form">
+						<label id="alarm_select_content">내용은 프리뷰 형식으로 한 줄이 보이며 그 뒤의 내용은 생략 됩니다...</label>
+					</div>
+				</div>
+				<div id='alarm_select_icon_form'>
+					<input type='checkbox' id='alarm_checkbox1' name="a" class='button-settings' value='aefrr' alt='w45rt'/><label for='alarm_checkbox1' style="vertical-align: middle; background-position: center;"></label><span></span>
+				</div>
+			</li>
+		</ul>
+
+		<!-- 알림함_선택 눌렀을 때 하단 읽음표시 , 삭제 -->
+		<div id="alarm_select_bottom_bar">
+			<div id="alarm_select_read_form" onclick="alarm_read()">
+				<div style="height: 60%; text-align: center;">
+					<img id="./img/alarm_select_read_img" src="img/alarm/fill.png"></img><span></span>
+				</div>
+				<div style="height: 40%; text-align: center;">
+					<label id="alarm_select_read_label">읽음표시</label><span></span>
+				</div>
+			</div>
+			<div id="alarm_select_delete_form" onclick="alarm_delete()">
+				<div style="height: 60%; text-align: center;">
+					<img id="alarm_select_delete_icon" src="img/delete.png"></img><span></span>
+				</div>
+				<div style="height: 40%; text-align: center;">
+					<label id="alarm_select_delete_label">삭제</label><span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 문서반출 신청 -->
+	<div class="form" id="doc_export_form">
+		<table class="alarmTitle" id="doc_export_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+					<label id="doc_export_lang_title">알림함</label><span></span>
+				</td>
+				<td onclick="alarm_delete()">
+					<img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+		</table>
+
+		<div class="alarmContent" id="doc_export_content">
+			<!-- 메시지 종류 -->
+			<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/doc_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="doc_export_lang_topic">문서반출 신청</label><span></span>
+				</div>
+			</div>
+
+			<!-- 발생 시간 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="doc_export_lang_strapline" style="font-weight: bold; padding-left: 10%;">제목</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="doc_export_strapline">영업사 견적서 발송</label><span></span>
+				</div>
+			</div>
+
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="doc_export_lang_user" style="font-weight: bold; padding-left: 10%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="doc_export_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="doc_export_lang_requestDate" style="font-weight: bold; padding-left: 10%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="doc_export_requestDate">2016. 4. 7 10:30</label><span></span>
+				</div>
+			</div>
+
+			<!-- 이메일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="doc_export_lang_email" style="font-weight: bold; padding-left: 10%;">이메일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="doc_export_email">gdhong@net-id.co.kr</label><span></span>
+				</div>
+			</div>
+
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="doc_export_message" style="width: 93%; margin: auto;">이일이메일이 메일이메일 이메일</label><span></span>
+			</div>
+
+			<!-- 첨부파일 -->
+			<div class="attachBox" id="doc_export_attachBox">
+				<div style="width: 100%; margin: 1% 0 1% 0;">
+					<label id="notice_lang_attachBox" style="font-weight: bold; padding-left: 3%;">목록</label><span></span>
+				</div>
+				<ul id="doc_export_attachBox_list" style="width: 100%; list-style: none; padding: 0; margin: 0;">
+					<li style="padding-left: 5%;" onclick="open_doc_export_click_filename()">
+						<img src="img/icon/docx.png" style="width: 4%;">
+						<label>ClouDoc_서버점검_안내서.docx</label><span></span>
+					</li>
+				</ul>
+			</div>
+        </div>
+        
+        <div class="alarmFooter" id="doc_export_footer">
+            <div style="border-right: 1px solid #d8d8d8;" onclick="button_return()">
+				<label id="doc_export_lang_return">반려</label><span></span>
+            </div>
+            <div onclick="open_button_approval()">
+				<label id="doc_export_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+            </div>
+        </div>
+    </div>
+    
+	<!-- 문서반출_파일 정보창 -->
+	<div class="fileInfoDialog" id="doc_export_file_dialog">
+		<div class="fileInfoDialogTitle">
+			<label id="doc_export_file_dialog_lang_title">한국전자_추가_개발_견적서.xlsx</label><span></span>
+		</div>
+		<div class="fileInfoDialogContent">
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%">
+				<div style="width: 40%;">
+					<label id="doc_export_file_dialog_lang_path" style="font-weight: bold; padding-left: 10%;">원본 경로</label><span></span>
+				</div>
+				<div style="width: 60%; overflow: scroll; white-space: nowrap;">
+					<label id="doc_export_file_dialog_path" style="font-size: 18px;">개인문서함/영업자료/견적서/한국전지</label><span></span>
+   				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%;">
+				<div style="width: 40%;">
+					<label id="doc_export_file_dialog_lang_size" style="font-weight: bold; padding-left: 10%;">파일 크기</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="doc_export_file_dialog_size">64.0KB</label><span></span>
+				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%; border-bottom: none;">
+				<div style="width: 40%;">
+					<label id="doc_export_file_dialog_lang_modDate" style="font-weight: bold; padding-left: 10%;">수정한 날짜</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="doc_export_file_dialog_modDate">2016. 4. 11 16:51</label><span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 문서반출_승인창 -->
+	<div class="messageConfirmDialog" id="doc_export_dialog">
+		<div class="messageConfirmDialogTitle">
+			<label id="doc_export_dialog_lang_title">반출 신청을 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="messageConfirmDialogContent">
+			<input type="text" placeholder="승인사유를 입력해주세요."><span></span>
+		</div>
+		<div class="messageConfirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;" onclick="close_button_approval()">
+				<label id="doc_export_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div onclick="doc_export_approval()">
+				<label id="doc_export_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 회원가입 신청 -->
+	<div class="form" id="signin_form">
+		<table class="alarmTitle" id="signin_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="signin_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="signin_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/signin_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="signin_lang_topic">회원가입 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="signin_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="signin_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="signin_lang_requestDate" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="signin_requeDate">2016. 4. 7 10:50</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 이메일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="signin_lang_mail" style="font-weight: bold; padding-left: 12%;">이메일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="signin_mail">300 MB</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 개인 정보 -->
+			<div class="alarmContentDom4">
+				<div style="width: 100%; height: 10%;"></div>
+				<div class="alarmContentDom4Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="signin_lang_expireDate" style="font-weight: bold; padding-left: 5%;">성별</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="signin_expireDate">남자</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="storage_lang_birthDate" style="font-weight: bold; padding-left: 5%;">생년월일</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="storage_birthDate">1992-02-05</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="signin_lang_tell" style="font-weight: bold; padding-left: 5%;">자택 전화번호</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="signin_tell">02-1234-5678</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="signin_lang_phone" style="font-weight: bold; padding-left: 5%;">휴대전화</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="signin_phone">010-1234-5678</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 회사 정보 -->
+			<div class="alarmContentDom2">
+				<div style="width: 100%; height: 10%;"></div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="signin_lang_id" style="font-weight: bold; padding-left: 5%;">사원번호</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="signin_id">M16030001</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="signin_lang_companyTell" style="font-weight: bold; padding-left: 5%;">회사 전화번호</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="signin_companyTell">070-1234-5678</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="signin_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="signin_lang_return">반려</label><span></span>
+			</div>
+			<div>
+				<label id="signin_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 회원가입_승인창 -->
+	<div class="confirmDialog" id="signin_dialog">
+		<div class="confirmDialogContent">
+			<label id="signin_dialog_lang_content">회원가입을 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="confirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="signin_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="signin_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 용량 추가 신청 -->
+	<div class="form" id="storage_form">
+		<table class="alarmTitle" id="storage_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="storage_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="storage_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/storage_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="storage_lang_topic">용량 추가 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="storage_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="storage_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="storage_lang_requestDate" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="storage_requeDate">2016. 4. 7 10:50</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 현재 용량 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="storage_lang_nowStorage" style="font-weight: bold; padding-left: 12%;">현재 용량</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="storage_nowStorage">300 MB</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청 용량 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="storage_lang_requestStorage" style="font-weight: bold; padding-left: 12%;">신청 용량</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="storage_requestStorage">200 MB</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 승인 후 용량 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="storage_lang_afterSotrage" style="font-weight: bold; padding-left: 12%;">승인 후 용량</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="storage_afterSotrage">500 MB</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="storage_message" style="width: 93%; margin: auto;">현재 진행하고 있는 프로젝트에 대한 자료 정보들을 저장하는 대에 용량이 매우 부족한 상황입니다. 용량 증설에 대하여 승인 부탁드립니다.</label><span></span>
+			</div>
+			
+			<!-- 개인 정보 -->
+			<div class="alarmContentDom4">
+				<div style="width: 100%; height: 10%;"></div>
+				<div class="alarmContentDom4Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="storage_lang_expireDate" style="font-weight: bold; padding-left: 5%;">만료일</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="storage_expireDate">없음</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="storage_lang_tell" style="font-weight: bold; padding-left: 5%;">연락처</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="storage_tell">010-1234-5678</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="storage_lang_mail" style="font-weight: bold; padding-left: 5%;">이메일</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="storage_mail">gdhong@net-id.co.kr</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="storage_lang_department" style="font-weight: bold; padding-left: 5%;">부서</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="storage_department">모바일개발팀</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 회사 정보 -->
+			<div class="alarmContentDom2">
+				<div style="width: 100%; height: 10%;"></div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="storage_lang_id" style="font-weight: bold; padding-left: 5%;">사원번호</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="storage_id">M16030001</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="storage_lang_companyTell" style="font-weight: bold; padding-left: 5%;">회사 전화번호</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="storage_companyTell">070-1234-5678</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="storage_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="storage_lang_return">반려</label><span></span>
+			</div>
+			<div>
+				<label id="storage_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 용량 추가_승인창 -->
+	<div class="confirmDialog" id="storage_dialog">
+		<div class="confirmDialogContent">
+			<label id="storage_dialog_lang_content">용량증설를 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="confirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="storage_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="storage_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 보안 웹링크 신청 -->
+	<div class="form" id="web_link_form">
+		<table class="alarmTitle" id="web_link_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="web_link_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="web_link_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/link_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="web_link_lang_topic">보안 웹링크 복사 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 제목 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="web_link_lang_strapline" style="font-weight: bold; padding-left: 12%;">제목</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="web_link_strapline">모바일 개발 웹링크 복사 신청합니다.</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="web_link_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="web_link_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="web_link_lang_requestDate" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="web_link_requeDate">2016. 4. 7 10:50</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 만료일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="web_link_lang_expireDate" style="font-weight: bold; padding-left: 12%;">만료일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="web_link_expireDate">2016. 4. 9</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="web_link_message" style="width: 93%; margin: auto;">안녕하세요. 보안 웹링크 복사 신청합니다. 서버팀의 보마일 개발팀 송낙규 연구원에게 보낼 일이 있어 신청합니다. 꼭 승인해주시기 바랍니다.</label><span></span>
+			</div>
+			
+			<!-- 첨부파일 -->
+			<div class="attachBox" id="web_link_attachBox">
+				<div style="width: 100%; margin: 1% 0 1% 0;">
+					<label id="web_link_lang_attachBox" style="font-weight: bold; padding-left: 3%;">첨부파일</label><span></span>
+				</div>
+				<ul id="web_link_attachBox_list" style="width: 100%; list-style: none; padding: 0; margin: 0;">
+					<li style="padding-left: 5%;">
+						<img src="img/icon/xlsx.png" style="width: 4%;">
+						<label>모바일_UI_재설계.xlsx</label><span></span>
+					</li>
+				</ul>
+			</div>
+        </div>
+        
+        <div class="alarmFooter" id="web_link_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="web_link_lang_delete">삭제</label><span></span>
+			</div>
+			<div>
+				<label id="web_link_lang_confirm" style="color: #0A71A5;">확인</label><span></span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 보안웹링크_파일 정보창 -->
+	<div class="fileInfoDialog" id="web_link_file_dialog">
+		<div class="fileInfoDialogTitle">
+			<label id="web_link_file_dialog_lang_title">한국전자_추가_개발_견적서.xlsx</label><span></span>
+		</div>
+		<div class="fileInfoDialogContent">
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%">
+				<div style="width: 40%;">
+					<label id="web_link_file_dialog_lang_path" style="font-weight: bold; padding-left: 10%;">원본 경로</label><span></span>
+				</div>
+				<div style="width: 60%; overflow: scroll; white-space: nowrap;">
+					<label id="web_link_file_dialog_path" style="font-size: 18px;">개인문서함/영업자료/견적서/한국전지</label><span></span>
+   				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%;">
+				<div style="width: 40%;">
+					<label id="web_link_file_dialog_lang_size" style="font-weight: bold; padding-left: 10%;">파일 크기</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="web_link_file_dialog_size">64.0KB</label><span></span>
+				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%; border-bottom: none;">
+				<div style="width: 40%;">
+					<label id="web_linkt_file_dialog_lang_modDate" style="font-weight: bold; padding-left: 10%;">수정한 날짜</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="web_link_file_dialog_modDate">2016. 4. 11 16:51</label><span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 보안 웹링크_승인창 -->
+	<div class="messageConfirmDialog" id="web_link_dialog">
+		<div class="messageConfirmDialogTitle">
+			<label id="web_link_dialog_lang_title">보안웹링크 복사를 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="messageConfirmDialogContent">
+			<input type="text" placeholder="승인사유를 입력해주세요."><span></span>
+		</div>
+		<div class="messageConfirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="web_link_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="web_link_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 디바이스 등록 신청 -->
+	<div class="form" id="device_form">
+		<table class="alarmTitle" id="device_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="device_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="device_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/device_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="device_lang_topic">디바이스 등록 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="device_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="device_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="device_lang_user" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="device_user">2016. 4. 14</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 기종 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="device_lang_user" style="font-weight: bold; padding-left: 12%;">기종</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="device_user">AndroidPhone</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 디바이스 ID -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="device_lang_user" style="font-weight: bold; padding-left: 12%;">디바이스 ID</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="device_user">fa588b5da3b8a7da</label><span></span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="device_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="device_lang_return">반려</label><span></span>
+			</div>
+			<div>
+				<label id="device_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 디바이스 등록_승인창 -->
+	<div class="confirmDialog" id="device_dialog">
+		<div class="confirmDialogContent">
+			<label id="device_dialog_lang_content">디바이스 등록을 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="confirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="device_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="device_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 문서인계 신청 -->
+	<div class="form" id="transfer_form">
+		<table class="alarmTitle" id="transfer_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="transfer_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="transfer_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/transfer_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="transfer_lang_topic">문서인계 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 제목 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="transfer_lang_strapline" style="font-weight: bold; padding-left: 12%;">제목</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="transfer_strapline">문서인계 신청합니다.</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="transfer_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="transfer_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="transfer_requestDate" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="transfer_requestDate">2016. 4. 14 16:35</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="transfer_message" style="width: 93%; margin: auto;">개인적인 사정으로 퇴사하게 되었습니다. 문서인계 신청합니다.<br>승인 부탁드립니다.</label><span></span>
+			</div>
+			
+			<!-- 커뮤니티 정보 -->
+			<div class="alarmContentDom2">
+				<div style="width: 100%; height: 10%;">
+				</div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="transfer_lang_transferer" style="font-weight: bold; padding-left: 5%;">인계자</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="transfer_transferer">홍길동(gdhong)</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="transfer_lang_consignee" style="font-weight: bold; padding-left: 5%;">인수자</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="transfer_consignee">홍길순(gshong)</label><span></span>
+						</div>
+					</div>
+				</div><span></span>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="transfer_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="transfer_lang_return">반려</label><span></span>
+			</div>
+			<div>
+				<label id="transfer_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 문서인계_승인창 -->
+	<div class="confirmDialog" id="transfer_dialog">
+		<div class="confirmDialogContent">
+			<label id="transfer_dialog_lang_content">문서인계를 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="confirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="transfer_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="transfer_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 클라이언트 삭제 -->
+	<div class="form" id="client_delete_form">
+		<table class="alarmTitle" id="client_delete_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="client_delete_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="client_delete_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/client_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="client_delete_lang_topic">클라이언트 삭제 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="client_delete_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="client_delete_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="client_delete_lang_requestDate" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="client_delete_requestDate">2016. 4. 14 16:35</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="client_delete_message" style="width: 93%; margin: auto;">ClouDoc client 삭제 승인 요청합니다. 새로운 버전으로 업그레이드 하기 위하여 기존 클라이언트를 삭제하려 합니다. 승인해 주시기 바랍니다.</label><span></span>
+			</div>
+			
+			<!-- 커뮤니티 정보 -->
+			<div class="alarmContentDom2">
+				<div style="width: 100%; height: 10%;">
+				</div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="client_delete_lang_computerName" style="font-weight: bold; padding-left: 5%;">컴퓨터 이름</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="client_delete_computerName">DESKTOP-MUP3421</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="client_delete_lang_userIP" style="font-weight: bold; padding-left: 5%;">사용자 IP</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="client_delete_userIP">192.168.1.100</label><span></span>
+						</div>
+					</div>
+				</div><span></span>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="client_delete_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="community_create_lang_return">반려</label><span></span>
+			</div>
+			<div>
+				<label id="community_create_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 클라이언트 삭제 승인 창 -->
+	<div class="confirmDialog" id="client_delete_dialog">
+		<div class="confirmDialogContent">
+			<label id="client_delete_dialog_lang_content">클라이언트 삭제를 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="confirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="client_delete_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="client_delete_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- Q&A -->
+	<div class="form" id="qna_form">
+		<table class="alarmTitle" id="qna_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="qna_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="qna_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/qna_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="qna_lang_topic">Q&A</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 제목 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="qna_lang_strapline" style="font-weight: bold; padding-left: 12%;">제목</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="qna_strapline">문서인계 신청합니다.</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="qna_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="qna_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="qna_lang_requestDate" style="font-weight: bold; padding-left: 12%;">작성일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="qna_requestDate">2016. 4. 14 18:35</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 구분 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="qna_lang_separation" style="font-weight: bold; padding-left: 12%;">구분</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="qna_separation">기타문의</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="qna_message" style="width: 93%; margin: auto;">개인적인 사정으로 인하여 PC를 포맷하게 되었습니다. 포맷 이전에 ClouDoc client를 삭제하고 싶습니다. 삭제 절차가 어떻게 되는지 알 수 있습니까?</label><span></span>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="qna_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="transfer_lang_list">목록</label><span></span>
+			</div>
+			<div>
+				<label id="transfer_lang_reply" style="color: #0A71A5;">답변</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- Q&A_답변창 -->
+	<div class="messageConfirmDialog" id="qna_dialog">
+		<div class="messageConfirmDialogTitle">
+			<label id="qna_dialog_lang_title">답변을 등록하시겠습니까?</label><span></span>
+		</div>
+		<div class="messageConfirmDialogContent">
+			<input type="text" placeholder="답변을 입력해주세요."><span></span>
+		</div>
+		<div class="messageConfirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="qna_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="qna_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 커뮤니티 생성 신청 -->
+	<div class="form" id="community_create_form">
+		<table class="alarmTitle" id="community_create_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="community_create_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="community_create_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/community_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="community_create_lang_topic">커뮤니티 생성 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_create_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="community_create_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_create_lang_requestDate" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="community_create_requestDate">2016. 4. 14 16:35</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="community_create_message" style="width: 93%; margin: auto;">개발자들과의 소통을 위하여 만드는 협업게시판입니다. 같은 개발자들이라 하여도 서로 동떨어져있기에 게시판을 통하여 소통을 하고자 만듭니다. 승인 부탁드립니다.</label><span></span>
+			</div>
+			
+			<!-- 커뮤니티 정보 -->
+			<div class="alarmContentDom2">
+				<div style="width: 100%; height: 10%;">
+				</div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="community_create_lang_cooperateName" style="font-weight: bold; padding-left: 5%;">협업게시판 이름</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="community_create_cooperateName">개발자 모임</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="community_create_lang_categoryName" style="font-weight: bold; padding-left: 5%;">카테고리 이름</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="community_create_categoryName">개발팀</label><span></span>
+						</div>
+					</div>
+				</div><span></span>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="community_create_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="community_create_lang_return">반려</label><span></span>
+			</div>
+			<div>
+				<label id="community_create_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 커뮤니티 생성_승인창 -->
+	<div class="confirmDialog" id="community_create_dialog">
+		<div class="confirmDialogContent">
+			<label id="community_create_dialog_lang_content">협업게시판 생성을 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="confirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="community_create_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="community_create_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 커뮤니티 가입 신청 -->
+	<div class="form" id="community_join_form">
+		<table class="alarmTitle" id="community_join_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="community_join_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="community_join_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/community_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="community_join_lang_topic">커뮤니티 가입 신청</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사용자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_join_lang_user" style="font-weight: bold; padding-left: 12%;">사용자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="community_join_user">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 신청일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_join_lang_requestDate" style="font-weight: bold; padding-left: 12%;">신청일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="community_join_requestDate">2016. 4. 14 16:35</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 커뮤니티 정보 -->
+			<div class="alarmContentDom2">
+				<div style="width: 100%; height: 10%;">
+				</div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="community_join_lang_cooperateName" style="font-weight: bold; padding-left: 5%;">협업게시판 이름</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="community_join_cooperateName">개발자 모임</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="community_join_lang_categoryName" style="font-weight: bold; padding-left: 5%;">카테고리 이름</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="community_join_categoryName">개발팀</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="alarmFooter" id="community_join_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="community_join_lang_return">반려</label><span></span>
+			</div>
+			<div>
+				<label id="community_join_lang_approve" style="color: #0A71A5;">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 커뮤니티 가입_승인창 -->
+	<div class="confirmDialog" id="community_join_dialog">
+		<div class="confirmDialogContent">
+			<label id="community_join_dialog_lang_content">협업게시판 가입을 승인하시겠습니까?</label><span></span>
+		</div>
+		<div class="confirmDialogButton">
+			<div style="border-right: 1px solid #EDEBEB;">
+				<label id="community_join_dialog_lang_cancel">취소</label><span></span>
+			</div>
+			<div>
+				<label id="community_join_dialog_lang_approve">승인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 커뮤니티 새글 알림 -->
+	<div class="form" id="community_alert_form">
+		<table class="alarmTitle" id="community_alert_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="community_alert_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="community_alert_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/community_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="community_alert_lang_topic">커뮤니티 새글 알림</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 제목 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_alert_lang_strapline" style="font-weight: bold; padding-left: 12%;">제목</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="community_alert_strapline">Android 개발 지원자 모집합니다.</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 작성자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_alert_lang_writer" style="font-weight: bold; padding-left: 12%;">작성자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="community_alert_writer">홍길동(gdhong)</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 작성일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_alert_lang_writeDate" style="font-weight: bold; padding-left: 12%;">작성일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="community_alert_writeDate">2016. 4. 7 10:50</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 게시판 이름 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_alert_lang_boardName" style="font-weight: bold; padding-left: 12%;">게시판 이름</label><span></span>
+				</div>
+				<div style="width: 70%; overflow: scroll; white-space: nowrap;">
+					<label id="community_alert_boardName">개발자 모임 > 게시판 그룹 > 게시판 이름</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="community_alert_message" style="width: 93%; margin: auto;">안녕하세요. 서버팀>모바일개발팀에 있는 송낙규라고 합니다. 다름이 아니라 이번 프로젝트에 있어서 Android 개발자가 부족하여 도움을 구합니다. 혹시, Android개발 경력이 있으신 분은 도움 부탁 드립니다. 사례는 잘 챙겨드리겠습니다.</label><span></span>
+			</div>
+			
+			<!-- 태그 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="community_alert_lang_tag" style="font-weight: bold; padding-left: 12%;">태그</label><span></span>
+				</div>
+				<div style="width: 70%; overflow: scroll; white-space: nowrap;">
+					<label id="community_alert_tag">Android, 개발, 도움, help</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 첨부파일 -->
+			<div class="attachBox" id="notice_attachBox">
+				<div style="width: 100%; margin: 1% 0 1% 0;">
+					<label id="community_alert_lang_attachBox" style="font-weight: bold; padding-left: 3%;">첨부파일</label><span></span>
+				</div>
+				<ul id="community_alert_attachBox_list" style="width: 100%; list-style: none; padding: 0; margin: 0;">
+					<li style="padding-left: 5%;">
+						<img src="img/icon/docx.png" style="width: 4%;">
+						<label>프로젝트_기획서.docx</label><span></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+        
+		<div class="alarmFooter" id="community_alert_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="community_alert_lang_delete">삭제</label><span></span>
+			</div>
+			<div>
+				<label id="community_alert_lang_confirm" style="color: #0A71A5;">확인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 커뮤니티 새글_파일 정보창 -->
+	<div class="fileInfoDialog" id="community_alert_file_dialog">
+		<div class="fileInfoDialogTitle">
+			<label id="community_alert_file_dialog_lang_title">한국전자_추가_개발_견적서.xlsx</label><span></span>
+		</div>
+		<div class="fileInfoDialogContent">
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%">
+				<div style="width: 40%;">
+					<label id="community_alert_file_dialog_lang_path" style="font-weight: bold; padding-left: 10%;">원본 경로</label><span></span>
+				</div>
+				<div style="width: 60%; overflow: scroll; white-space: nowrap;">
+					<label id="community_alert_file_dialog_path" style="font-size: 18px;">개인문서함/영업자료/견적서/한국전지</label><span></span>
+   				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%;">
+				<div style="width: 40%;">
+					<label id="community_alert_file_dialog_lang_size" style="font-weight: bold; padding-left: 10%;">파일 크기</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="community_alert_file_dialog_size">64.0KB</label><span></span>
+				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%; border-bottom: none;">
+				<div style="width: 40%;">
+					<label id="community_alert_file_dialog_lang_modDate" style="font-weight: bold; padding-left: 10%;">수정한 날짜</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="community_alert_file_dialog_modDate">2016. 4. 11 16:51</label><span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 공지사항 -->
+	<div class="form" id="notice_form">
+		<table class="alarmTitle" id="notice_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="alarm_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+        
+        <div class="alarmContent" id="notice_content">
+        	<!-- 메시지 종류 -->
+        	<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/notice_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="notice_lang_topic">공지사항</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 제목 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="notice_lang_strapline" style="font-weight: bold; padding-left: 12%;">제목</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="notice_strapline">(긴급)서버 점검 안내</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 작성자 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="notice_lang_writer" style="font-weight: bold; padding-left: 12%;">작성자</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="notice_writer">서비스 관리자</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 작성일 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div>
+					<label id="notice_lang_writeDate" style="font-weight: bold; padding-left: 12%;">작성일</label><span></span>
+				</div>
+				<div style="width: 70%;">
+					<label id="notice_writeDate">2016. 4. 7 10:50</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 내용 -->
+			<div class="alarmContentDom1" style="height: auto; padding: 2% 0 2% 0;">
+				<label id="notice_message" style="width: 93%; margin: auto;">안녕하세요. ClouDoc 서비스 관리자입니다. 다름이 아니라 금일 18시 부터 ClouDoc 서버 점검이 있을 예정입니다. 모든 사용자들은 18시 이전에 안전하게 문서들을 저장해주시기 바랍니다.</label><span></span>
+			</div>
+			
+			<!-- 첨부파일 -->
+			<div class="attachBox" id="notice_attachBox">
+				<div style="width: 100%; margin: 1% 0 1% 0;">
+					<label id="notice_lang_attachBox" style="font-weight: bold; padding-left: 3%;">첨부파일</label><span></span>
+				</div>
+				<ul id="notice_attachBox_list" style="width: 100%; list-style: none; padding: 0; margin: 0;">
+					<li style="padding-left: 5%;">
+						<img src="img/icon/docx.png" style="width: 4%;">
+						<label>ClouDoc_서버점검_안내서.docx</label><span></span>
+					</li>
+				</ul>
+			</div>
+        </div>
+        
+        <div class="alarmFooter" id="notice_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="notice_lang_delete">삭제</label><span></span>
+			</div>
+			<div>
+				<label id="notice_lang_confirm" style="color: #0A71A5;">확인</label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 공지사항_파일 정보창 -->
+	<div class="fileInfoDialog" id="notice_file_dialog">
+		<div class="fileInfoDialogTitle">
+			<label id="notice_file_dialog_lang_title">한국전자_추가_개발_견적서.xlsx</label><span></span>
+		</div>
+		<div class="fileInfoDialogContent">
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%">
+				<div style="width: 40%;">
+					<label id="notice_file_dialog_lang_path" style="font-weight: bold; padding-left: 10%;">원본 경로</label><span></span>
+				</div>
+				<div style="width: 60%; overflow: scroll; white-space: nowrap;">
+					<label id="notice_file_dialog_path" style="font-size: 18px;">개인문서함/영업자료/견적서/한국전지</label><span></span>
+   				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%;">
+				<div style="width: 40%;">
+					<label id="notice_file_dialog_lang_size" style="font-weight: bold; padding-left: 10%;">파일 크기</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id=notice_file_dialog_size">64.0KB</label><span></span>
+				</div>
+			</div>
+			<div class="alarmContentDom1 alarmContentItem" style="height: 33%; border-bottom: none;">
+				<div style="width: 40%;">
+					<label id="notice_file_dialog_lang_modDate" style="font-weight: bold; padding-left: 10%;">수정한 날짜</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="notice_file_dialog_modDate">2016. 4. 11 16:51</label><span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 서버 경고 알림창 -->
+	<div class="form" id="server_alert_form">
+		<table class="alarmTitle" id="server_alert_title" cellpadding="0" cellspacing="0">
+			<tr>
+				<td onclick="closeForm(this)">
+					<img src="./img/backBtnWhite.png" style="width: 21%; height: 44%;"></img><span></span>
+				</td>
+				<td style="width: auto;">
+                    <label id="alarm_lang_title">알림함</label><span></span>
+				</td>
+				<td>
+                    <img src="img/deleteBtnWhite.png" style="width: 40%; height: 45%;"><span></span>
+				</td>
+			</tr>
+        </table>
+		
+		<div class="alarmContent" id="server_alert_content">
+			<!-- 메시지 종류 -->
+			<div class="alarmContentDom1 alarmContentTopic">
+				<div>
+					<img src="img/alarm/server_on.png"><span></span>
+				</div>
+				<div style="width: 85%; padding-right: 15%;">
+					<label id="serverAlert_lang_topic">서버 경고</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 발생 시간 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div style="width: 40%;">
+					<label id="serverAlert_lang_occurTime" style="font-weight: bold; padding-left: 10%;">발생 시간</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="serverAlert_occurTime">2016. 4. 14 17:49:24</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사이트 아이디 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div style="width: 40%;">
+					<label id="serverAlert_lang_siteID" style="font-weight: bold; padding-left: 10%;">사이트아이디</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="serverAlert_siteID">Site ID</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 사이트 이름 -->
+			<div class="alarmContentDom1 alarmContentItem">
+				<div style="width: 40%;">
+					<label id="serverAlert_lang_siteName" style="font-weight: bold; padding-left: 10%;">사이트 명</label><span></span>
+				</div>
+				<div style="width: 60%;">
+					<label id="serverAlert_siteName">ClouDoc</label><span></span>
+				</div>
+			</div>
+			
+			<!-- 서버 IP -->
+			<div class="alarmContentDom1" style="height: auto; border-bottom: none;">
+				<label id="serverAlert_siteIP" style="padding: 2% 0 2% 5%;">192.168.1.100<br>192.168.1.101</label><span></span>
+			</div>
+			
+			<!-- Apache 체크 -->
+			<div class="alarmContentDom4">
+				<div class="alarmContentDom4Topic">
+					<label id="serverAlert_lang_apacheCheck" style="padding-left: 1%;">Apache 체크</label><span></span>
+				</div>
+				<div class="alarmContentDom4Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_apacheService" style="font-weight: bold; padding-left: 5%;">서비스</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_service">정상</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_apacheThread" style="font-weight: bold; padding-left: 5%;">Thread 수</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_apacheThread">0</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_apacheCpu" style="font-weight: bold; padding-left: 5%;">CPU 사용률</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_apacheCpu">0%</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_apacheRam" style="font-weight: bold; padding-left: 5%;">RAM</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_apacheRam">0 KB</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Tomcat 체크 -->
+			<div class="alarmContentDom4">
+				<div class="alarmContentDom4Topic">
+					<label id="serverAlert_lang_tomcatCheck" style="padding-left: 1%;">Tomcat 체크</label><span></span>
+				</div>
+				<div class="alarmContentDom4Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_tomcatService" style="font-weight: bold; padding-left: 5%;">서비스</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_tomcatService">정상</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_tomcatThread" style="font-weight: bold; padding-left: 5%;">Thread 수</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_tomcatThread">0</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_tomcatCpu" style="font-weight: bold; padding-left: 5%;">CPU 사용률</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_tomcatCpu">0%</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_tomcatRam" style="font-weight: bold; padding-left: 5%;">RAM</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_tomcatRam">0 KB</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- modjk 체크 -->
+			<div class="alarmContentDom3">
+				<div class="alarmContentDom3Topic">
+					<label id="serverAlert_lang_modjkCheck" style="padding-left: 1%;">modjk 체크 (Port: 8009)</label><span></span>
+				</div>
+				<div class="alarmContentDom3Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_modjkTimeWait" style="font-weight: bold; padding-left: 5%;">TIME_WAIT</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_modjkTimeWait">0</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_closeWait" style="font-weight: bold; padding-left: 5%;">CLOSE_WAIT</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_closeWait">0</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_established" style="font-weight: bold; padding-left: 5%;">ESTABLISHED</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_established">0</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- DB 체크 -->
+			<div class="alarmContentDom2">
+				<div class="alarmContentDom2Topic">
+					<label id="serverAlert_lang_DBCheck" style="padding-left: 1%;">DB 체크</label><span></span>
+				</div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_mainDB" style="font-weight: bold; padding-left: 5%;">Main DB 연결</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_mainDB">정상</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_logDB" style="font-weight: bold; padding-left: 5%;">Log DB 연결</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_logDB">정상</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- CPU / Memory 체크 -->
+			<div class="alarmContentDom3">
+				<div class="alarmContentDom3Topic">
+					<label id="serverAlert_lang_cpuMemory" style="padding-left: 1%;">CPU / Memory 체크</label><span></span>
+				</div>
+				<div class="alarmContentDom3Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_cpu" style="font-weight: bold; padding-left: 5%;">CPU 사용률</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_cpu">100%</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_ram" style="font-weight: bold; padding-left: 5%;">RAM</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_ram">7782 MB / 8192 MB (95%)</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_swap" style="font-weight: bold; padding-left: 5%;">SWAP</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_swap">3574 MB / 6121 MB (57%)</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Netstat 치크 -->
+			<div class="alarmContentDom2">
+				<div class="alarmContentDom2Topic">
+					<label id="serverAlert_lang_netstatCheck" style="padding-left: 1%;">Netstat 체크</label><span></span>
+				</div>
+				<div class="alarmContentDom2Content">
+					<div style="display: flex;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_netstatTimewait" style="font-weight: bold; padding-left: 5%;">TIME_WAIT</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_netstatTimewait">20</label><span></span>
+						</div>
+					</div>
+					<div style="display: flex; border-bottom: none;">
+						<div style="width: 40%; height: 100%;">
+							<label id="serverAlert_lang_netstatClosewait" style="font-weight: bold; padding-left: 5%;">CLOSE_WAIT</label><span></span>
+						</div>
+						<div style="width: 60%; height: 100%;">
+							<label id="serverAlert_netstatClosewait">10</label><span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 디스크 용량 체크 -->
+			<div style="width: 93.75%; height: 6.9%; margin: auto;">
+				<label id="serverAlert_lang_diskVolumeCheck" style="padding-left: 1%;">디스크 용량 체크</label>
+			</div>
+			<ul id="serverAlert_diskVolumCheck" style="width: 93.75%; height: 24.5%; margin: auto; background-color: #FFFFFF; border-radius: 10px; list-style: none; padding: 0;">
+				<li style="width: 100%; height: 25%; border-bottom: 1px solid #EDEBEB; display: flex;">
+					<div style="width: 25%; height: 100%; text-align: center;">
+						<label id="serverAlert_lang_diskType" style="font-weight: bold;">Disk Type</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label id="serverAlert_lang_usedSize" style="font-weight: bold;">Used Size</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label id="serverAlert_lang_totalSize" style="font-weight: bold;">Total Size</label><span></span>
+					</div>
+					<div style="width: 15%; height: 100%; text-align: center;">
+						<label id="serverAlert_lang_usePercent" style="font-weight: bold;">Use %</label><span></span>
+					</div>
+				</li>
+				
+				<li style="width: 100%; height: 25%; border-bottom: 1px solid #EDEBEB; display: flex;">
+					<div style="width: 25%; height: 100%; text-align: center;">
+						<label>C:</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label>79.37 GB</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label>119.14 GB</label><span></span>
+					</div>
+					<div style="width: 15%; height: 100%; text-align: center;">
+						<label>67 %</label><span></span>
+					</div>
+				</li>
+				<li style="width: 100%; height: 25%; border-bottom: 1px solid #EDEBEB; display: flex;">
+					<div style="width: 25%; height: 100%; text-align: center;">
+						<label>E:</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label>12.51 GB</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label>29.73 GB</label><span></span>
+					</div>
+					<div style="width: 15%; height: 100%; text-align: center;">
+						<label>42 %</label><span></span>
+					</div>
+				</li>
+				<li style="width: 100%; height: 25%; border-bottom: none; display: flex;">
+					<div style="width: 25%; height: 100%; text-align: center;">
+						<label>Z:</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label>51.34 GB</label><span></span>
+					</div>
+					<div style="width: 30%; height: 100%; text-align: center;">
+						<label>230.91 GB</label><span></span>
+					</div>
+					<div style="width: 15%; height: 100%; text-align: center;">
+						<label>22 %</label><span></span>
+					</div>
+				</li>
+			</ul>
+			
+			<div style="width: 100%; height: 5%;"></div>
+		</div>
+		
+		<div class="alarmFooter" id="server_alert_footer">
+			<div style="border-right: 1px solid #E8E8E8;">
+				<label id="serverAlert_lang_delete">삭제</label><span></span>
+			</div>
+			<div>
+				<label id="serverAlert_lang_confirm" style="color: #0A71A5;">확인</label><span></span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

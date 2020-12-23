@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  CentralECMTablet
+
+  Created by Rusa on 13. 8. 22..
+
+*/
+/* 타앱에서 데이터 받은 뷰 */
+"file saved" = "保存しました。";
+"file save failed" = "保存に失敗しました。";
+"Login to ues." = "ログイン後、ご使用ください。";
+"Uload completed" = "アップロードが完了しました。";
+"Close" = "閉じる";
+"Save" = "保存";
+"To ServerStorage" = "サーバにアップロード";
+"To LocalStorage" = "ローカルに保存";
+
+/* ChildBrowser */
+"Open in..." = "別アプリで開く";
+"Conv" = "文字コードを変換";

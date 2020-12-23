@@ -1,0 +1,203 @@
+//
+// Copyright 2009-2010 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#import "WebThree20ViewController.h"
+#import "CentralECMAppDelegate.h"
+#import "TapDetectingWindow.h"
+
+@implementation WebThree20ViewController
+
+@synthesize webView, docUrl;
+ 
+#pragma mark -
+#pragma mark user define
+
+- (BOOL)isShowingChrome {
+	UINavigationBar* bar = self.navigationController.navigationBar;
+	return bar ? bar.alpha != 0 : 1;
+}
+
+#pragma mark -
+#pragma mark TapDetectingWindow delegate
+-(void)userDidTapWebView:touch
+{
+	if ([self isShowingChrome]) {
+		[self showBars:NO animated:YES];
+	} else {
+		[self showBars:YES animated:NO];
+	}	
+}
+
+#pragma mark -
+#pragma mark TTViewController
+- (void)showBars:(BOOL)show animated:(BOOL)animated
+{
+	[super showBars:show animated:animated];
+// 	CGFloat alpha = show ? 1 : 0;
+	if (animated) {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:TT_TRANSITION_DURATION];
+ 
+		[UIView setAnimationDelegate:self];
+		if (show) {
+			[UIView setAnimationDidStopSelector:@selector(showBarsAnimationDidStop)];
+		} else {
+			[UIView setAnimationDidStopSelector:@selector(hideBarsAnimationDidStop)];
+		}
+	} else {
+		if (show) {
+			[self showBarsAnimationDidStop];
+		} else {
+			[self hideBarsAnimationDidStop];
+		}
+	}
+	
+	if (animated) {
+		[UIView commitAnimations];
+	}
+}
+
+- (id)init
+{
+ 	if (self = [super init])
+	{
+		self.statusBarStyle = UIStatusBarStyleBlackTranslucent;
+		self.navigationBarStyle =  UIBarStyleBlackTranslucent; //appDelegate.navClientController.navigationBar.barStyle;//
+		self.navigationBarTintColor = nil;
+		self.wantsFullScreenLayout = YES;
+		self.hidesBottomBarWhenPushed = YES;
+ 	}
+	
+ 	return self;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)showBarsAnimationDidStop {
+	self.navigationController.navigationBarHidden = NO;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)hideBarsAnimationDidStop {
+	self.navigationController.navigationBarHidden = YES;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	
+	return TTIsSupportedOrientation(interfaceOrientation);
+}
+
+ 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                         duration:(NSTimeInterval)duration {
+	[self showBars:NO animated:YES];
+	[super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	//[self updateToolbarWithOrientation:toInterfaceOrientation];
+}
+
+ 
+
+
+#pragma mark -
+#pragma mark common
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+ 	
+	
+	CGRect screenFrame = [UIScreen mainScreen].bounds;
+	self.view = [[[UIView alloc] initWithFrame:screenFrame] autorelease];
+	
+	
+	CGRect innerFrame = CGRectMake(0, 0,
+								   screenFrame.size.width, screenFrame.size.height);
+	webView = [[UIWebView alloc]  initWithFrame:innerFrame];
+	webView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+	[self.view addSubview:webView];
+	
+	CentralECMAppDelegate *appDelegate = (CentralECMAppDelegate *)[[UIApplication sharedApplication] delegate];
+
+	//window = (TapDetectingWindow *)[[UIApplication sharedApplication].windows objectAtIndex:0];
+	window = (TapDetectingWindow *)appDelegate.window;
+    window.viewToObserve = webView;
+    window.controllerThatObserves = self;
+  	
+	NSURLRequest *request= [NSURLRequest requestWithURL:docUrl];
+
+// 	NSError* error = nil;
+//	NSURLResponse* response = nil;
+// 	[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+//	NSString *mimeType =[response MIMEType];
+//	NSLog(@"mimeType=%@", mimeType);
+//	NSRange range=[mimeType rangeOfString:@"image"];
+//	
+//	//mime type을 확인하여 image이면 최대한 여백없이 처리한다.
+//	if (range.length > 0){
+//		NSString *htmlString = @"<html><body style='margin:0;padding:0'><img  style='position:absolute;y:100'src='%@' width='950px' ></body></html>";
+//		NSString *imageHTML  = [[NSString alloc] initWithFormat:htmlString, docUrl];
+// 		webView.scalesPageToFit = YES;
+//		[webView loadHTMLString:imageHTML baseURL:nil];
+// 	}
+//	else
+	{
+ 		// Load image in UIWebView
+//		[webView loadRequest:[NSURLRequest requestWithURL:docUrl]];
+		[webView loadRequest:request];
+		webView.scalesPageToFit=YES;
+ 	}
+	 
+ 
+}
+ 
+- (void)didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+	
+	// Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+	[super viewDidLoad];
+ 
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[super viewWillDisappear:animated];
+	
+	[UIApplication sharedApplication].statusBarOrientation = UIInterfaceOrientationPortrait;
+	CentralECMAppDelegate *appDelegate = (CentralECMAppDelegate *)[[UIApplication sharedApplication] delegate];
+	
+	appDelegate.navClientController.navigationBar.translucent=NO;
+	appDelegate.navClientController.navigationBar.barStyle =0;
+	appDelegate.navServerController.navigationBar.translucent=NO;
+	appDelegate.navServerController.navigationBar.barStyle =0;
+
+	appDelegate.isRotate = NO;
+	 
+ 
+}
+
+- (void)dealloc {
+	
+	[webView release];
+	[docUrl release];
+    [super dealloc];
+}
+
+@end

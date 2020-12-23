@@ -1,0 +1,101 @@
+@charset "utf-8";
+
+input[type=button] { font-size: 16px; }
+.nav-title label { font-size: 16px; }
+.tree-drive > label { font-size: 16px; }
+.tree-folder { font-size: 15px; }
+.BM-title label { font-size:16px; }
+.BM-folder { font-size: 15px; }
+.recentBtn { font-size: 16px; }
+.contents-title > div:nth-child(2) label:nth-child(2) { font-size: 20px; }
+.contents-title > div:nth-child(2) label:nth-child(3) { font-size: 15px; }
+.contents-title > div:nth-child(3) label,
+.bookmark-title > div:nth-child(4) label { font-size: 16px; }
+.contents-search button { font-size: 16px; }
+.list > div div:first-child { font-size: 14px; }
+.list > div div:last-child { font-size: 12px; }
+.dialog { font-size: 16px; }
+.dialog-setting { font-size: 20px; }
+.dialog-setting li div:last-child { font-size: 16px; }
+.dialog-setting input[type=button] { font-size: 20px; }
+.dialog-title { font-size: 20px; }
+.dialog-confirm > div:first-child { font-size: 16px; }
+.dialog-fixed li { font-size: 16px; }
+
+.main-contents { width: 74%; height: 100%; position: relative; left: 26%; background-color: #F4F9FE; }
+
+section > nav {
+    width: 26%; height: 100%;
+    position: relative; left: 0%; z-index: 300;
+    color: #FFFFFF; background-color: #2A8FC5;
+    border-right:1px solid #000;
+    display: block;
+    float: left; overflow: hidden;
+    box-shadow: 3px 10px 10px #888888;
+}
+
+input[type=button] { padding: 5px 12px; margin: 0px 15px; }
+/********** Contents **********/
+    /********** Left menu **********/
+    /* Menu contents : Tree area */
+        /* Folder list */
+        .tree-folder { padding-left: 10px; }
+        .tree-folder label:nth-child(1) { width: 20px; }
+        .tree-folder label:nth-child(2) { width: 23px; }
+    /* Menu contents : Bookmark area */
+        .BM-folder img { width: 23px; }
+    /********** /Left menu **********/
+
+    /********** Main contents(file lists) **********/
+        /* Contents title : Close menu button *****/
+        .contents-title > img:nth-child(1) { width: 22px; }
+        /* Contents title : Current route */
+        .contents-title > div:nth-child(2) { margin-left: 39px; padding-right: 144px; }
+        .bookmark-title > div:nth-child(2) { padding-right: 244px; }
+        .contents-title > div:nth-child(2) img { width: 28px; }
+        .contents-title > div:nth-child(2) label:nth-child(2) { padding: 0 5px 0 10px; }
+        /* Contents title : Sort button */
+        .bookmark-title > div:nth-child(4) { width: 90px; right: 90px; }
+        .contents-title > div:nth-child(3) img,
+        .bookmark-title > div:nth-child(4) img { width: 25px; margin-left: 10px; }
+        .contents-title > div:nth-child(3) { width: 90px; }
+
+    /* Contents file list */
+        /* Contents file list - list */
+        .list > label:nth-child(1) { width: 28px; left: 22px; }
+        .list > div { padding: 0px 70px; }
+        .list > div div:last-child label:nth-child(2) { padding-left: 20px; }
+        .list > label:nth-child(3) { width: 70px; }
+        .list-BM-unchecked { background-position-x: 22px; }
+        .list-BM-checked { background-position-x: 22px; }
+        /* Contents file list - bookmark list */
+        .BM-list > label:nth-child(3).personal { background-position-x: 22px; }
+        .BM-list > label:nth-child(3).orgcowork { background-position-x: 22px; }
+        .BM-list input { width: 20px; margin-right: 20px; }
+/********** /Contents **********/
+
+@media screen and (orientation: portrait) {
+    /********** Main contents(file lists) **********/
+        /* Contents title : Sort button */
+        .contents-title > div:nth-child(3) { padding-right: 22px; }
+        .contents-search { padding: 0 22px; }
+        
+        header label:nth-child(1) { width: 15%; background: url("../images/img/logo.png") no-repeat; background-size: 100%; background-position-y: 80%; }
+        /* Title */
+        header label:nth-child(2) { width: 4%; right: 6%; background: url("../images/icon/header_afresh.png") no-repeat; background-size: 60%; background-position-y: 80%; }
+        /* Buttons */
+        header label:nth-child(3) { width: 4%; right: 2%; background: url("../images/icon/header_set.png") no-repeat right; background-size: 70%; background-position-y: 80%; }
+}
+
+@media screen and (orientation: landscape) {
+    /********** Main contents(file lists) **********/
+        /* Contents title : Sort button */
+        .contents-title > div:nth-child(3) { padding-right: 18px; }
+        .contents-search { padding: 0 18px; }
+        
+        header label:nth-child(1) { width: 11%; background: url("../images/img/logo.png") no-repeat; background-size: 100%; background-position-y: 70%; }
+        /* Title */
+        header label:nth-child(2) { width: 3%; right: 4%; background: url("../images/icon/header_afresh.png") no-repeat; background-size: 60%; background-position-y: 70%; }
+        /* Buttons */
+        header label:nth-child(3) { width: 3%; right: 1%; background: url("../images/icon/header_set.png") no-repeat right; background-size: 70%; background-position-y: 70%; }
+}

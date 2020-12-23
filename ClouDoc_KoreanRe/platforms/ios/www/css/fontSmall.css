@@ -1,0 +1,66 @@
+@charset "utf-8";
+img, .imgLabel { zoom: 0.9; }
+
+/* 세로: 100% */
+@media screen and (orientation: portrait) and (min-width: 71vw) and (max-width: 100vw) {
+    body { font-size: 15px; }
+    .list label:nth-child(3) p:last-child,
+    .BM-list label:nth-child(2) p:last-child { font-size: 10px; }
+    .dialog-confirm > div:nth-child(2) label { font-size: 13px; }
+    #NetID_currentFolder { font-size: 13px; }
+}
+
+/* 세로: 70% */
+@media screen and (orientation: portrait) and (min-width: 31vw) and (max-width: 70vw) {
+    body { font-size: 14.4px; }
+    .list label:nth-child(3) p:last-child,
+    .BM-list label:nth-child(2) p:last-child { font-size: 9.5px; }
+    .dialog-confirm > div:nth-child(2) label { font-size: 12.4px; }
+    #NetID_currentFolder { font-size: 12.4px; }
+}
+
+/* 세로: 30% */
+@media screen and (orientation: portrait) and (min-width: 0vw) and (max-width: 30vw) {
+    body { font-size: 14.4px; }
+    .list label:nth-child(3) p:last-child,
+    .BM-list label:nth-child(2) p:last-child { font-size: 9.5px; }
+    .dialog-confirm > div:nth-child(2) label { font-size: 12.4px; }
+    #NetID_currentFolder { font-size: 12.4px; }
+}
+
+
+/* 가로: 100% */
+@media screen and (orientation: landscape) and (min-width: 71vw) and (max-width: 100vw) {
+    body { font-size: 14.4px; }
+    .list label:nth-child(3) p:last-child,
+    .BM-list label:nth-child(2) p:last-child { font-size: 9.5px; }
+    .dialog-confirm > div:nth-child(2) label { font-size: 12.4px; }
+    #NetID_currentFolder { font-size: 12.4px; }
+}
+
+/* 가로: 70% */
+@media screen and (orientation: landscape) and (min-width: 51vw) and (max-width: 70vw) {
+    body { font-size: 14.4px; }
+    .list label:nth-child(3) p:last-child,
+    .BM-list label:nth-child(2) p:last-child { font-size: 9.5px; }
+    .dialog-confirm > div:nth-child(2) label { font-size: 12.4px; }
+    #NetID_currentFolder { font-size: 12.4px; }
+}
+
+/* 가로: 50% */
+@media screen and (orientation: landscape) and (min-width: 31vw) and (max-width: 50vw) {
+    body { font-size: 14.4px; }
+    .list label:nth-child(3) p:last-child,
+    .BM-list label:nth-child(2) p:last-child { font-size: 9.5px; }
+    .dialog-confirm > div:nth-child(2) label { font-size: 12.4px; }
+    #NetID_currentFolder { font-size: 12.4px; }
+}
+
+/* 가로: 30% */
+@media screen and (orientation: landscape) and (min-width: 0vw) and (max-width: 30vw) {
+    body { font-size: 14.4px; }
+    .list label:nth-child(3) p:last-child,
+    .BM-list label:nth-child(2) p:last-child { font-size: 9.5px; }
+    .dialog-confirm > div:nth-child(2) label { font-size: 12.4px; }
+    #NetID_currentFolder { font-size: 12.4px; }
+}

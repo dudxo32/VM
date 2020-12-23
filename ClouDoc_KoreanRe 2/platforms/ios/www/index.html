@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no">
+            <title>CentralECM</title>
+            
+            <!-- external css files -->
+            <link type="text/css" rel="stylesheet" href="css/autoTextResize.css" />
+            
+            <!-- internal css files -->
+            <link rel="stylesheet" type="text/css" href="css/reset.css" />
+            <link rel="stylesheet" type="text/css" href="css/layout.css" />
+            <link rel="stylesheet" type="text/css" href="css/fontBig.css" />
+            <link rel="stylesheet" type="text/css" href="css/fontMiddle.css" />
+            <link rel="stylesheet" type="text/css" href="css/fontSmall.css" />
+            <!-- theme -->
+<!--            <link rel="stylesheet" type="text/css" href="css/themeRed.css" />-->
+            <link rel="stylesheet" type="text/css" href="css/themeLightBlue.css" />
+            <link rel="stylesheet" type="text/css" href="css/themePurple.css" />
+            <link rel="stylesheet" type="text/css" href="css/themeGray.css" />
+            <link rel="stylesheet" type="text/css" href="css/themeBlue.css" />
+            
+            <script type="text/javascript" src="js/jquery.js"></script>
+            <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+            <script type="text/javascript" src="js/explorer.js"></script>
+            <script type="application/javascript" src="js/fastclick.js"></script>
+            <script type="text/javascript" src="js/util/hammer.js"></script>
+            <script type="text/javascript" src="js/util/childbrowser.js"></script>
+            <script type="text/javascript" src="js/util/utilsocket.js"></script>
+            <script type="text/javascript" src="js/util/webstorage.js"></script>
+            <script type="text/javascript" src="js/plugin/UpDownManager.js"></script>
+            <script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+            <script type="text/javascript" src="js/plugin/CryptUtil.js"></script>
+            <script type="text/javascript" src="js/plugin/AppManager.js"></script>
+            <script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+            <script type="text/javascript" src="js/plugin/DeviceUtil.js"></script>
+            <script type="text/javascript" src="js/plugin/Entertainment.js"></script>
+            <script type="text/javascript" src="js/plugin/ActivityView.js"></script>
+            <script type="text/javascript" src="js/plugin/ProxyConnect.js"></script>
+            <script type="text/javascript" src="js/plugin/ProxyPlugin.js"></script>
+            <script type="text/javascript" src="js/manager/getdrivelist.js"></script>
+            <script type="text/javascript" src="js/manager/mobile/getlist.js"></script>
+            <script type="text/javascript" src="js/manager/mobile/LocalFSManager.js"></script>
+            <script type="text/javascript" src="js/manager/alertMessage.js"></script>
+            <script type="text/javascript" src="js/manager/sort.js"></script>
+            <script type="text/javascript" src="js/manager/bookmark.js"></script>
+            <script type="text/javascript" src="js/manager/getserverinfo.js"></script>
+            <script type="text/javascript" src="js/manager/mobile/loginmanager.js"></script>
+            <script type="text/javascript" src="js/util/highlightUtil.js"></script>
+            <script type="text/javascript">
+                
+                $(document).ready(function() {
+                                  $('#loadingPage').show();
+                                  // 앱델리게이트에서 값을 받아옴
+                                  var arguments = new Array();
+                                  arguments = window.location.hash;
+                                  var argument = "";
+                                  authKey = "";
+                                  for(i = 1; i < arguments.length; i++) {
+                                  argument += arguments[i];
+                                  }
+                                  
+                                  var argArr = argument.split('&');
+                                  
+                                  accountID = argArr[0];
+                                  authKey = argArr[1];
+                                  mac = argArr[2];
+                                  serviceID = argArr[3];
+                                  
+                                  SetlocalStorage("UserID", accountID);
+                                  SetlocalStorage("AuthKey", authKey);
+                                  SetlocalStorage("mac", mac);
+                                  SetlocalStorage("serviceID", serviceID);
+                                  SetlocalStorage("useProxy", "false");
+                                  SetlocalStorage("firstSort", 0);
+                                  // 모든 클릭 이벤트 id 받기
+                                  // $(window).on('click', clickFunc);
+                                  
+                                  
+                                  window.addEventListener('load', function() {
+                                                          new FastClick(document.body);
+                                                          }, false);
+                                   
+                                  });
+                                  
+                                  // 모든 클릭 이벤트 id 받기
+                                  /*
+                                   function clickFunc(obj) {
+                                   alert(obj.target.id);
+                                   }
+                                   */
+            
+            // 새폴더 생성 & 폴더명 변경 시, 엔터키로 자동 실행
+            /*
+             window.document.onkeydown= function(e){
+             if(e.keyCode == 13) {
+             if($('#newFolderName').is(':focus')) {
+             $('#newFolderName').blur();
+             newFolderCreate();
+             }
+             else if($('#renameName').is(':focus')) {
+             $('#renameName').blur();
+             rename();
+             }
+             }
+             }
+             */
+            /*
+            function leftMenuManager() {
+                var leftMenuPosition = "";
+                var contentsPosition = "";
+                
+                if ( $("nav").is(":visible") )
+                {
+                    if(isSplit == "yes") { leftMenuPosition = "-36%"; contentsPosition = "64%"; }
+                    else { leftMenuPosition = "-26%"; contentsPosition = "74%"; }
+                    
+                    $("nav").animate({"left" : leftMenuPosition}, 500, function(){$(this).hide();controlShowPath();});
+                    $(".main-contents").animate({"left" : "0%", "width" : "100%"}, 500);
+                }
+                else
+                {
+                    if(isSplit == "yes") { leftMenuPosition = "36%"; contentsPosition = "64%"; }
+                    else { leftMenuPosition = "26%"; contentsPosition = "74%"; }
+                    
+                    $("nav").show();
+                    $("nav").animate({"left" : "0%"}, 500);
+                    $(".main-contents").animate({"left" : leftMenuPosition, "width" : contentsPosition}, 500, function(){controlShowPath();});
+                }
+            }
+            */
+            
+            function leftMenuManager() {
+                var leftMenu = $("nav");
+                if ( leftMenu.hasClass("openedMenu") )  {
+                    $(".openedMenu").removeClass("openedMenu").addClass("closedMenu");
+                    $(".dialog").hide();
+                    $(".blank").off("click").hide();
+                } else {
+                    $(".closedMenu").removeClass("closedMenu").addClass("openedMenu");
+                }
+            }
+            
+            // <body>로드시 호출 함수
+            function onBodyLoad() {
+                appendBMFolderList("menu");
+                var fontSize = GetlocalStorage("fontSize") == null? "Middle" : GetlocalStorage("fontSize");
+                changeFontSize(fontSize);
+                var theme = GetlocalStorage("theme");
+                if ( theme == null || theme == "undefined" )    theme = "Blue";
+                changeTheme(theme);
+                setTimeout(function(){document.addEventListener("deviceready", init, false);}, 500);
+            }
+            
+            // onBodyLoad() -> init() 호출
+            function init() {
+                try{
+                    deviceUtil = new DeviceUtil();
+                    deviceUtil.langID(function(r) {
+                                      retValueArr = new Array();
+                                      retValueArr = r.split("\t");
+                                      SetlocalStorage("OSLang", retValueArr[0]);
+                                      if(retValueArr[1] != "" && retValueArr[1] != null) SetlocalStorage("Officesuite", retValueArr[1]);
+                                      else            SetlocalStorage("Officesuite", "nonexistent");
+                                      getLoginLang();
+                                      }, function(r) {alert("init ERR: "+ r);});
+                                      
+                                      
+                                      SetlocalStorage("DeviceID", device.uuid); // 기기 고유 번호
+                                      deviceUtil.DevicePlatform(SetDeviceInfo, function(r){alert("Set deivce info ERR: "+ r)});
+                                      regDevice();
+                }catch(e){
+                    alert('err = ' + e);
+                }
+            }
+            
+            /* onBodyLoad() -> init() -> SetDeviceInfo()
+             * 디바이스 정보 저장
+             */
+            function SetDeviceInfo(r) {
+                RetArr = new Array();
+                RetArr = r.split("\t");
+                SetlocalStorage("Platform", RetArr[0]); // 값이 '12'로 고정되었다.
+                SetlocalStorage("PUSHID", RetArr[1]); // CommonPack.java의 RegID값
+                
+            }
+            
+            function getSplit(){
+                var bodyW = $("body").width();
+                var winW = $(window).width();
+                if ( bodyW < winW * 0.4 )       $("head").append("<link rel='stylesheet' type='text/css' href='css/size30.css'>");
+                else if ( bodyW < winW * 0.6 )  $("head").append("<link rel='stylesheet' type='text/css' href='css/size50.css'>");
+                else if ( bodyW < winW * 0.8 )  $("head").append("<link rel='stylesheet' type='text/css' href='css/size70.css'>");
+                else if ( bodyW == winW )       $("head").append("<link rel='stylesheet' type='text/css' href='css/size100.css'>");
+            }
+            
+            var crashTimer;
+            var crashIsTrue = false;
+            function mouseDown() {
+                crashIsTrue = true;
+                crashTimer = setTimeout(function(){ holding();}, 3000);
+            }
+            
+            function holding() {
+                if(crashTimer)
+                clearTimeout(timer);
+                if(crashIsTrue) {
+                    deviceUtil = new DeviceUtil();
+                    deviceUtil.alertCrashLog(function(){}, function(){});
+                }
+            }
+            
+            function mouseUp() {
+                crashIsTrue = false;
+            }
+            
+            //디바이스 등록
+            function regDevice() {
+                protocol= "http";
+                // npdocapp.koreanre.co.kr
+                var server= "npdocapp.koreanre.co.kr";
+                //var server = "10.10.1.127";
+                var id= accountID;
+                var password= " ";
+                // setting port
+                
+                if(server.indexOf(":") == -1) {
+                    port= "80";
+                    SSLPort= "443";
+                } else {
+                    port= server.substring(server.lastIndexOf(":")+ 1);
+                    SSLPort= server.substring(server.lastIndexOf(":")+ 1);
+                    server= server.substring(0, server.lastIndexOf(":"));
+                }
+                
+                tmpAgent = GetlocalStorage("Platform");
+                tmpDeviceID = GetlocalStorage("DeviceID");
+                tmpServerIP= GetlocalStorage("webserver");
+                tmpUserID= GetlocalStorage("id");
+                
+                
+                if(tmpAgent == "11")  tmpAgent= "IPhone";
+                else if(tmpAgent == "12") tmpAgent= "AndroidPhone";
+                else if(tmpAgent == "13") tmpAgent= "Windows";
+                else       tmpAgent= "Tablet";
+                tmpAgent = "11";
+                
+                tmpDeviceID1= tmpDeviceID.substr(0, 25);
+                tmpDeviceID2= tmpDeviceID.substr(25);
+                tmpDeviceID= tmpDeviceID1 + " " + tmpDeviceID2;
+                
+                SetlocalStorage("useProxy", "false");
+                getserverinfo(protocol, port, server);
+                tmpDeviceID= GetlocalStorage("DeviceID");
+                pushid= GetlocalStorage("PUSHID");
+                DeviceInfo= device.name + "\t" + device.platform +"\t" + tmpDeviceID + "\t" + device.version +"\t"+tmpAgent;
+                value= DeviceInfo+"\t"+id+"\t"+password+"\t"+pushid;
+                SetlocalStorage("webserver", server);
+                SetlocalStorage("id", id);
+                cryptutil= new CryptUtil();
+                cryptutil.call(function(r) {
+                               loginRetArr= new Array();
+                               loginRetArr= r.split("\t");
+                               
+                               authID = GetlocalStorage("UserID");
+                               AuthKey = GetlocalStorage("AuthKey");
+                               AuthMac = GetlocalStorage("mac");
+                               
+                               tmpparaData= "DeviceName=" + loginRetArr[0] + ";DevicePlatform=" + loginRetArr[1] + ";DeviceID=" + loginRetArr[2] + ";SofewareVer=" + loginRetArr[3]+";ModelName="+loginRetArr[4]
+                               + ";UserID=" + loginRetArr[5] + ";Password=" + loginRetArr[6]+ ";PushRegID=" + loginRetArr[7];
+                               tmpCookie= "PlusVersion=version 1.0"+ ";RegSession="+ loginRetArr[8];
+                               LoginparaData= "Server="+server+"&Port="+port+"&Url="+"/webapp/device_reg_request.jsp"+"&CookieData="+tmpCookie+"&ParamData="+tmpparaData+"&AccountId="+authID+"&AuthKey="+AuthKey+"&mac="+AuthMac+"&serviceID="+serviceID;
+                               if(useProxy == "true"){
+                               us = new ProxyConnect();
+                               us.proxyconn(success_reg, function(){alert('fail');}, protocol, port, server, "POST", "/webapp/protocal_mgmt.jsp", LoginparaData);
+                               } else {
+                               LoginRetVal= AjaxRequest(protocol, port, server, "POST", "/webapp/protocal_mgmt.jsp", LoginparaData);
+                               var checkretvalArr= new Array();
+                               checkretvalArr= LoginRetVal.split("\r\n");
+                               if("version 1.0" == checkretvalArr[0].toLowerCase()) {
+                               if("success" == checkretvalArr[1].toLowerCase()
+                                  || "Already Exist" == checkretvalArr[1]
+                                  || "Incorrect Password" == checkretvalArr[1]) {
+                               logincheck();
+                               } else if(checkretvalArr[1].toLowerCase() != "Auth Fail"){
+                               alert(checkretvalArr[1].toLowerCase());
+                               AM = new AppManager();
+                               setTimeout(function(){
+                                          AM.auth_get();
+                                          AM.finishapp();
+                                          }, 1000);
+                               }
+                               } else if(checkretvalArr[1].toLowerCase() != "Auth Fail"){
+                               navigator.notification.alert(LoginRetVal, null, 'Login', 'OK');
+                               AM = new AppManager();
+                               setTimeout(function(){
+                                          AM.auth_get();
+                                          AM.finishapp();
+                                          }, 1000);
+                               }
+                               }
+                               }, function(e){alert("Device regist ERR: "+ e)}, value, GetlocalStorage("SiteID"));
+            }
+            
+            
+            function success_reg(LoginRetVal){
+                var checkretvalArr= new Array();
+                checkretvalArr= LoginRetVal.split("\r\n");
+                if("version 1.0" == checkretvalArr[0].toLowerCase()) {
+                    if("success" == checkretvalArr[1].toLowerCase()
+                       || "Already Exist" == checkretvalArr[1]
+                       || "Incorrect Password" == checkretvalArr[1]) {
+                        logincheck();
+                    } else {
+                        alert(checkretvalArr[1].toLowerCase());
+                    }
+                } else
+                navigator.notification.alert(LoginRetVal, null, 'Login', 'OK');
+            }
+            // 로그인 진행
+            function logincheck() {
+                var secure = GetlocalStorage("secureStatus");
+                var auto = GetlocalStorage("auto");
+                var server = "npdocapp.koreanre.co.kr";
+                //var server = "10.10.1.127";
+                var id = accountID;
+                var password = " ";
+                // Login type 확인
+                LoginType = "Normal";
+                /* sel = document.getElementById('login_type');
+                 if(sel.options[sel.selectedIndex].value != "login") {
+                 if(GetlocalStorage("auto") == "true") {
+                 navigator.notification.alert(login_alert_not_support_auto, null, login_alert_title, 'OK');
+                 SetlocalStorage("auto", "false");
+                 }
+                 if(sel.options[sel.selectedIndex].value == "guest") LoginType= "GuestID";
+                 else if(sel.options[sel.selectedIndex].value == "offline") {
+                 // explorer.html의 타이틀 로드 시간이 걸리기 때문에, setTimeout 설정
+                 setTimeout(function() {offlineLogin(id, password);}, 400);
+                 return;
+                 }
+                 } */
+                // 보안접속 여부 확인
+                if(secure == "true") secure= "yes";
+                else     secure= "no";
+                protocol= "http";
+                port= GetlocalStorage("port");
+                SSLPort= GetlocalStorage("securityPort");
+                var clientconfigs= GetlocalStorage("nClientConfigs");
+                var hide_ssl= "";
+                if(clientconfigs != null && clientconfigs != "") {
+                    clientconfigArr= clientconfigs.split(",");
+                    hide_ssl= clientconfigArr[0] & 1024;
+                    if(hide_ssl != 0 && hide_ssl != "" && hide_ssl != null)
+                    SetlocalStorage("SSL", "no");
+                    else if(secure == "yes") {
+                        SetlocalStorage("SSL", "yes");
+                        SetlocalStorage("SSLPort", SSLPort);
+                    } else
+                    SetlocalStorage("SSL", "no");
+                } else
+                SetlocalStorage("SSL", "no");
+                
+                try{
+                    gettabletinfo(protocol, port, server);
+                    getserverinfo(protocol, port, server);
+                    login(id, password, LoginType);
+                }catch(e){
+                    alert('err = ' + e);
+                }
+                
+            }
+            
+            
+            // 언어 불러오기
+            function getLoginLang() {
+                langfile = "./lang/kor.xml";
+                
+                OSLang= GetlocalStorage("OSLang");
+                if(OSLang == "eng") langfile = "./lang/eng.xml";
+                else if(OSLang == "jpn") langfile = "./lang/jpn.xml";
+                else if(OSLang == "chn") langfile = "./lang/chn.xml";
+                
+                $.ajax({
+                       type: "get",
+                       dataType: "xml",
+                       url: langfile,
+                       success: function(xml) {
+                       lang = $(xml).find("lang");
+                       
+                       /*	UI	*/
+                       // 새폴더 생성
+                       $('#newFd_lang_cancel').text(lang.find("newFd_lang_cancel").text());
+                       $('#newFd_lang_title').text(lang.find("newFd_lang_title").text());
+                       $('#newFd_lang_create').text(lang.find("newFd_lang_create").text());
+                       // 폴더명 변경
+                       $('#rename_lang_cancel').text(lang.find("rename_lang_cancel").text());
+                       $('#rename_lang_title').text(lang.find("rename_lang_title").text());
+                       $('#rename_lang_change').text(lang.find("rename_lang_change").text());
+                       // explorerForm
+                       explorer_lang_title_server= lang.find("explorer_lang_title_server").text();
+                       explorer_lang_title_local= lang.find("explorer_lang_title_local").text();
+                       $("#multiple_lang_cancel").text(lang.find("multiple_lang_cancel").text());
+                       $("#multiple_lang_sign").text(lang.find("multiple_lang_sign").text());
+                       $("#multiple_lang_allSelcet").text(lang.find("multiple_lang_allSelcet").text());
+                       $("#work_lang_cancel").text(lang.find("work_lang_cancel").text());
+                       $("#work_lang_apply").text(lang.find("work_lang_apply").text());
+                       $("#documentSel_lang_server").text(explorer_lang_title_server);
+                       $("#documentSel_lang_local").text(explorer_lang_title_local);
+                       //좌측메뉴
+                       $("#serverDocumentBox_lang_title").text(lang.find("serverDocumentBox_lang_title").text());
+                       $("#localDocumentBox_lang_title").text(lang.find("localDocumentBox_lang_title").text());
+                       $("#ldb_lang_local").text(lang.find("ldb_lang_local").text());
+                       // 정렬 다이얼로그
+                       $("#sort_lang_title").text(lang.find("sort_lang_title").text());
+                       $("#sort_lang_LtH").text(lang.find("sort_lang_LtH").text());
+                       $("#sort_lang_HtL").text(lang.find("sort_lang_HtL").text());
+                       $("#sort_lang_new").text(lang.find("sort_lang_new").text());
+                       $("#sort_lang_old").text(lang.find("sort_lang_old").text());
+                       // 단일 파일 작업 다이얼로그
+                       $("#fileFunc_lang_copy").text(lang.find("fileFunc_lang_copy").text());
+                       $("#fileFunc_lang_move").text(lang.find("fileFunc_lang_move").text());
+                       $("#fileFunc_lang_chName").text(lang.find("fileFunc_lang_chName").text());
+                       $("#fileFunc_lang_delete").text(lang.find("fileFunc_lang_delete").text());
+                       // 하단 작업 창
+                       $("#singleTool_lang_cameraOn").text(lang.find("singleTool_lang_camera").text());
+                       $("#singleTool_lang_cameraOff").text(lang.find("singleTool_lang_camera").text());
+                       $("#singleTool_lang_newFolderOn").text(lang.find("singleTool_lang_newFolder").text());
+                       $("#singleTool_lang_newFolderOff").text(lang.find("singleTool_lang_newFolder").text());
+                       $("#multipleTool_lang_move").text(lang.find("multipleTool_lang_move").text());
+                       $("#multipleTool_lang_copy").text(lang.find("multipleTool_lang_copy").text());
+                       $("#multipleTool_lang_newFolder").text(lang.find("multipleTool_lang_newFolder").text());
+                       $("#multipleTool_lang_delete").text(lang.find("multipleTool_lang_delete").text());
+                       $("#workTool_lang_newFolder").text(lang.find("workTool_lang_newFolder").text());
+                       // 사진 업로드 다이얼로그
+                       $("#picture_lang_title").text(lang.find("picture_lang_title").text());
+                       $("#picture_lang_pictureUpload").text(lang.find("picture_lang_pictureUpload").text());
+                       $("#picture_lang_videoUpload").text(lang.find("picture_lang_videoUpload").text());
+                       $("#piture_lang_pictureLoad").text(lang.find("piture_lang_pictureLoad").text());
+                       $("#picture_lang_videoLoad").text(lang.find("picture_lang_videoLoad").text());
+                       
+                       /*	alert	*/
+                       lang_alert_closeApp_title= lang.find("lang_alert_closeApp_title").text();
+                       lang_alert_not_exists_path= lang.find("lang_alert_not_exists_path").text();
+                       lang_alert_overwrite= lang.find("lang_alert_overwrite").text();
+                       lang_alert_offset= lang.find("lang_alert_offset").text();
+                       lang_alert_not_support_format= lang.find("lang_alert_not_support_format").text();
+                       lang_alert_path_exists_err= lang.find("lang_alert_path_exists_err").text();
+                       lang_alert_create_folder_fail= lang.find("lang_alert_create_folder_fail").text();
+                       lang_parameter_missing= lang.find("lang_parameter_missing").text();
+                       lang_server_error= lang.find("lang_server_error").text();
+                       lang_status_stop= lang.find("lang_status_stop").text();
+                       lang_login_incorrect_password= lang.find("lang_login_incorrect_password").text();
+                       lang_login_password_expire= lang.find("lang_login_password_expire").text();
+                       lang_login_domain_disk_overflow= lang.find("lang_login_domain_disk_overflow").text();
+                       lang_not_exists= lang.find("lang_not_exists").text();
+                       lang_login_guest_expire= lang.find("lang_login_guest_expire").text();
+                       lang_login_not_allowed_agent= lang.find("lang_login_not_allowed_agent").text();
+                       lang_exception_error= lang.find("lang_exception_error").text();
+                       lang_ip_filtered= lang.find("lang_ip_filtered").text();
+                       lang_server_busy= lang.find("lang_server_busy").text();
+                       lang_user_busy= lang.find("lang_user_busy").text();
+                       lang_access_denied= lang.find("lang_access_denied").text();
+                       lang_invalid_parameter= lang.find("lang_invalid_parameter").text();
+                       lang_disk_overflow= lang.find("lang_disk_overflow").text();
+                       lang_already_folder_exists= lang.find("lang_already_folder_exists").text();
+                       lang_already_file_error= lang.find("lang_already_file_error").text();
+                       lang_guest_root= lang.find("lang_guest_root").text();
+                       lang_sharing_violation= lang.find("lang_sharing_violation").text();
+                       lang_guest_data_root= lang.find("lang_guest_data_root").text();
+                       lang_already_file_exists= lang.find("lang_already_file_exists").text();
+                       lang_already_folder_error= lang.find("lang_already_folder_error").text();
+                       lang_has_acl_folder= lang.find("lang_has_acl_folder").text();
+                       lang_has_share_folder= lang.find("lang_has_share_folder").text();
+                       lang_substree_exists= lang.find("lang_substree_exists").text();
+                       lang_filename_filtered= lang.find("lang_filename_filtered").text();
+                       lang_upload_limit= lang.find("lang_upload_limit").text();
+                       lang_upload_busy= lang.find("lang_upload_busy").text();
+                       lang_partial_success= lang.find("lang_partial_success").text();
+                       lang_download_busy= lang.find("lang_download_busy").text();
+                       lang_license_expired= lang.find("lang_license_expired").text();
+                       lang_download_limit= lang.find("lang_download_limit").text();
+                       lang_login_not_exist_device= lang.find("lang_login_not_exist_device").text();
+                       lang_login_stop_device= lang.find("lang_login_stop_device").text();
+                       lang_login_lost_device= lang.find("lang_login_lost_device").text();
+                       lang_alert_not_exists_Officesuite= lang.find("lang_alert_not_exists_Officesuite").text();
+                       lang_alert_check_network= lang.find("lang_alert_check_network").text();
+                       network_alert_title= lang.find("network_alert_title").text();
+                       lang_alert_same_dir= lang.find("lang_alert_same_dir").text();
+                       lang_alert_closeApp= lang.find("lang_alert_closeApp").text();
+                       lang_alert_not_found_err= lang.find("lang_alert_not_found_err").text();
+                       lang_alert_security_err= lang.find("lang_alert_security_err").text();
+                       lang_alert_abort_err= lang.find("lang_alert_abort_err").text();
+                       lang_alert_not_readable_err= lang.find("lang_alert_not_readable_err").text();
+                       lang_alert_encoding_err= lang.find("lang_alert_encoding_err").text();
+                       lang_alert_no_modification_allowed_err= lang.find("lang_alert_no_modification_allowed_err").text();
+                       lang_alert_invalid_state_err= lang.find("lang_alert_invalid_state_err").text();
+                       lang_alert_syntax_err= lang.find("lang_alert_syntax_err").text();
+                       lang_alert_invalid_modification_err= lang.find("lang_alert_invalid_modification_err").text();
+                       lang_alert_quota_exceeded_err= lang.find("lang_alert_quota_exceeded_err").text();
+                       lang_alert_type_mismatch_err= lang.find("lang_alert_type_mismatch_err").text();
+                       lang_alert_valid_folder_name= lang.find("lang_alert_valid_folder_name").text();
+                       lang_alert_valid_folder_name_close= lang.find("lang_alert_valid_folder_name_close").text();
+                       lang_confrim_wifi = lang.find("lang_confrim_wifi").text();
+                       
+                       /* Toast */
+                       
+                       
+                       toast_lang_move = lang.find("toast_lang_move").text();
+                       toast_lang_copy = lang.find("toast_lang_copy").text();
+                       toast_lang_upload = lang.find("toast_lang_upload").text();
+                       toast_lang_download = lang.find("toast_lang_download").text();
+                       toast_lang_delete = lang.find("toast_lang_delete").text();
+                       
+                       },
+                       error: function(xhr, status, error) {
+                       navigator.notification.alert("Get language ERR: "+ status, null, 'Explorer', 'OK');
+                       navigator.notification.alert("Get language ERR: "+ error, null, 'Explorer', 'OK');
+                       }
+                       });
+            }
+            
+            function log(context) {
+                $('#log').html(context);
+            }
+            </script>
+            </head>
+    
+    <body onload="onBodyLoad()">
+        <div id="loadingPage" style="width:100%; height:100%; margin:0px; padding:0px; position:absolute; z-index: 99999;"> <img src="images/img/1.png" style="width:100%; height:100%;"></div>
+        <div class="blank"></div>
+        <header>
+            <!-- Logo -->
+            <label class="imgLabel" ontouchstart="mouseDown()" ontouchend="mouseUp()" ontouchmove="mouseUp()"></label>
+            <!-- multi open file button -->
+            <div data-state="default" ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' ontouchmove='touchEnd(this)' onclick="selectMode(true)"><img><span></span></div>
+            <!-- Back to viewer button -->
+            <div data-state="default" ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' ontouchmove='touchEnd(this)' onclick="backToViewer()"><img><span></span></div>
+            <!-- Refresh button -->
+            <div data-state="default" ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' ontouchmove='touchEnd(this)' onclick="refresh()"><img><span></span></div>
+            <!-- Setting button -->
+            <div data-state="default" ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' ontouchmove='touchEnd(this)' onclick="settingDialogManager('open')"><img><span></span></div>
+            <!-- //@@ -->
+            <div data-state="select" ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' ontouchmove='touchEnd(this)' onclick="openMultiFile()"><img><span></span></div>
+            <!-- -->
+            <div data-state="select" ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' ontouchmove='touchEnd(this)' onclick="selectMode(false)"><img><span></span></div>
+        </header>
+        
+        <section>
+            <!-- Dialog : setting -->
+            <div class="dialog-setting">
+                <!-- Setting dialog title -->
+                <div><label>환경설정</label><span></span></div>
+                
+                <ul>
+                    <!-- Client version -->
+                    <li>
+                        <div><label>버전정보</label><span></span></div>
+                        <div><label>ClouDoc Ver. 1.36.1</label><span></span></div>
+                    </li>
+                    <!-- User info -->
+                    <li>
+                        <div><label>사용자정보</label><span></span></div>
+                        <div><label></label><span></span></div>
+                        <input type="button" value="로그아웃" onclick="logoutConfirm()">
+                    </li>
+                    <!-- Theme setting -->
+                    <li>
+                        <div><label>색상</label><span></span></div>
+                        <div>
+                            <input id="NetID_setting_theme_blue" type="radio" name="theme" value="Blue"><label for="NetID_setting_theme_blue">Blue</label>
+                                <input id="NetID_setting_theme_gray" type="radio" name="theme" value="Gray"><label for="NetID_setting_theme_gray">Gray</label>
+                                    <input id="NetID_setting_theme_purple" type="radio" name="theme" value="Purple"><label for="NetID_setting_theme_purple">Purple</label>
+                                        <input id="NetID_setting_theme_lightBlue" type="radio" name="theme" value="LightBlue"><label for="NetID_setting_theme_lightBlue">LightBlue</label>
+<!--                                        <input id="NetID_setting_theme_red" type="radio" name="theme" value="Red"><label for="NetID_setting_theme_red">Red</label>-->
+                                            <script>$(".dialog-setting input[name=theme]").change(function(){changeTheme($(this).val());});</script>
+                                            <span></span>
+                                            </div>
+                    </li>
+                    <!-- Font setting -->
+                    <li>
+                        <div><label>폰트크기</label><span></span></div>
+                        <div>
+                            <input id="NetID_setting_fontSize_big" type="radio" name="font-size" value="Big"><label for="NetID_setting_fontSize_big">대</label>
+                                <input id="NetID_setting_fontSize_middle" type="radio" name="font-size" value="Middle"><label for="NetID_setting_fontSize_middle">중</label>
+                                    <input id="NetID_setting_fontSize_small" type="radio" name="font-size" value="Small"><label for="NetID_setting_fontSize_small">소</label>
+                                        <script>$(".dialog-setting input[name=font-size]").change(function(){changeFontSize($(this).val());});</script>
+                                        <span></span>
+                                        </div>
+                    </li>
+                    <!-- File list info -->
+                    <li>
+                        <div><label>&nbsp;&nbsp;&nbsp;파일</label><span style="height: 50%;"></span><br><label>상세정보</label><span style="height: 50%;"></span></div>
+                        <div>
+                            <input id="NetID_setting_fileShowInfo" type="radio" name="fileShowInfo" value="show"><label for="NetID_setting_fileShowInfo">표시</label>
+                                <input id="NetID_setting_fileHideInfo" type="radio" name="fileShowInfo" value="hide"><label for="NetID_setting_fileHideInfo">표시안함</label>
+                                    <script>$(".dialog-setting input[name=fileShowInfo]").change(function(){changeFileShowInfo($(this).val());});</script>
+                                    <span></span>
+                                    </div>
+                    </li>
+                        <!-- Bookmark list path option -->
+                        <li>
+                        <!-- <div><label>경로 표시</label><span></span></div> -->
+                        <div><label>즐겨찾기</label><span style="height: 50%;"></span><br><label>원문경로</label><span style="height: 50%;"></span></div>
+                            <div>
+                                <input id="NetID_setting_BMShowPath" type="radio" name="BMShowPath" value="show"><label for="NetID_setting_BMShowPath">표시</label>
+                                    <input id="NetID_setting_BMHidePath" type="radio" name="BMShowPath" value="hide"><label for="NetID_setting_BMHidePath">표시안함</label>
+                                        <script>$(".dialog-setting input[name=BMShowPath]").change(function(){changeBMShowPath($(this).val());});</script>
+                                        <span></span>
+                                        </div>
+                        </li>
+                        
+                        <!-- document preview option -->
+                        <li>
+                            <div><label>문서 프리뷰</label><span></span></div>
+                            <div>
+                                <input id="NetID_setting_use_preview" type="radio" name="usePreview" value="use"><label for="NetID_setting_use_preview">표시</label>
+                                    <input id="NetID_setting_unuse_preview" type="radio" name="usePreview" value="unuse"><label for="NetID_setting_unuse_preview">표시안함</label>
+                                        <script>$(".dialog-setting input[name=usePreview]").change(function(){usePreview($(this).val());});</script>
+                                        <span></span>
+                                        </div>
+                        </li>
+                        
+                        
+                        </br><input type="button" value="확인" onclick="settingDialogManager('close')">
+                        </ul>
+            </div>
+            <!-- Left menu -->
+            <nav class="openedMenu">
+                <!-- Menu title -->
+                <div class="nav-title" onclick="getDriveList()">
+                    <img src="images/icon/nav-folder-01.png"><label>문서함</label><span></span>
+                        </div>
+                <!-- Menu contents : Directory tree -->
+                <div>
+                    <!--<div class="tree-drive"><img src="images/icon/nav-folder-02.png"><label>개인문서함 (P)</label><span></span></div>
+                     <div class="tree-deeper">
+                     <div class="tree-folder tree-close"><label></label><label></label><label><label>닫힌폴더명</label><span></span></label></div>
+                     <div class="tree-folder tree-open"><label></label><label></label><label><label>열린폴더명</label><span></span></label></div>
+                     <div class="tree-deeper">
+                     <div class="tree-folder tree-close"><label></label><label></label><label><label>닫힌폴더명</label><span></span></label></div>
+                     <div class="tree-folder tree-close"><label></label><label></label><label><label>닫힌폴더명</label><span></span></label></div>
+                     </div>
+                     </div>
+                     <div class="tree-drive"><img src="images/icon/nav-folder-05.png" width="25px"><label>공유문서함 (Q)</label><span></span></label></div>
+                     <div class="tree-deeper">
+                     <div class="tree-folder tree-close"><label></label><label></label><label><label>닫힌폴더명</label><span></span></label></div>
+                     </div>-->
+                </div>
+                <!-- Menu contents : Bookmark -->
+                <div class="nav-title BM-title"><img src="images/icon/bookmark.png"><label>즐겨찾기</label><div class="BM-editBtn2" onclick="BMEditDialogManager('open')" style="float: right;  padding-right: 5%; height: 100%;"><img src="images/icon/cont-lineup.png"></div><span></span></div>
+                <div onclick="cancelEditMode()">
+                    <!--<div class="BM-folder" onclick="getBMList(this)">
+                     <div><img src="images/icon/nav-folder-03.png"><span></span></div>
+                     <div><label>즐겨찾기 폴더 명</label><span></span></div>
+                     </div>-->
+                    <!--<div class="BM-folder" onclick="getBMList(this)"><div><img src="images/icon/nav-folder-03.png"><span></span></div><div><label>부서통합</label><span></span></div></div>
+                     <div class="BM-folder" onclick="getBMList(this)"><div><img src="images/icon/nav-folder-03.png"><span></span></div><div><label>영업부 주문서</label><span></span></div></div>
+                     <div class="BM-folder" onclick="getBMList(this)"><div><img src="images/icon/nav-folder-03.png"><span></span></div><div><label>각 지점 내역</label><span></span></div></div>
+                     <div class="BM-folder" onclick="getBMList(this)"><div><img src="images/icon/nav-folder-03.png"><span></span></div><div><label>사용자 정의01</label><span></span></div></div>
+                     <div class="BM-folder" onclick="getBMList(this)"><div><img src="images/icon/nav-folder-03.png"><span></span></div><div><label>사용자 정의02</label><span></span></div></div>-->
+                </div>
+                <!-- Menu contents : Bookmark edit button -->
+                <div class="recentBtn" onclick="getBMList(this)"><img src="images/icon/recent.png"><label>최근 문서</label><span></span></div>
+            </nav>
+            
+            <!-- Main contents -->
+            <div class="main-contents openedMenu">
+                <!-- Dialog : sort -->
+                <div id="NetID_sortDialog" class="dialog dialog-fixed">
+                    <div class="dialog-title"><label>정렬기준</label><label class="imgLabel" onclick="sortDialogManager('close')"></label></div>
+                    <ul>
+                        <li onclick="sort_default()"><label>기본정렬</label><span></span></li>
+                        <li onclick="sort('LtH')"><label>파일명 오름차순</label><span></span></li>
+                        <li onclick="sort('HtL')"><label>파일명 내림차순</label><span></span></li>
+                        <li onclick="sort('new')"><label>최신 항목 우선</label><span></span></li>
+                        <li onclick="sort('old')"><label>오래된 항목 우선</label><span></span></li>
+                    </ul>
+                </div>
+                
+                <!-- Dialog : bookmark sort -->
+                <div id="NetID_BMSortDialog" class="dialog dialog-fixed">
+                    <div class="dialog-title"><label>정렬기준</label><label class="imgLabel" onclick="BMSortDialogManager('close')"></label></div>
+                    <ul>
+                        <li onclick="BMSort('Reg')"><label>등록순</label><span></span></li>
+                        <li onclick="BMSort('LtH')"><label>파일명 오름차순</label><span></span></li>
+                        <li onclick="BMSort('HtL')"><label>파일명 내림차순</label><span></span></li>
+                        <li onclick="BMSort('User')"><label>사용자 정렬</label><span></span></li>
+                    </ul>
+                </div>
+                
+                <!-- Dialog : create bookmark folder -->
+                <div id="NetID_BMFolAppendDialog" class="dialog dialog-input">
+                    <div class="dialog-title"><label>새폴더 생성</label><label class="imgLabel" onclick="BMFolAppendDialogManager('close')"></label></div>
+                    <div><input type="text" placeholder="폴더명을 입력해 주세요"><span></span></div>
+                    <div>
+                        <input type="button" value="확인" onclick="appendBMFolder()">
+                            <input type="button" value="취소" onclick="BMFolAppendDialogManager('close')">
+                    </div>
+                </div>
+                
+                <!-- Dialog : rename bookmark folder -->
+                <div id="NetID_BMFolChangeDialog" class="dialog dialog-input">
+                    <div class="dialog-title"><label>이름변경</label><label class="imgLabel" onclick="BMFolChangeDialogManager('close')"></label></div>
+                    <div><input type="hidden"><input type="text"><span></span></div>
+                    <div>
+                        <input type="button" value="확인" onclick="changeBMFolder()">
+                            <input type="button" value="취소" onclick="BMFolChangeDialogManager('close')">
+                    </div>
+                </div>
+                
+                <!-- Dialog : bookmark append -->
+                <div class="dialog dialog-BM dialog-BM-append">
+                    <input type="hidden"><input type="hidden"><input type="hidden"><input type="hidden">
+                        <div class="dialog-title"><label>즐겨찾기 추가</label><label class="imgLabel" onclick="BMAppendDialogManager('close', '', '', '')"></label></div>
+                        <ul>
+                            <!--<li><label></label><label>부서통합</label></li>
+                             <li><label></label><label>영업부 주문서</label></li>
+                             <li><label></label><label>각 지점 내역</label></li>
+                             <li><label></label><label>사용자 정의01</label></li>
+                             <li><label></label><label>사용자 정의02</label></li>-->
+                        </ul>
+                        </div>
+                
+                <!-- Dialog : bookmark edit -->
+                <div class="dialog dialog-BM dialog-BM-edit">
+                    <div class="dialog-title"><label>즐겨찾기 편집</label><label class="imgLabel" onclick="BMEditDialogManager('close')"></label></div>
+                    <ul>
+                        <!--<li><label onclick="removeBMFolder(this)"></label><label></label><label>부서통합</label><label>수정</label></li>
+                         <li><label onclick="removeBMFolder(this)"></label><label></label><label>영업부 주문서</label><label>수정</label></li>
+                         <li><label onclick="removeBMFolder(this)"></label><label></label><label>각 지점 내역</label><label>수정</label></li>
+                         <li><label onclick="removeBMFolder(this)"></label><label></label><label>사용자 정의01</label><label>수정</label></li>
+                         <li><label onclick="removeBMFolder(this)"></label><label></label><label>사용자 정의02</label><label>수정</label></li>
+                         <li><label onclick="removeBMFolder(this)"></label><label></label><label>사용자 정의03</label><label>수정</label></li>
+                         <li><label onclick="removeBMFolder(this)"></label><label></label><label>사용자 정의04</label><label>수정</label></li>
+                         <li><label onclick="removeBMFolder(this)"></label><label></label><label>시용자 정의05</label><label>수정</label></li>-->
+                    </ul>
+                    <div>
+                        <input type="button" value="새폴더" onclick="BMFolAppendDialogManager('open')">
+                        <input type="button" value="확인" onclick="saveBMFolOrder()"><span></span>
+                    </div>
+                </div>
+                
+                <!-- Dialog : bookmark remove -->
+                <div id="NetID_BMRemoveDialog" class="dialog dialog-confirm">
+                    <div class="dialog-title"><label style="margin: 0px;">삭제 하시겠습니까?</label><span></span></div>
+                    <div><label></label><span></span></div>
+                    <div>
+                        <input type="button" value="확인" onclick="removeBM(this.id)">
+                            <input type="button" value="취소" onclick="BMRemoveDialogManager('close', '')"><span></span>
+                    </div>
+                </div>
+                
+                <!-- Contents title : normal -->
+                <div class="contents-title openedMenu"  onclick="$('.contents-search input').val('');searchInput();">
+                    <!-- Close menu button -->
+                    <img src="images/icon/nav-button.png" onclick="leftMenuManager()">
+                        <!-- Current route -->
+                        <div id="NetID_explorerDir" ><img src="images/icon/cont-title-01.png" onclick="upFolder()"><label></label><label id="NetID_currentFolder"></label><span></span></div>
+                        <!-- Sort button -->
+                        <div onclick="sortDialogManager('open')"><label>정렬</label><img src="images/icon/cont-lineup.png"><span></span></div>
+                        </div>
+                <!-- Contents title : bookmark edit -->
+                <div class="contents-title bookmark-title openedMenu"  onclick="$('.contents-search input').val('');searchInput();">
+                    <!-- Close menu button -->
+                    <img src="images/icon/nav-button.png" onclick="leftMenuManager()">
+                    <!-- Current route -->
+                    <div><img src="images/icon/BM-blue.png"><label>즐겨찾기</label><label id="NetID_currentBMFolder"></label><span></span></div>
+                    <!-- Sort button -->
+                    <div onclick="BMSortDialogManager('open')"><label>정렬</label><img src="images/icon/cont-lineup.png"><span></span></div>
+                    <!-- Edit button -->
+                    <div onclick="editMode()"><label>편집</label><img src="images/icon/cont-edit.png"><span></span></div>
+                </div>
+                <!-- Contents title : recent-title -->
+                <div class="contents-title recent-title openedMenu"  onclick="$('.contents-search input').val('');searchInput();">
+                    <!-- Close menu button -->
+                    <img src="images/icon/nav-button.png" onclick="leftMenuManager()">
+                    <!-- Current route -->
+                    <div><img src="images/icon/recent_title.png"><label>최근 문서</label><label id="NetID_currentBMFolder"></label><span></span></div>
+                    <!-- clear button -->
+                    <div class="recent-clear" onclick="recentClear()" style="height: 100%; position: absolute; top: 0; text-align: right;"><label></label><img src="images/icon/recent_clear.png"><span></span></div>
+                    <!-- Sort button -->
+                    <div style="height: 100%; position: absolute; top: 0; right: 0; text-align: right;"><label></label><img src=""><span></span></div>
+                </div>
+
+                <!-- Contents search -->
+                <div class="contents-search openedMenu"><input type="text" onkeyup="searchInput()"></button><span></span>
+                    </div>
+                
+                <!-- Contents file list -->
+                <div class="contents-list openedMenu">
+                </div>
+            </div>
+            <div class="BM-bottom openedMenu"><input type="button" value="위로" onclick="BMEdit_changeOrder('up')"><input type="button" value="아래로" onclick="BMEdit_changeOrder('down')"><input type="button" value="완료"><input type="button" value="취소" onclick="cancelEditMode(true)"><span></span></div>
+        </section>
+    </body>
+</html>

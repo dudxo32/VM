@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+        
+        <title>코리안리재보험 문서중앙화</title>
+        <link rel="stylesheet" type="text/css" href="css/reset.css" />
+        <link rel="stylesheet" type="text/css" href="css/layout.css" />
+        <link rel="stylesheet" type="text/css" href="css/content.css" />
+        
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/common.js"></script>
+        <script type="text/javascript" src="js/util/webstorage.js"></script>
+        <script type="text/javascript" src="js/tablet/explorer.js"></script>
+        <script type="text/javascript" src="js/util/childbrowser.js"></script>
+        <script type="text/javascript" src="js/util/utilsocket.js"></script>
+        <script type="text/javascript" src="js/plugin/UpDownManager.js"></script>
+        <script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+        <script type="text/javascript" src="js/plugin/CryptUtil.js"></script>
+        <script type="text/javascript" src="js/plugin/AppManager.js"></script>
+        <script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+        <script type="text/javascript" src="js/plugin/DeviceUtil.js"></script>
+        <script type="text/javascript" src="js/plugin/Entertainment.js"></script>
+        <script type="text/javascript" src="js/plugin/ActivityView.js"></script>
+        <script type="text/javascript" src="js/plugin/ProxyConnect.js"></script>
+        <script type="text/javascript" src="js/plugin/ProxyPlugin.js"></script>
+        <script type="text/javascript" src="js/plugin/AlbumPlugin.js"></script>
+        <script type="text/javascript" src="js/tablet/getdrivelist.js"></script>
+        <script type="text/javascript" src="js/tablet/getlist.js"></script>
+        <script type="text/javascript" src="js/tablet/LocalFSManager.js"></script>
+        <script type="text/javascript" src="js/manager/alertMessage.js"></script>
+        <script type="text/javascript" src="js/manager/sort.js"></script>
+        <script type="text/javascript" src="js/manager/getserverinfo.js"></script>
+        <script type="text/javascript" src="js/manager/mobile/loginmanager.js"></script>
+        <script type="text/javascript" src="js/tablet/alarm.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                              $("body").css({"width" : "100%", "height" : "100%"});
+                              });
+                              
+                              function onBodyLoad() {
+                                  getExplorerLang();
+                              }
+        
+        function leftMenuManager() {
+            if ( $("nav").is(":visible") )
+            {
+                $("nav").animate({"left" : "-26%"}, 100, function(){$(this).hide();});
+                $(".main-contents").animate({"left" : "0%", "width" : "100%"}, 100);
+                $(".contents-title > div:nth-child(1)").show();
+            }
+            else
+            {
+                $("nav").show();
+                $("nav").animate({"left" : "0%"}, 100);
+                $(".main-contents").animate({"left" : "26%", "width" : "74%"}, 100);
+                $(".contents-title > div:nth-child(1)").hide();
+            }
+        }
+        
+        // 언어 불러오기
+        function getExplorerLang() {
+            langfile = "./lang/kor.xml";
+            
+            var OSLang= GetlocalStorage("OSLang");
+            if ( OSLang == "eng" )      langfile = "./lang/eng.xml";
+            else if ( OSLang == "jpn" )   langfile = "./lang/jpn.xml";
+            else if ( OSLang == "chn" )   langfile = "./lang/chn.xml";
+            
+            // 언어에 따른 CSS 수정
+            if ( OSLang == "jpn" )
+            {
+                $("#multiple_lang_sign").css("font-size",  (parseInt($("#multiple_lang_sign").css("font-size")) - 2) + "px");
+            }
+            
+            $.ajax({
+                   type: "get",
+                   dataType: "xml",
+                   url: langfile,
+                   success: function(xml) {
+                   lang = $(xml).find("lang");
+                   
+                   lang_alert = lang.find("lang_alert").text();
+                   lang_cancel = lang.find("lang_cancel").text();
+                   lang_day = lang.find("lang_day").text();
+                   lang_doc_export = lang.find("lang_doc_export").text();
+                   lang_enter_contents = lang.find("lang_enter_contents").text();
+                   lang_enter_password = lang.find("lang_enter_password").text();
+                   lang_enter_reading_count = lang.find("lang_enter_reading_count").text();
+                   lang_enter_title = lang.find("lang_enter_title").text();
+                   lang_external_webLink = lang.find("lang_external_webLink").text();
+                   lang_external_linkMail = lang.find("lang_external_linkMail").text();
+                   lang_input_receiver = lang.find("lang_input_receiver").text();
+                   lang_linkMail = lang.find("lang_linkMail").text();
+                   lang_max_export_expire = lang.find("lang_max_export_expire").text();
+                   lang_ok = lang.find("lang_ok").text();
+                   lang_overflow_export_size = lang.find("lang_overflow_export_size").text();
+                   lang_secure_linkMail = lang.find("lang_secure_linkMail").text();
+                   lang_secure_webLink = lang.find("lang_secure_webLink").text();
+                   lang_select_approver = lang.find("lang_select_approver").text();
+                   lang_select_date = lang.find("lang_select_date").text();
+                   lang_select_expire_date = lang.find("lang_select_expire_date").text();
+                   lang_webLink = lang.find("lang_webLink").text();
+                   lang_while_login = lang.find("lang_while_login").text();
+                   $("#lang_no_available_func").text(lang.find("lang_no_available_func").text());
+                   
+                   /*   UI   */
+                   // 새폴더 생성
+                   $("#newFd_lang_cancel").text(lang.find("lang_cancel").text());
+                   $("#newFd_lang_title").text(lang.find("lang_input_folder_name").text());
+                   $("#NetID_newFolderName").attr("placeholder", " " + lang.find("lang_new_folder").text());
+                   $("#newFd_lang_create").text(lang.find("lang_create").text());
+                   // 폴더명 변경
+                   $("#rename_lang_cancel").text(lang.find("lang_cancel").text());
+                   $("#rename_lang_title").text(lang.find("lang_input_change_folder_name").text());
+                   $("#rename_lang_change").text(lang.find("lang_change").text());
+                   // explorerForm
+                   lang_select_file = lang.find("lang_select_file").text();
+                   lang_selected_file_count = lang.find("lang_selected_file_count").text();
+                   explorer_lang_title_server = lang.find("lang_server_documents_drive").text();
+                   explorer_lang_title_local = lang.find("lang_local_documents_drive").text();
+                   explorer_lang_title_external = lang.find("lang_external_storage").text();
+                   $("#multiple_lang_sign").text(lang.find("lang_select_file").text());
+                   $("#work_lang_cancel").text(lang.find("lang_cancel").text());
+                   lang_doCopy = lang.find("lang_do_copy").text();
+                   lang_doMove = lang.find("lang_do_move").text();
+                   $("#documentSel_lang_server").text(explorer_lang_title_server);
+                   $("#documentSel_lang_local").text(explorer_lang_title_local);
+                   $("#documentSel_lang_external_storage").text(explorer_lang_title_external);
+                   $("#explorer_lang_server_notExist").text(lang.find("lang_not_exist_low").text());
+                   $("#explorer_lang_local_notExist").text(lang.find("lang_not_exist_low").text());
+                   //좌측메뉴
+                   $("#menu_lang_title").text(lang.find("lang_alert").text());
+                   $("#menu_lang_notice").text(lang.find("lang_notice").text());
+                   $("#menu_lang_docExport").text(lang_doc_export);
+                   $("#menu_lang_webLink").text(lang_webLink);
+                   $("#menu_lang_community").text(lang.find("lang_community").text());
+                   $("#menu_lang_driveEvent").text(lang.find("lang_driveEvent").text());
+                   $("#menu_lang_linkMail").text(lang.find("lang_linkMail").text());
+                   $("#menu_lang_logout").text(lang.find("lang_logout").text());
+                   // 정렬 다이얼로그
+                   $("#sort_lang_title").text(lang.find("lang_sort_standard").text());
+                   $("#sort_lang_LtH").text(lang.find("lang_file_name_LtH").text());
+                   $("#sort_lang_HtL").text(lang.find("lang_file_name_HtL").text());
+                   $("#sort_lang_new").text(lang.find("lang_latest_entries_first").text());
+                   $("#sort_lang_old").text(lang.find("lang_oldest_entries_first").text());
+                   // 단일 파일 작업 다이얼로그
+                   $("#fileFunc_lang_copy").text(lang.find("lang_copy").text());
+                   $("#fileFunc_lang_move").text(lang.find("lang_move").text());
+                   $("#fileFunc_lang_chName").text(lang.find("lang_rename").text());
+                   $("#fileFunc_lang_docExport").text(lang.find("lang_doc_export_request").text());
+                   $("#fileFunc_lang_webLink").text(lang.find("lang_webLink_copy").text());
+                   $("#fileFunc_lang_linkMail").text(lang.find("lang_linkMail_send").text());
+                   $("#fileFunc_lang_delete").text(lang.find("lang_delete").text());
+                   $("#fileFunc_lang_restore").text(lang.find("lang_restore").text());
+                   $("#fileFunc_lang_delete2").text(lang.find("lang_delete").text());
+                   // 반출 다이얼로그
+                   $("#export_lang_title").text(lang.find("lang_export").text());
+                   $("#export_lang_docExport").text(lang.find("lang_doc_export_request").text());
+                   $("#export_lang_webLink").text(lang.find("lang_webLink_copy").text());
+                   $("#export_lang_linkMail").text(lang.find("lang_linkMail_send").text());
+                   // 하단 작업 창
+                   $("#bottomTool_lang_move").text(lang.find("lang_move").text());
+                   $("#bottomTool_lang_copy").text(lang.find("lang_copy").text());
+                   $("#bottomTool_lang_export").text(lang.find("lang_export").text());
+                   $("#bottomTool_lang_camera").text(lang.find("lang_photo_upload").text());
+                   $("#bottomTool_lang_newFolder").text(lang.find("lang_new_folder").text());
+                   $("#bottomTool_lang_delete").text(lang.find("lang_delete").text());
+                   // 사진 업로드 다이얼로그
+                   $("#picture_lang_title").text(lang.find("lang_photo_upload").text());
+                   $("#picture_lang_pictureUpload").text(lang.find("lang_picture_upload").text());
+                   $("#picture_lang_videoUpload").text(lang.find("lang_video_upload").text());
+                   $("#piture_lang_pictureLoad").text(lang.find("lang_picture_load").text());
+                   $("#picture_lang_videoLoad").text(lang.find("lang_video_load").text());
+                   // Progress
+                   $("#progress_lang_currentFileName").text(lang.find("lang_current_file").text());
+                   $("#progress_lang_fileCount").text(lang.find("lang_whole_file").text());
+                   progress_lang_download = lang.find("lang_file_downlaod").text();
+                   progress_lang_download_pause = lang.find("lang_file_download_pause").text();
+                   progress_lang_upload = lang.find("lang_file_upload").text();
+                   progress_lang_upload_pause = lang.find("lang_file_upload_pause").text();
+                   progress_lang_pause = lang.find("lang_pause").text();
+                   progress_lang_resume = lang.find("lang_resume").text();
+                   // 승인권자 목록
+                   $("#approverList_lang_title").text(lang.find("lang_approver_list").text());
+                   // 반출 화면
+                   $("#lang_export_receiver").text(lang.find("lang_receiver").text());
+                   $("#NetID_export_receiver").attr("placeholder", lang_input_receiver);
+                   $("#lang_export_title").text(lang.find("lang_strapline").text());
+                   $("#NetID_export_title").attr("placeholder", lang_enter_title);
+                   $("#lang_export_approver").text(lang.find("lang_approver").text());
+                   $("#NetID_export_approver").attr("placeholder", lang_select_approver);
+                   $("#lang_export_approvalMethod").text(lang.find("lang_approval_method").text());
+                   $("#lang_export_approvalMethod_first").text(lang.find("lang_approval_first").text());
+                   $("#lang_export_approvalMethod_after").text(lang.find("lang_approval_after").text());
+                   $("#lang_export_period").text(lang.find("lang_export_period").text());
+                   $("#lang_export_contents").text(lang.find("lang_contents").text());
+                   $("#NetID_export_contents").attr("placeholder", lang_enter_contents);
+                   $("#lang_export_attachments").text(lang.find("lang_attached_file").text());
+                   $("#lang_export_download_pw").text(lang.find("lang_download_password").text());
+                   $("#NetID_export_pw").attr("placeholder", lang_enter_password);
+                   $("#lang_export_limit").text(lang.find("lang_download_count_limit").text());
+                   $("#lang_export_expire").text(lang.find("lang_usage_expire_DT").text());
+                   $("#lang_export_cancel").text(lang.find("lang_cancel").text());
+                   $("#lang_export_source_protect").text(lang.find("lang_source_protect").text());
+                   $("#lang_export_encryptApply_yes").text(lang.find("lang_yes").text());
+                   $("#lang_export_encryptApply_no").text(lang.find("lang_no").text());
+                   $("#lang_export_reading_count").text(lang.find("lang_reading_count").text());
+                   $("#lang_export_reading_password").text(lang.find("lang_reading_password").text());
+                   $("#NetID_export_readingPW").attr("placeholder", lang_enter_password);
+                   $("#lang_export_reading_period").text(lang.find("lang_reading_period").text());
+                   
+                   /*   alert   */
+                   lang_alert_closeApp_title = lang.find("lang_close").text();
+                   lang_alert_logout_confirm = lang.find("lang_logout_confirm").text();
+                   lang_alert_not_exists_path = lang.find("lang_not_exist_path").text();
+                   lang_alert_overwrite = lang.find("lang_confirm_overwrite").text();
+                   lang_alert_offset = lang.find("lang_confirm_offset").text();
+                   lang_alert_not_support_format = lang.find("lang_not_support_format").text();
+                   lang_alert_path_exists_err = lang.find("lang_same_destination_path").text();
+                   lang_alert_create_folder_fail = lang.find("lang_create_folder_fail").text();
+                   lang_confirm_delete = lang.find("lang_confirm_delete").text();
+                   lang_parameter_missing = lang.find("lang_parameter_missing").text();
+                   lang_server_error = lang.find("lang_server_error").text();
+                   lang_not_exists = lang.find("lang_not_exists").text();
+                   lang_exception_error = lang.find("lang_exception_error").text();
+                   lang_ip_filtered = lang.find("lang_ip_filtered").text();
+                   lang_server_busy = lang.find("lang_server_busy").text();
+                   lang_user_busy = lang.find("lang_user_busy").text();
+                   lang_access_denied = lang.find("lang_access_denied").text();
+                   lang_invalid_parameter = lang.find("lang_invalid_parameter").text();
+                   lang_disk_overflow = lang.find("lang_disk_overflow").text();
+                   lang_already_folder_exists = lang.find("lang_already_folder_exists").text();
+                   lang_already_file_error = lang.find("lang_already_file_exists").text();
+                   lang_guest_root = lang.find("lang_guest_root").text();
+                   lang_sharing_violation = lang.find("lang_sharing_violation").text();
+                   lang_guest_data_root = lang.find("lang_guest_data_root").text();
+                   lang_already_file_exists = lang.find("lang_already_file_exists").text();
+                   lang_already_folder_error = lang.find("lang_already_folder_error").text();
+                   lang_has_acl_folder = lang.find("lang_has_acl_folder").text();
+                   lang_has_share_folder = lang.find("lang_has_share_folder").text();
+                   lang_substree_exists = lang.find("lang_substree_exists").text();
+                   lang_filename_filtered = lang.find("lang_filename_filtered").text();
+                   lang_upload_limit = lang.find("lang_upload_limit").text();
+                   lang_upload_busy = lang.find("lang_upload_busy").text();
+                   lang_partial_success = lang.find("lang_partial_success").text();
+                   lang_download_busy = lang.find("lang_download_busy").text();
+                   lang_license_expired = lang.find("lang_license_expired").text();
+                   lang_download_size_excess = lang.find("lang_download_size_excess").text();
+                   lang_login_not_exist_device = lang.find("lang_login_not_exist_device").text();
+                   lang_alert_not_exists_Officesuite = lang.find("lang_not_exist_officesuite").text();
+                   lang_confirm_download_officesuite = lang.find("lang_confirm_download_officesuite").text();
+                   lang_server_not_connect = lang.find("lang_server_not_connect").text();
+                   lang_server_not_response = lang.find("lang_server_not_response").text();
+                   lang_alert_not_found_err = lang.find("lang_can_not_found_err").text();
+                   lang_alert_security_err = lang.find("lang_security_err").text();
+                   lang_alert_abort_err = lang.find("lang_abort_err").text();
+                   lang_alert_not_readable_err = lang.find("lang_can_not_readable_err").text();
+                   lang_alert_encoding_err = lang.find("lang_encoding_err").text();
+                   lang_alert_no_modification_allowed_err = lang.find("lang_can_not_modification_err").text();
+                   lang_alert_invalid_state_err = lang.find("lang_invalid_state_err").text();
+                   lang_alert_syntax_err = lang.find("lang_syntax_err").text();
+                   lang_alert_invalid_modification_err = lang.find("lang_invalid_modification_err").text();
+                   lang_alert_quota_exceeded_err = lang.find("lang_quota_exceeded_err").text();
+                   lang_alert_type_mismatch_err = lang.find("lang_type_mismatch_err").text();
+                   lang_alert_valid_folder_name = lang.find("lang_input_folder_name").text();
+                   lang_alert_cannot_folder_name = lang.find("lang_cannot_folder_name").text();
+                   lang_alert_can_not_delete = lang.find("lang_can_not_use_delete_func").text();
+                   lang_alert_can_not_move = lang.find("lang_can_not_move_StL").text();
+                   lang_alert_can_not_do_func = lang.find("lang_can_not_do_func").text();
+                   lang_confrim_wifi = lang.find("lang_confrim_data_use").text();
+                   lang_alert_closeApp = lang.find("lang_close_application").text();
+                   // document.getElementById("NetID_logoutBtn").value = lang.find("properties_lang_logoutBtn").text();
+                   
+                   /*   toast   */
+                   toast_lang_move = lang.find("lang_move_completed").text();
+                   toast_lang_copy = lang.find("lang_copy_completed").text();
+                   toast_lang_delete = lang.find("lang_delete_completed").text();
+                   toast_lang_upload = lang.find("lang_upload_completed").text();
+                   toast_lang_download = lang.find("lang_download_completed").text();
+                   toast_lang_restore = lang.find("lang_restore_completed").text();
+                   
+                   if ( GetsessionStorage("offline") == "true" )
+                   {
+                   setTimeout(function () {
+                              document.addEventListener("deviceready", changeToLocal, false);
+                              }, 500);
+                   $(".explorer_title").css("pointer-events", "none");
+                   }
+                   else
+                   {
+                   setTimeout(function () {
+                              document.addEventListener("deviceready", getDriveList, false);
+                              }, 500);
+                   }
+                   },
+                   error: function(xhr, status, error) {
+                   navigator.notification.alert("Get language ERR: "+ status, function(){}, lang_alert, lang_ok);
+                   navigator.notification.alert("Get language ERR: "+ error, function(){}, lang_alert, lang_ok);
+                   }
+                   });
+        }
+        </script>
+    </head>
+    
+    <body onload="onBodyLoad()">
+        <header>
+            <!-- Logo -->
+            <div><img src="images/img/logo.png" width="115px"><span></span></div>
+            <!-- Title -->
+            <div><label>문서중앙화</label><span></span></div>
+            <!-- Buttons -->
+            <div><img src="images/icon/header_afresh.png" width="24px"><span></span></div>
+            <div><img src="images/icon/header_set.png" width="27px"><span></span></div>
+        </header>
+        
+        <section>
+            <!-- Left menu -->
+            <nav>
+                <!-- Menu title -->
+                <div class="nav-title">
+                    <div><img src="images/icon/nav-folder-01.png" width="27px"><label style="font-size: 20px; font-weight: 500; color: #FFFFFF; padding-left: 10px; line-height: 30px;">탐색기</label><span></span></div>
+                    <div onclick="leftMenuManager()"><img src="images/icon/nav-close.png" width="22px"><span></span></div>
+                </div>
+                <!-- Menu contents : Directory tree -->
+                <div>
+                    <div class="tree-drive"><img src="images/icon/nav-folder-02.png" width="25px"><label>개인문서함 (P)</label><span></span></div>
+                    <div class="tree-deeper">
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>DOC_EXPORT</label><span></span></div>
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>GUEST</label><span></span></div>
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>RECYCLER</label><span></span></div>
+                        <div class="tree-folder tree-close"><img src="images/icon/nav-folder-minus.png" width="18px"><img src="images/icon/nav-folder-04.png" width="21px"><label>내 중요폴더01</label><span></span></div>
+                        <div class="tree-deeper">
+                            <div class="tree-folder tree-close"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>닫힌폴더 01</label><span></span></div>
+                            <div class="tree-folder tree-close"><img src="images/icon/nav-folder-minus.png" width="18px"><img src="images/icon/nav-folder-04.png" width="21px"><label>열린폴더 01</label><span></span></div>
+                            <div class="tree-deeper">
+                                <div class="tree-folder tree-close tree-selected"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>START_Uji</label><span></span></div>
+                            </div>
+                            <div class="tree-folder tree-close"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>닫힌폴더 02020200202020202</label><span></span></div>
+                        </div>
+                    </div>
+                    <div class="tree-drive"><img src="images/icon/nav-folder-05.png" width="25px"><label>공유문서함 (Q)</label><span></span></div>
+                    <div class="tree-deeper">
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>AAA</label><span></span></div>
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>BBB</label><span></span></div>
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>CCC</label><span></span></div>
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>DDD</label><span></span></div>
+                        <div class="tree-folder tree-open"><img src="images/icon/nav-folder-plus.png" width="18px"><img src="images/icon/nav-folder-03.png" width="21px"><label>EEE</label><span></span></div>
+                    </div>
+                </div>
+                <!-- Menu contents : Blank -->
+                <div></div>
+                <!-- Menu contents : Favorite -->
+                <div class="fav-title"><img src="images/icon/nav-favorite.png" width="25px"><label>즐겨찾기</label><span></span></div>
+                <div>
+                    <div class="fav-folder">
+                        <div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div>
+                        <div><label>부서통합</label><span></span></div>
+                        <div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div>
+                    </div>
+                    <div class="fav-folder">
+                        <div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div>
+                        <div><label>영어부 주문서</label><span></span></div>
+                        <div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div>
+                    </div>
+                    <div class="fav-folder fav-selected">
+                        <div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div>
+                        <div><label>각 지점 내역</label><span></span></div>
+                        <div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div>
+                    </div>
+                    <div class="fav-folder">
+                        <div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div>
+                        <div><label>사용자 정의01</label><span></span></div>
+                        <div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div>
+                    </div>
+                    <div class="fav-folder">
+                        <div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div>
+                        <div><label>사용자 정의02</label><span></span></div>
+                        <div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div>
+                    </div>
+                    <div class="fav-folder"><div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div><div><label>사용자 정의02</label><span></span></div><div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div></div>
+                    <div class="fav-folder"><div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div><div><label>사용자 정의02</label><span></span></div><div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div></div>
+                    <div class="fav-folder"><div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div><div><label>사용자 정의02</label><span></span></div><div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div></div>
+                    <div class="fav-folder"><div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div><div><label>사용자 정의02</label><span></span></div><div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div></div>
+                    <div class="fav-folder"><div><img src="images/icon/nav-folder-03.png" width="21px"><span></span></div><div><label>사용자 정의02</label><span></span></div><div><img src="images/icon/nav-arrow.png" width="20px"><span></span></div></div>
+                </div>
+                <!-- Menu contents : Favorite edit button -->
+                <div class="fav-editBtn"><img src="images/icon/fav-edite.png" width="5px"><label>즐겨찾기 편집</label><span></span></div>
+            </nav>
+            
+            <!-- Main contents -->
+            <div class="main-contents">
+                <!-- Contents title -->
+                <div class="contents-title">
+                    <!-- Close menu button -->
+                    <div onclick="leftMenuManager()"><img src="images/icon/nav-open.png" width="22px"><span></span></div>
+                    <!-- Current route -->
+                    <div>
+                        <img src="images/icon/cont-title-01.png" width="30px" onclick="upFolder()"><label style="font-size: 25px; padding: 0px 10px; vertical-align: sub;">개인문서함</label>
+                            <img src="images/icon/cont-route.png" width="6px"><label>내 중요폴더01</label>
+                                <img src="images/icon/cont-route.png" width="6px"><label>Start_Uji</label>
+                                    <span></span>
+                    </div>
+                    <!-- Sort button -->
+                    <div><label>정렬</label><img src="images/icon/cont-lineup.png" width="22.5px"><span></span></div>
+                </div>
+                
+                <!-- Contents search -->
+                <div class="contents-search"><input type="text"><button type="submit">검색</button><span></span>
+                    </div>
+                
+                <!-- Contents file list -->
+                <div class="contents-list">
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

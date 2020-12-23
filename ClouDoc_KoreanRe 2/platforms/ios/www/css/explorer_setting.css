@@ -1,0 +1,200 @@
+#settingForm, #propertiesForm, #dataSettingForm {
+	font-weight: bold;
+	color: #5E5E5E;
+	background-color: #EEF1F3;
+    display: none;
+    position: fixed;
+}
+
+#settingForm {
+	display: none;
+}
+
+#serInfoListTable div, #userInfoListTable div, #devInfoListTable div, #extInfoListTable div {
+	width: 90%;
+	color: #ADADAD;
+}
+
+/********************* 모든 Form 공통 *********************/
+#titleTable {
+	width: 100%;
+	height: 10%;
+	color: #FFFFFF;
+	border-bottom: 1px solid #C6C6C6;
+	background-color: #0A71A5;
+}
+#titleTable td {
+	width: 15%;
+}
+#titleTable img {
+	width: 28%;
+	height: 37%;
+	padding-left: 25%;
+	vertical-align: bottom;
+}
+
+.subheading {
+	padding-left: 4%;
+	font-weight: normal;
+	height: 20.76%;
+	background-color: #EEF1F3;
+}
+
+/********************* settingForm *********************/
+
+#settingListTable {
+	width: 100%;
+	height: 22.125%;
+	background-color: white;
+}
+#settingListTable td {
+	border-bottom: 1px solid #C6C6C6;
+}
+#settingListTable label {
+	padding-left: 5%;
+}
+#settingListTable img {
+	vertical-align: bottom;
+	width: 45%;
+	height: 52.18%;
+    float: right;
+}
+
+#setting_lang_logout {
+	color: red;
+}
+
+#logoutTD a {
+	text-decoration: none;
+}
+#logoutTD span {
+	width: 70%;
+	height: 42%;
+	float: right;
+}
+
+/********************* propertiesForm *********************/
+#propertiesForm {
+	overflow: scroll;	
+}
+
+#serInfoListTable {
+	width: 100%;
+	height: 24.375%;
+	background-color: white;
+}
+#serInfoListTable td {
+	border-bottom: 1px solid #C6C6C6;
+}
+#serInfoListTable label {
+	padding-left: 10%;
+}
+#serInfoListTable img {
+	vertical-align: bottom;
+	width: 75%;
+	height: 52.18%;
+}
+
+#userInfoListTable {
+	width: 100%;
+	height: 15.625%;
+	background-color: white;
+}
+#userInfoListTable td {
+	border-bottom: 1px solid #C6C6C6;
+}
+#userInfoListTable label {
+	padding-left: 10%;
+}
+#userInfoListTable img {
+	vertical-align: bottom;
+	width: 75%;
+	height: 52.18%;
+}
+#userInfoListTableTitle {
+	height: 44%;
+}
+
+#devInfoListTable {
+	width: 100%;
+	height: 24.375%;
+	background-color: white;
+}
+#devInfoListTable td {
+	border-bottom: 1px solid #C6C6C6;
+}
+#devInfoListTable label {
+	padding-left: 10%;
+}
+#devInfoListTable img {
+	vertical-align: bottom;
+	width: 75%;
+	height: 52.18%;
+}
+
+#devInfo_id {
+	word-break: break-all;
+}
+
+#extInfoListTable {
+	width: 100%;
+	height: 24.375%;
+	background-color: white;
+	display: table;
+	display: none;
+}
+#extInfoListTable td {
+	border-bottom: 1px solid #C6C6C6;
+}
+#extInfoListTable label {
+	padding-left: 10%;
+}
+#extInfoListTable img {
+	vertical-align: bottom;
+	width: 75%;
+	height: 52.18%;
+}
+
+#propertiesBottom {
+	width: 100%;
+	height: 35%;
+	text-align: center;
+}
+
+#sign_mold {
+	width: 80%;
+	height: auto;
+	padding: 8%;
+	text-align: left;
+}
+
+#logoutBtn_mold {
+	width: 100%;
+	height: 100%;
+}
+
+#logoutBtn {
+	width: 76%;
+    height: 20%;
+    font-weight: bold;
+    font-family: malgunGothic;
+    color: white;
+    background-color: #A7A9AA;
+    border: none;
+    font-size: 22px;
+}
+
+/********************* propertiesForm *********************/
+#dataSettingTable {
+	width: 100%;
+	height: 8.75%;
+	background-color: white;
+}
+
+#dataSettingTable td {
+	border-bottom: 1px solid #C6C6C6;
+}
+
+#dataSetting_lang {
+	padding-left: 5%;
+}

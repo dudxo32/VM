@@ -1,0 +1,23 @@
+//
+//  TapDetectingWindow.h
+//  CentralECM
+//
+//  Created by HeungKyoo Han on 10. 6. 6..
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@protocol TapDetectingWindowDelegate
+- (void)userDidTapWebView:(id)tapPoint;
+@end
+
+//주의: xib파일에서 window를 TapDetectingWindow로 바꿔야 한다.
+//http://mithin.in/2009/08/26/detecting-taps-and-events-on-uiwebview-the-right-way/
+@interface TapDetectingWindow : UIWindow {
+    UIView *viewToObserve;
+    id <TapDetectingWindowDelegate> controllerThatObserves;
+}
+@property (nonatomic, retain) UIView *viewToObserve;
+@property (nonatomic, assign) id <TapDetectingWindowDelegate> controllerThatObserves;
+@end

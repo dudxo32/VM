@@ -1,0 +1,433 @@
+@charset "utf-8";
+
+* { -webkit-overflow-scrolling: touch; }
+label, input { vertical-align: middle; }
+
+*:not(span) + span { width: 0px; height: 100%; vertical-align: middle; display: inline-block; }
+.highlight { vertical-align: bottom; background-color: #FFFF00; }
+.blank { width: 100%; height: 100%; z-index: 900; position: fixed; display: none; background-color: rgba(0, 0, 0, 0.5); }
+
+@media screen and (orientation: portrait) {
+    input[type=button] { border: 1px solid #1869C4; color: #FFFFFF; -webkit-appearance: none; appearance: none; -webkit-border-radius: 6px; }
+    /********** Header **********/
+        header { width: 100%; height: 4.5%; padding: 0 2%; position: relative; }
+        header label { height: 100%; display: inline-block; position: absolute; }
+        /* Logo */
+        header label:nth-child(1) { width: 15%; background: url("../images/img/logo.png") no-repeat; background-size: 100%; background-position-y: 80%; }
+        /* multi open file btn */
+        header label:nth-child(2) { width: 4%; right: 14%; background: url("../images/icon/backToViewer.png") no-repeat; background-size: 70%; background-position-y: 80%; }
+        /* Back to viewer btn */
+        header label:nth-child(3) { width: 4%; right: 10%; background: url("../images/icon/backToViewer.png") no-repeat; background-size: 70%; background-position-y: 80%; }
+        /* Title */
+        header label:nth-child(4) { width: 4%; right: 6%; background: url("../images/icon/header_afresh.png") no-repeat; background-size: 60%; background-position-y: 80%; }
+        /* Buttons */
+        header label:nth-child(5) { width: 4%; right: 2%; background: url("../images/icon/header_set.png") no-repeat right; background-size: 70%; background-position-y: 80%; }
+        header div { height: 100%; position: absolute; }
+        header img { vertical-align: bottom; padding: 10%; margin-bottom: 5px; }
+        header div[data-state=select] { display: none; }
+        header.select div[data-state=default] { display: none; }
+        header.select div[data-state=select] { display: block; }
+    /********** /Header **********/
+
+
+    /********** Contents **********/
+        section { width: 100%; height: 95.5%; position: relative; }
+        /********** Left menu **********/
+        section > nav {
+            width: 26%; height: 100%;
+            position: relative; left: 0%; z-index: 300;
+            color: #FFFFFF;
+            border-right:1px solid #000;
+            display: block;
+            float: left; overflow: hidden;
+            box-shadow: 3px 10px 10px #888888;
+            transition: all 0.5s ease;
+        }
+
+        /* Menu title */
+        .nav-title { width: 100%; height: 4.5%; padding-left: 3%; border-bottom: 0.5px solid #000000; z-index: 350; position: relative; }
+        .nav-title label { padding-left: 3%; }
+
+        /* Menu contents */
+        /* Menu contents : Tree area */
+            nav > div:nth-child(2) { width: 100%; height: 65.5%; white-space: nowrap; overflow: scroll; z-index: 350; position: relative; }
+            /* Drive list */
+            .tree-drive { width: 100%; height: 35px; padding-left: 4%; z-index: 370; position: relative; }
+            .tree-drive > label:nth-child(1) { height: 100%; display: inline-block; }
+            .tree-drive-selected {  }
+            .tree-drive > label { padding-left: 4%; color: #FFFFFF; }
+            /* Folder list */
+            .tree-folder { width: 100%; height: 35px; z-index: 370; position: relative; }
+            .tree-folder label { height: 100%; display: inline-block; }
+            .tree-folder label:nth-child(3) { padding-right: 8px; }
+            .tree-folder label:nth-child(3) label { display: initial; }
+            /* Opened & Closed folder list */
+            .tree-open > label:nth-child(1) { background: url("../images/icon/nav-folder-minus.png") no-repeat center; background-size: 70%; }
+            .tree-open > label:nth-child(2) { background: url("../images/icon/nav-folder-04.png") no-repeat center; background-size: 100%; }
+            .tree-close > label:nth-child(1) { background: url("../images/icon/nav-folder-plus.png") no-repeat center; background-size: 70%; }
+            .tree-close > label:nth-child(2) { background: url("../images/icon/nav-folder-03.png") no-repeat center; background-size: 100%; }
+            /* Selected list */
+            .tree-selected {  }
+            .tree-selected label:nth-child(3) {  }
+            /* Folder deeper */
+            .tree-deeper { width: 100%; height: auto; padding-left: 6%; display: none; z-index: 370; position: relative; }
+        /* Menu contents : Bookmark area */
+            nav > div:nth-child(4) { width: 100%; height: 21%; white-space: nowrap; overflow: scroll; border-bottom: 0.5px solid #004b6d; z-index: 350; position: relative; }
+            /* Title */
+            .BM-title { border-top: 0.5px solid #000000; }
+            /* Folder list */
+            .BM-folder { width: 100%; height: 20%; padding-left: 4%; z-index: 370; position: relative; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+            .BM-folder label { padding-left: 3.5%; }
+            /* Selected list */
+            .BM-selected {  }
+            /* Edit button */
+            .recentBtn { width: 100%; height: 4.5%; color: #FFFFFF; padding-left: 4%; z-index: 350; position: relative; }
+            .recentBtn label { padding-left: 4%; }
+        /********** /Left menu **********/
+
+
+        /********** Main contents(file lists) **********/
+        .main-contents { width: 74%; height: 100%; position: relative; left: 26%;  }
+        /* Contents title */
+        .contents-title { height: 4.5%; top: 4.5%; position: fixed; transition: all 0.5s ease; }
+        .bookmark-title { display: none; }
+            /* Contents title : Close menu button *****/
+            .contents-title > img:nth-child(1) { height: 100%; position: absolute; left: 0px; }
+            /* Contents title : Current route */
+            .contents-title > div:nth-child(2) { width: 100%; height: 100%; position: absolute; top: 0; left: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            /* Contents title : Sort button */
+            .contents-title > div:nth-child(3) { height: 100%; position: absolute; top: 0; right: 0; text-align: right; }
+            .bookmark-title > div:nth-child(4) { height: 100%; position: absolute; top: 0; text-align: right; }
+        /* Contents search */
+        .contents-search { height: 5%; top: 9%; text-align: center; border-bottom: 0.1px solid #000000; position: fixed; transition: all 0.5s ease; }
+        .contents-search input { width: 100%; height: 60%; vertical-align: middle; border: 1px solid #AAAAAA; background: url("../images/icon/search.png") no-repeat 5px center; background-size: 17.5px; }
+        .contents-search input:focus { background: none; }
+
+        /* Contents file list */
+        .contents-list { height: 86%; overflow-y: scroll; position: fixed; top: 14%; transition: all 0.5s ease; }
+            /* Contents file list - list */
+/*            .list { width: 100%; height: 55px; border-bottom: 0.1px solid #B4B4B4; position: relative; }*/
+/*            .list > label:nth-child(1) { height: 100%; position: absolute; display: inline-block; }*/
+/*            .list > div { width: inherit; height: 100%; display: inline-block; }*/
+/*            .list > div div:first-child { width: 100%; height: 55%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }*/
+/*            .list > div div:first-child > label { vertical-align: bottom; }*/
+/*            .list > div div:last-child { width: 100%; height: 40%; color: #777777; overflow: hidden; white-space: nowrap; }*/
+/*            .list > label:nth-child(3) { height: 100%; position: absolute; right: 0px; display: inline-block; }*/
+/*            .list-BM-unchecked { background: url("../images/icon/nav-bookmark-unchecked.png") no-repeat right; background-size: 40%; }*/
+/*            .list-BM-checked { background: url("../images/icon/nav-bookmark-checked.png") no-repeat right; background-size: 40%; }*/
+.list { width: 100%; height: 50px; padding: 0 70px; border-bottom: 1px solid #B4B4B4; position: relative; display: flex; }
+.list img:nth-child(1) { margin: auto; position: absolute; top: 0; bottom: 0; }
+.list label:nth-child(2) { width: inherit; padding-right: 10px; line-height: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list label:nth-child(3) { line-height: 50px; text-align: center; white-space: nowrap; }
+.list label:nth-child(3) p { transition: line-height 0.2s ease; }
+.list label:nth-child(3) p:last-child { display: none; }
+.list.showInfo label:nth-child(3) p { line-height: 25px; }
+.list.showInfo label:nth-child(3) p:last-child { display: block; }
+.list img:nth-child(4) { margin: auto; position: absolute; top: 0; bottom: 0; }
+.list img:nth-child(5) { margin: auto; position: absolute; top: 0; bottom: 0; display: none; }
+/* 6 : Bookmark select button */
+.list img:nth-child(6) { margin: auto; position: absolute; top: 0; bottom: 0; display: none; }
+
+/*.list { width: 100%; border-bottom: 0.1px solid #B4B4B4; position: relative; background-color: #FFFFFF; }*/
+/*.list img, .list label, .list input { position: absolute; margin: auto; top: 0; bottom: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }*/
+/*.list img:nth-child(1) { left: 0px; }*/
+/*.list label:nth-child(2) { transition: all 0.5s ease; }*/
+/*.list img:nth-child(4) { right: 0px; }*/
+.list-BM-unchecked { content: url("../images/icon/nav-bookmark-unchecked.png"); }
+.list-BM-checked { content: url("../images/icon/nav-bookmark-checked.png"); }
+
+.list-unchecked { content: url("../img/multipleSelectOff.png"); }
+.list-checked { content: url("../img/multipleSelectOn.png"); }
+            /* Contents file list - bookmark list */
+            .BM-list label:nth-child(2) p { line-height: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: line-height 0.2s ease; }
+            .BM-list label:nth-child(2) p:last-child { dispaly: none; }
+            .BM-list > img:nth-child(4).personal { content: url("../images/icon/nav-bookmark-checked.png"); }
+            .BM-list > img:nth-child(4).orgcowork { content: url("../images/icon/BM-blue.png"); }
+            .BM-list input { display: none; }
+            .BM-showPath label:nth-child(2) p:first-child { line-height: 30px; }
+            .BM-showPath label:nth-child(2) p:last-child { line-height: 20px; display: block; }
+            .BM-list input { -webkit-appearance: none; border-radius: 100%; display: none; position: absolute; margin: auto; top: 0; bottom: 0; }
+            .BM-list input:checked { box-shadow: 0px 0px 3px #FFF inset; border: none; }
+/*.BM-showPath label:nth-child(2) label:first-child { line-height: 30px; }*/
+/*.BM-showPath label:nth-child(2) label:last-child { line-height: 20px; }*/
+        /********** /Main contents(file lists) **********/
+
+        .recent_list { padding: 0 22px 0 70px; }
+        .recent_list img:nth-child(4) { margin: auto; position: absolute; top: 0; bottom: 0; display: none; }
+        .contents-list.select .recent_list { padding: 0 70px; }
+
+        /* Bookmark edit bottom button */
+        .BM-bottom { height: 0px; position: fixed; right: 0; bottom: 0px; z-index: 200; border-top: 1px solid #000000; text-align: center; display: none; transition: width 0.3s ease; overflow-y: scroll; }
+        .BM-bottom.closedMenu { width: 100%; }
+    /********** /Contents **********/
+
+    /********** Dialog **********/
+        .dialog { width: 50%; z-index: 999; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; margin: auto; border: 1px solid #C3C3C3; border-radius: 6px; box-shadow: 10px 15px 15px #333333; font-weight: bold; text-align: center; display: none; background-color: #FFFFFF; }
+
+        .dialog-title { width: 100%; height: 50px; color: #FFFFFF; }
+        .dialog-title label:first-child { width: 70%; margin-left: 15%; display: inline-block; }
+        .dialog-title label:last-child { width: 15%; height: 100%; display: inline-block; background: url("../images/icon/close.png") no-repeat right; background-size: 40%; }
+
+        .dialog-setting { z-index: 999; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; margin: auto; border-radius: 6px; box-shadow: 10px 15px 15px #333333; text-align: center; display: none; background-color: #E3EAF1; }
+        .dialog-setting > div:nth-child(1) { width: 100%; height: 8%; color: #FFFFFF; font-weight: bold; border-radius: 6px 6px 0px 0px; text-align: center; }
+        .dialog-setting ul { height: 92%; overflow: auto; }
+        .dialog-setting li { width: 100%; height: 75px; border-width: 2px 0px; border-color: #E3EAF1; border-style: solid; text-align: initial; display: flex; background-color: #FFFFFF; }
+        .dialog-setting li:first-child, .dialog-setting li:last-child { border-top-width: 4px; }
+        .dialog-setting li:nth-child(2) { position: relative; }
+        .dialog-setting li:nth-child(2) > input { height: 70%; position: absolute; margin: auto; top: 0; bottom: 0; right: 10px; }
+        .dialog-setting li div:nth-child(1) { width: 25%; height: 100%; padding-left: 20px; font-weight: bold; }
+        .dialog-setting li div:nth-child(2) { width: 75%; height: 100%; }
+        .dialog-setting input[type=radio]{ width: 20px; height: 100%; margin: 0px 5px; }
+        .dialog-setting input[type=radio]+label { margin-right: 10px; }
+        .dialog-setting ul > input[type=button] { width: 40%; height: 50px; margin: 25px 0px; border-radius: 20px; }
+
+        .dialog-confirm { height: 160px;  }
+        .dialog-confirm > div:nth-child(1) { color: #000000; background-color: #F5F5F4; font-weight: initial; }
+        .dialog-confirm > div:nth-child(2) { height: 55px; padding: 0 10px; font-weight: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dialog-confirm > div:nth-child(3) { height: 55px; }
+        .dialog-confirm input { border: 1px solid #1869C4; color: #FFFFFF; }
+
+        .dialog-input { height: 170px; }
+        .dialog-input > div:nth-child(2) { height: 70px; }
+        .dialog-input > div:nth-child(2) input { width: 94%; height: 30px; bolder: 1px solid #AAAAAA; }
+        .dialog-input > div:last-child { height: 50px; }
+
+        .dialog-fixed { height: 250px; overflow: hidden; }
+        .dialog-fixed li { height: 50px; border-bottom: 1px solid #E3E3E3; }
+        .dialog-fixed li .active { background-color: #E9E9E9; }
+        #NetID_sortDialog { height: 300px; }
+
+        .dialog-BM { height: 350px; overflow: hidden; }
+        .dialog-BM ul { height: 300px; overflow-y: scroll; text-align: left; }
+        .dialog-BM li { height: 50px; position: relative; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dialog-BM li .active { background-color: #E9E9E9; }
+
+        .dialog-BM-append li label:first-child { width: 6.7%; height: 100%; margin: 0px 3%; display: inline-block; background: url("../images/icon/nav-folder-03.png") no-repeat center; background-size: 100%; }
+
+        .dialog-BM-edit { height: 400px; }
+/*        .dialog-BM-edit li > label:nth-child(1) { width: 4.4%; height: 100%; margin-left: 2.3%; display: inline-block; background: url("../images/icon/pop-close.png") no-repeat center; background-size: 100%; }*/
+/*        .dialog-BM-edit li > label:nth-child(2) { width: 5.5%; height: 100%; margin: 0px 2.3%; display: inline-block; background: url("../images/icon/nav-folder-03.png") no-repeat center; background-size: 100%; }*/
+/*        .dialog-BM-edit li > label:nth-child(3) { width: 68%; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }*/
+/*        .dialog-BM-edit li > input { padding: 3px 8px; margin: 0px; margin-right: 5px; display: inline-block; }*/
+        .dialog-BM-edit li > img:nth-child(1) { content: url("../images/icon/pop-close.png"); width: 9.2%; padding: 0 2.3%; }
+        .dialog-BM-edit li > img:nth-child(2) { content: url("../images/icon/nav-folder-03.png"); width: 7%; }
+        .dialog-BM-edit li > label:nth-child(3) { width: 42%; padding-left: 2.3%; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dialog-BM-edit li > img:nth-child(4) { width: 11.2%; padding: 0 2.3%; }
+        .dialog-BM-edit li > img:nth-child(5) { width: 11.2%; padding: 0 2.3%; }
+        .dialog-BM-edit li > input { padding: 3px 8px; margin: 0px; margin-left: 2%; }
+
+        .dialog-BM-edit > div:last-child { padding: 0px 10px; border-top: 1px solid #E3E3E3; }
+    /**********        **********/
+}
+
+@media screen and (orientation: landscape) {
+    input[type=button] { border: 1px solid #1869C4; color: #FFFFFF; -webkit-appearance: none; appearance: none; -webkit-border-radius: 6px; }
+    /********** Header **********/
+        header { width: 100%; height: 6.3%; padding: 0 1%; position: relative; }
+        header label { height: 100%; display: inline-block; position: absolute; }
+        /* Logo */
+        header label:nth-child(1) { width: 11%; background: url("../images/img/logo.png") no-repeat; background-size: 100%; background-position-y: 70%; }
+        /* multi open file btn */
+        header label:nth-child(2) { width: 3%; right: 10%; background: url("../images/icon/backToViewer.png") no-repeat; background-size: 70%; background-position-y: 70%; }
+        /* Back to viewer btn */
+        header label:nth-child(3) { width: 3%; right: 7%; background: url("../images/icon/backToViewer.png") no-repeat; background-size: 70%; background-position-y: 70%; }
+        /* Title */
+        header label:nth-child(4) { width: 3%; right: 4%; background: url("../images/icon/header_afresh.png") no-repeat; background-size: 60%; background-position-y: 70%; }
+        /* Buttons */
+        header label:nth-child(5) { width: 3%; right: 1%; background: url("../images/icon/header_set.png") no-repeat right; background-size: 70%; background-position-y: 70%; }
+        header div { height: 100%; position: absolute; }
+        header img { vertical-align: bottom; padding: 6%; margin-bottom: 5px; }
+        header div[data-state=select] { display: none; }
+        header.select div[data-state=default] { display: none; }
+        header.select div[data-state=select] { display: block; }
+    /********** /Header **********/
+
+
+    /********** Contents **********/
+        section { width: 100%; height: 93.7%; position: relative; }
+        /********** Left menu **********/
+        section > nav {
+            width: 26%; height: 100%;
+            position: relative; left: 0%; z-index: 300;
+            color: #FFFFFF;
+            border-right:1px solid #000;
+            display: block;
+            float: left; overflow: hidden;
+            box-shadow: 3px 10px 10px #888888;
+            transition: all 0.5s ease;
+        }
+
+        /* Menu title */
+        .nav-title { width: 100%; height: 6.3%; padding-left: 3%; border-bottom: 0.5px solid #000000; z-index: 350; position: relative; }
+        .nav-title label { padding-left: 3%; }
+
+        /* Menu contents */
+        /* Menu contents : Tree area */
+        nav > div:nth-child(2) { width: 100%; height: 62.1%; white-space: nowrap; overflow: scroll; z-index: 350; position: relative; }
+            /* Drive list */
+            .tree-drive { width: 100%; height: 35px; padding-left: 3%; z-index: 370; position: relative; }
+            .tree-drive > label:nth-child(1) { height: 100%; display: inline-block; }
+            .tree-drive-selected {  }
+            .tree-drive > label { padding-left: 3%; color: #FFFFFF; }
+            /* Folder list */
+            .tree-folder { width: 100%; height: 35px; z-index: 370; position: relative; }
+            .tree-folder label { height: 100%; display: inline-block; }
+            .tree-folder label:nth-child(3) { padding-right: 8px; }
+            .tree-folder label:nth-child(3) label { display: initial; }
+            /* Opened & Closed folder list */
+            .tree-open > label:nth-child(1) { background: url("../images/icon/nav-folder-minus.png") no-repeat center; background-size: 80%; }
+            .tree-open > label:nth-child(2) { background: url("../images/icon/nav-folder-04.png") no-repeat center; background-size: 100%; }
+            .tree-close > label:nth-child(1) { background: url("../images/icon/nav-folder-plus.png") no-repeat center; background-size: 80%; }
+            .tree-close > label:nth-child(2) { background: url("../images/icon/nav-folder-03.png") no-repeat center; background-size: 100%; }
+            /* Selected list */
+            .tree-selected {  }
+            .tree-selected label:nth-child(3) {  }
+            /* Folder deeper */
+            .tree-deeper { width: 100%; height: auto; padding-left: 4.3%; display: none; z-index: 370; position: relative; }
+        /* Menu contents : Bookmark area */
+            nav > div:nth-child(4) { width: 100%; height: 19%; white-space: nowrap; overflow: scroll; border-bottom: 0.5px solid #004b6d; z-index: 350; position: relative; }
+            /* Title */
+            .BM-title { border-top: 0.5px solid #000000; }
+            /* Folder list */
+            .BM-folder { width: 100%; height: 20%; padding-left: 3%; z-index: 370; position: relative; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+            .BM-folder label { padding-left: 3%; }
+            /* Selected list */
+            .BM-selected {  }
+            /* Edit button */
+            .recentBtn { width: 100%; height: 6.3%; padding-left: 3%; border-bottom: 0.5px solid #000000; z-index: 350; position: relative; }
+            .recentBtn label { padding-left: 3%; }
+        /********** /Left menu **********/
+
+
+        /********** Main contents(file lists) **********/
+        .main-contents { width: 74%; height: 100%; position: relative; left: 26%; }
+        /* Contents title */
+        .contents-title { height: 6.3%; top: 6.3%; position: fixed; transition: all 0.5s ease; }
+        .bookmark-title { display: none; }
+            /* Contents title : Close menu button *****/
+            .contents-title > img:nth-child(1) { height: 100%; position: absolute; left: 0px; }
+            /* Contents title : Current route */
+            .contents-title > div:nth-child(2) { width: 100%; height: 100%; position: absolute; top: 0; left: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            /* Contents title : Sort button */
+            .contents-title > div:nth-child(3) { height: 100%; position: absolute; top: 0; right: 0; text-align: right; }
+            .bookmark-title > div:nth-child(4) { height: 100%; position: absolute; top: 0; text-align: right; }
+        /* Contents search */
+        .contents-search { height: 7%; top: 12.6%; text-align: center; border-bottom: 0.1px solid #000000; position: fixed; transition: all 0.5s ease; }
+        .contents-search input { width: 100%; height: 60%; vertical-align: middle; border: 1px solid #AAAAAA; background: url("../images/icon/search.png") no-repeat 5px center; background-size: 17.5px; }
+        .contents-search input:focus { background: none; }
+
+        /* Contents file list */
+        .contents-list { height: 80.4%; overflow-y: scroll; position: fixed; top: 19.6%; transition: all 0.5s ease; }
+            /* Contents file list - list */
+/*            .list { width: 100%; height: 55px; border-bottom: 0.1px solid #B4B4B4; position: relative; }*/
+/*            .list > label:nth-child(1) { height: 100%; position: absolute; display: inline-block; }*/
+/*            .list > div { width: inherit; height: 100%; display: inline-block; }*/
+/*            .list > div div:first-child { width: 100%; height: 55%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }*/
+/*            .list > div div:first-child > label { vertical-align: bottom; }*/
+/*            .list > div div:last-child { width: 100%; height: 40%; color: #777777; overflow: hidden; white-space: nowrap; }*/
+/*            .list > label:nth-child(3) { height: 100%; position: absolute; right: 0px; display: inline-block; }*/
+/*            .list-BM-unchecked { background: url("../images/icon/nav-bookmark-unchecked.png") no-repeat right; background-size: 40%; }*/
+/*            .list-BM-checked { background: url("../images/icon/nav-bookmark-checked.png") no-repeat right; background-size: 40%; }*/
+.list { width: 100%; height: 50px; padding: 0 70px; border-bottom: 1px solid #B4B4B4; position: relative; display: flex; }
+.list img:nth-child(1) { margin: auto; position: absolute; top: 0; bottom: 0; }
+.list label:nth-child(2) { width: inherit; padding-right: 10px; line-height: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list label:nth-child(3) { line-height: 50px; text-align: center; white-space: nowrap; }
+.list label:nth-child(3) p { transition: line-height 0.2s ease; }
+.list label:nth-child(3) p:last-child { display: none; }
+.list.showInfo label:nth-child(3) p { line-height: 25px; transition: line-height 0.2s ease;  }
+.list.showInfo label:nth-child(3) p:last-child { display: block; }
+.list img:nth-child(4) { margin: auto; position: absolute; top: 0; bottom: 0; }
+.list img:nth-child(5) { margin: auto; position: absolute; top: 0; bottom: 0; display: none; }
+/* 6 : Bookmark select button */
+.list img:nth-child(6) { margin: auto; position: absolute; top: 0; bottom: 0; display: none; }
+/*.list { width: 100%; border-bottom: 0.1px solid #B4B4B4; position: relative; background-color: #FFFFFF; }*/
+/*.list img, .list label, .list input { position: absolute; margin: auto; top: 0; bottom: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }*/
+/*.list img:nth-child(1) { left: 0px; }*/
+/*.list label:nth-child(2) { transition: all 0.5s ease; }*/
+/*.list img:nth-child(4) { right: 0px; }*/
+.list-BM-unchecked { content: url("../images/icon/nav-bookmark-unchecked.png"); }
+.list-BM-checked { content: url("../images/icon/nav-bookmark-checked.png"); }
+
+.list-unchecked { content: url("../img/multipleSelectOff.png"); }
+.list-checked { content: url("../img/multipleSelectOn.png"); }
+
+/* Contents file list - bookmark list */
+.BM-list label:nth-child(2) p { line-height: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: line-height 0.2s ease; }
+.BM-list label:nth-child(2) p:last-child  dispaly: none; }
+.BM-list > img:nth-child(4).personal { content: url("../images/icon/nav-bookmark-checked.png"); }
+.BM-list > img:nth-child(4).orgcowork { content: url("../images/icon/BM-blue.png"); }
+.BM-list input { display: none; }
+.BM-showPath label:nth-child(2) p:first-child { line-height: 30px; }
+.BM-showPath label:nth-child(2) p:last-child { line-height: 20px; display: block; }
+.BM-list input { -webkit-appearance: none; border-radius: 100%; display: none; position: absolute; margin: auto; top: 0; bottom: 0; }
+.BM-list input:checked { box-shadow: 0px 0px 3px #FFF inset; border: none; }
+/*.BM-showPath label:nth-child(2) label:first-child { line-height: 30px; }*/
+/*.BM-showPath label:nth-child(2) label:last-child { line-height: 20px; }*/
+        /********** /Main contents(file lists) **********/
+
+.recent_list { padding: 0 22px 0 70px; }
+.recent_list img:nth-child(4) { margin: auto; position: absolute; top: 0; bottom: 0; display: none; }
+.contents-list.select .recent_list { padding: 0 70px; }
+
+        /* Bookmark edit bottom button */
+        .BM-bottom { height: 0px; position: fixed; right: 0; bottom: 0px; z-index: 200; border-top: 1px solid #000000; text-align: center; display: none; transition: width 0.3s ease; overflow-y: scroll; }
+        .BM-bottom.closedMenu { width: 100%; }
+    /********** /Contents **********/
+
+    /********** Dialog **********/
+        .dialog { width: 35%; z-index: 999; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; margin: auto; border: 1px solid #C3C3C3; border-radius: 6px; box-shadow: 10px 15px 15px #333333; font-weight: bold; text-align: center; display: none; background-color: #FFFFFF; }
+
+        .dialog-title { width: 100%; height: 50px; color: #FFFFFF; }
+        .dialog-title label:first-child { width: 70%; margin-left: 15%; display: inline-block; }
+        .dialog-title label:last-child { width: 15%; height: 100%; display: inline-block; background: url("../images/icon/close.png") no-repeat center; background-size: 40%; }
+
+        .dialog-setting { width: 55%; height: 50%; z-index: 999; position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; margin: auto; border-radius: 6px; box-shadow: 10px 15px 15px #333333; text-align: center; display: none; background-color: #E3EAF1; }
+        .dialog-setting > div:nth-child(1) { width: 100%; height: 8%; color: #FFFFFF; font-weight: bold; border-radius: 6px 6px 0px 0px; text-align: center; }
+        .dialog-setting ul { height: 92%; overflow: auto; }
+        .dialog-setting li { width: 100%; height: 75px; border-width: 2px 0px; border-color: #E3EAF1; border-style: solid; text-align: initial; display: flex; background-color: #FFFFFF; }
+        .dialog-setting li:first-child, .dialog-setting li:last-child { border-top-width: 4px; }
+        .dialog-setting li:nth-child(2) { position: relative; }
+        .dialog-setting li:nth-child(2) > input { height: 70%; position: absolute; margin: auto; top: 0; bottom: 0; right: 10px; }
+        .dialog-setting li div:nth-child(1) { width: 25%; height: 100%; padding-left: 20px; font-weight: bold; }
+        .dialog-setting li div:nth-child(2) { width: 75%; height: 100%; }
+        .dialog-setting input[type=radio]{ width: 20px; height: 100%; margin: 0px 5px; }
+        .dialog-setting input[type=radio]+label { margin-right: 10px; }
+        .dialog-setting ul > input[type=button] { width: 40%; height: 50px; margin: 25px 0px; border-radius: 20px; }
+
+        .dialog-confirm { height: 160px;  }
+        .dialog-confirm > div:nth-child(1) { color: #000000; background-color: #F5F5F4; font-weight: initial; }
+        .dialog-confirm > div:nth-child(2) { height: 55px; padding: 0 10px; font-weight: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dialog-confirm > div:nth-child(3) { height: 55px; }
+        .dialog-confirm input { border: 1px solid #1869C4; color: #FFFFFF; }
+
+        .dialog-input { height: 170px; }
+        .dialog-input > div:nth-child(2) { height: 70px; }
+        .dialog-input > div:nth-child(2) input { width: 94%; height: 30px; bolder: 1px solid #AAAAAA; }
+        .dialog-input > div:last-child { height: 50px; }
+
+        .dialog-fixed { height: 250px; overflow: hidden; }
+        .dialog-fixed li { height: 50px; border-bottom: 1px solid #E3E3E3; }
+        .dialog-fixed li .active { background-color: #E9E9E9; }
+        #NetID_sortDialog { height: 300px; }
+
+        .dialog-BM { height: 350px; overflow: hidden; }
+        .dialog-BM ul { height: 300px; overflow-y: scroll; text-align: left; }
+        .dialog-BM li { height: 50px; position: relative; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dialog-BM li .active { background-color: #E9E9E9; }
+
+        .dialog-BM-append li label:first-child { width: 6%; height: 100%; margin: 0px 2.5%; display: inline-block; background: url("../images/icon/nav-folder-03.png") no-repeat center; background-size: 100%; }
+
+        .dialog-BM-edit { height: 400px; }
+/*        .dialog-BM-edit li > label:nth-child(1) { width: 4.8%; height: 100%; margin-left: 2.5%; display: inline-block; background: url("../images/icon/pop-close.png") no-repeat center; background-size: 100%; }*/
+/*        .dialog-BM-edit li > label:nth-child(2) { width: 6%; height: 100%; margin: 0px 2.5%; display: inline-block; background: url("../images/icon/nav-folder-03.png") no-repeat center; background-size: 100%; }*/
+/*        .dialog-BM-edit li > label:nth-child(3) { width: 68%; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }*/
+/*        .dialog-BM-edit li > input { padding: 5px 10px; margin: 0px; margin-right: 5px; display: inline-block; }*/
+        .dialog-BM-edit li > img:nth-child(1) { content: url("../images/icon/pop-close.png"); width: 9.2%; padding: 0 2.3%; }
+        .dialog-BM-edit li > img:nth-child(2) { content: url("../images/icon/nav-folder-03.png"); width: 7%; }
+        .dialog-BM-edit li > label:nth-child(3) { width: 42%; padding-left: 2.3%; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dialog-BM-edit li > img:nth-child(4) { width: 11.2%; padding: 0 2.3%; }
+        .dialog-BM-edit li > img:nth-child(5) { width: 11.2%; padding: 0 2.3%; }
+        .dialog-BM-edit li > input { padding: 3px 8px; margin: 0px; margin-left: 2%; }
+        .dialog-BM-edit > div:last-child { height: 50px; padding: 0px 10px; border-top: 1px solid #E3E3E3; }
+    /**********        **********/
+}

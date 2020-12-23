@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang>
+	<!-- login.html -->
+	<login_lang_server>Server Info</login_lang_server>
+	<login_lang_id>ID</login_lang_id>
+	<login_lang_pw>Password</login_lang_pw>
+	<login_lang_type>Login Type</login_lang_type>
+	<login_lang_preference>Login Setup</login_lang_preference>
+	<login_lang_loginBtn>Login</login_lang_loginBtn>
+	<login_alert_closeApp>Are you sure you want to exit the program?</login_alert_closeApp>
+	<login_alert_insert_server>The server was not entered.<br/>Move to Server Input page.</login_alert_insert_server>
+	<login_alert_insert_id>Input User ID.</login_alert_insert_id>
+	<login_alert_insert_password>Input password.</login_alert_insert_password>
+	<login_alert_input_server>Server information can be entered in the 'Login Setup> Server Info'.</login_alert_input_server>
+	<login_alert_change_server>Server information can be changed in the 'Login Setup> Server Info'.</login_alert_change_server>
+	
+	<!-- login_setting.html -->
+	<subscribe>Subscribe</subscribe>
+	<!-- settingForm -->
+	<setting_lang_title>Setup</setting_lang_title>
+	<setting_lang_logSet>Login Setup</setting_lang_logSet>
+	<setting_lang_serInfo>Server Info</setting_lang_serInfo>
+	<setting_lang_regDevice>Register Device</setting_lang_regDevice>
+	<setting_lang_extConfo>External Connection Info</setting_lang_extConfo>
+	<!-- logSettingForm -->
+	<logSetting_lang_title>Login Setup</logSetting_lang_title>
+	<logSetting_lang_auto>Auto Login</logSetting_lang_auto>
+	<logSetting_lang_security>Security Login</logSetting_lang_security>
+	<!-- serInfoForm -->
+	<serInfo_lang_title>Server Info</serInfo_lang_title>
+	<serInfo_lang_ip>Server</serInfo_lang_ip>
+	<serInfo_lang_port>Port</serInfo_lang_port>
+	<serInfo_lang_securityPort>Security Port</serInfo_lang_securityPort>
+	<!-- regDeviceForm -->
+	<regDevice_lang_title>Register Device</regDevice_lang_title>
+	<regDevice_lang_devSetTitle>Device Setup</regDevice_lang_devSetTitle>
+	<regDevice_lang_ip>Server IP</regDevice_lang_ip>
+	<regDevice_lang_id>ID</regDevice_lang_id>
+	<regDevice_lang_passwd>Password</regDevice_lang_passwd>
+	<regDevice_lang_devInfoTitle>Device Info</regDevice_lang_devInfoTitle>
+	<deviceInfo_lang_model>Model</deviceInfo_lang_model>
+	<deviceInfo_lang_id>Device ID</deviceInfo_lang_id>
+	<deviceInfo_lang_requestDate>Request Date</deviceInfo_lang_requestDate>
+	<regDev_alert_insert_server>The server was not entered.<br/>Move to Server Input page.</regDev_alert_insert_server>
+	<regDev_alert_insert_id>Input User ID.</regDev_alert_insert_id>
+	<regDev_alert_insert_password>Input password.</regDev_alert_insert_password>
+	<regDev_alert_success>Device registered successfully.</regDev_alert_success>
+	<regDev_alert_needs_approval>You can use this device after administrator approves.</regDev_alert_needs_approval>
+	<regDev_alert_already_exist>This is an already registered device.</regDev_alert_already_exist>
+	<regDev_alert_not_exist_user>This is a non registered User ID.</regDev_alert_not_exist_user>
+	<regDev_alert_exceeds_number>Too many devices for a user..</regDev_alert_exceeds_number>
+	<regDev_alert_wrong_user_iofo>Incorrect Password.</regDev_alert_wrong_user_iofo>
+	<!-- extConfoForm -->
+	<extConfo_lang_title>External Connection Info</extConfo_lang_title>
+	<extConfo_lang_extConfoSet>External Connection Setup</extConfo_lang_extConfoSet>
+	<extConfo_lang_ip>Server</extConfo_lang_ip>
+	<extConfo_lang_port>Port</extConfo_lang_port>
+	
+	<!-- explorer.html -->
+	<!-- explorerForm -->
+	<explorer_lang_title>Server DocumentBox</explorer_lang_title>
+	<multiple_lang_cancel>Cancel</multiple_lang_cancel>
+	<multiple_lang_sign>Select File</multiple_lang_sign>
+	<!-- 좌측 메뉴 -->
+	<serverDocumentBox_lang_title>Server DocumentBox</serverDocumentBox_lang_title>
+	<sdb_lang_server>Server DocumentBox</sdb_lang_server>
+	<sdb_lang_part>Part DocumentBox</sdb_lang_part>
+	<sdb_lang_share>Share DocumentBox</sdb_lang_share>
+	<localDocumentBox_lang_title>Local DocumentBox</localDocumentBox_lang_title>
+	<ldb_lang_local>Local drive</ldb_lang_local>
+	<!-- 정렬 다이얼로그 -->
+	<sort_lang_title>Sort by</sort_lang_title>
+	<sort_lang_LtH>Filename Low-to-high</sort_lang_LtH>
+	<sort_lang_HtL>Filename High-to-low</sort_lang_HtL>
+	<sort_lang_new>Newest First</sort_lang_new>
+	<sort_lang_old>Oldest First</sort_lang_old>
+	<!-- 단일 파일 작업 다이얼로그 -->
+	<fileFunc_lang_copy>Copy</fileFunc_lang_copy>
+	<fileFunc_lang_move>Move</fileFunc_lang_move>
+	<fileFunc_lang_chName>Change File Name</fileFunc_lang_chName>
+	<fileFunc_lang_delete>Delete</fileFunc_lang_delete>
+	<!-- 하단 작업 창 -->
+	<tool_lang_picture>Photos Upload</tool_lang_picture>
+	<tool_lang_newFolder>New Folder</tool_lang_newFolder>
+	<tool_lang_cancel>Cancel</tool_lang_cancel>
+	<!-- 사진 업로드 다이얼로그 -->
+	<picture_lang_upload>Photos Upload</picture_lang_upload>
+	<piture_lang_pictureLoad>Photos Downlaod</piture_lang_pictureLoad>
+	<picture_lang_videoLoad>Videos Download</picture_lang_videoLoad>
+	
+	<!-- explorer_setting.html -->
+	<!-- settingForm -->
+	<explorerSetting_lang_title>Setup</explorerSetting_lang_title>
+	<setting_lang_properties>Properties Info</setting_lang_properties>
+	<setting_lang_logout>Logout</setting_lang_logout>
+	<!-- propertiesForm -->
+	<properties_lang_title>Properties Info</properties_lang_title>
+	<serInfo_lang_title>Server Info</serInfo_lang_title>
+	<serInfo_lang_ip>Server IP</serInfo_lang_ip>
+	<serInfo_lang_port>Port</serInfo_lang_port>
+	<userInfo_lang_title>User Info</userInfo_lang_title>
+	<userInfo_lang_id>ID</userInfo_lang_id>
+	<devInfo_lang_title>Device Info</devInfo_lang_title>
+	<devInfo_lang_model>Model</devInfo_lang_model>
+	<devInfo_lang_id>Device ID</devInfo_lang_id>
+	<extInfo_lang_title>External Info</extInfo_lang_title>
+	<extInfo_lang_ip>Server IP</extInfo_lang_ip>
+	<extInfo_lang_port>Port</extInfo_lang_port>
+	<properties_lang_sign>If you need a server, your information has changed, please re-run the application to reset the login screen.</properties_lang_sign>
+	<properties_lang_logoutBtn>Logout</properties_lang_logoutBtn>
+</lang>

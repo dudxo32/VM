@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+<title>CentralECM</title>
+
+<!-- external css files -->
+<link rel="stylesheet" type="text/css" href="css/autoTextResize.css" />
+<link rel="stylesheet" type="text/css" href="css/onOffSwitch.css" />
+
+<!-- internal css files -->
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+<link rel="stylesheet" type="text/css" href="css/explorer_setting.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/explorer_setting.js"></script>
+<script type="text/javascript" src="js/util/webstorage.js"></script>
+<script type="text/javascript" src="js/plugin/AppManager.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+	// 화면 사이즈 조정
+	document.getElementById('settingForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('settingForm').style.width=	$(window).width()+ 'px';
+	document.getElementById('propertiesForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('propertiesForm').style.width=	$(window).width()+ 'px';
+	document.getElementById('dataSettingForm').style.height=	$(window).height()+ 'px';
+	document.getElementById('dataSettingForm').style.width=	$(window).width()+ 'px';
+	
+	// 토스트 위치 조정
+	$('#toast').css('left', ($(window).width() -$('#toast').width())/2 + 'px');
+	$('#toast').css('top', ($(window).height() -$('#toast').height())*0.85 + 'px');
+
+	// 페이지 오픈시 fade 효과
+	$('#settingForm').fadeIn(1);
+});
+
+function onBodyLoad() {
+	document.addEventListener("deviceready", init, false);
+}
+
+function init() {
+	document.addEventListener("backbutton", onBackKeyDown, false);
+}
+
+//'취소'키 입력시, 앱 종료 다이얼로그
+function onBackKeyDown() {
+	if($('#settingForm').css('display') == "block")
+		document.getElementById('backBtn').click();
+	else if($('#propertiesForm').css('display') == "block")
+		document.getElementById('backFromPropertiesForm').click();
+	else if($('#dataSettingForm').css('display') == "block")
+		document.getElementById('backFromDataSettingForm').click();
+}
+
+function logout() {
+	SetlocalStorage("auto", "false");
+	SetlocalStorage("autoPassword", "");
+
+    localStorage.removeItem("UserID");
+    localStorage.removeItem("AuthKey");
+
+    AM = new AppManager();
+    AM.auth_logout();
+    AM.finishapp();
+}
+
+function BackExplorer() {
+    document.location.href="explorer.html#"+GetlocalStorage("UserID")+"&"+GetlocalStorage("AuthKey");
+}
+
+	langfile = "./lang/kor.xml";
+	/*
+	OSLang= GetlocalStorage("OSLang");
+	if(OSLang == "eng") langfile = "./lang/eng.xml";
+	else if(OSLang == "jpn") langfile = "./lang/jpn.xml";
+	else if(OSLang == "chn") langfile = "./lang/chn.xml";
+	*/
+	$.ajax({
+		type: "get",
+		dataType: "xml",
+		url: langfile,
+		success: function(xml) {
+			lang = $(xml).find("lang");
+			
+			// settingForm
+			$("#explorerSetting_lang_title").text(lang.find("explorerSetting_lang_title").text());
+			$("#setting_lang_properties").text(lang.find("setting_lang_properties").text());
+			$("#setting_lang_dataSetting").text(lang.find("setting_lang_dataSetting").text());
+			$("#setting_lang_logout").text(lang.find("setting_lang_logout").text());
+			// propertiesForm
+			$("#properties_lang_title").text(lang.find("properties_lang_title").text());
+			$("#serInfoList_lang_title").text(lang.find("serInfoList_lang_title").text());
+			$("#serInfoList_lang_ip").text(lang.find("serInfoList_lang_ip").text());
+			$("#serInfoList_lang_port").text(lang.find("serInfoList_lang_port").text());
+			$("#userInfo_lang_title").text(lang.find("userInfo_lang_title").text());
+			$("#userInfo_lang_id").text(lang.find("userInfo_lang_id").text());
+			$("#devInfo_lang_title").text(lang.find("devInfo_lang_title").text());
+			$("#devInfo_lang_model").text(lang.find("devInfo_lang_model").text());
+			$("#devInfo_lang_id").text(lang.find("devInfo_lang_id").text());
+			$("#extInfo_lang_title").text(lang.find("extInfo_lang_title").text());
+			$("#extInfo_lang_ip").text(lang.find("extInfo_lang_ip").text());
+			$("#extInfo_lang_port").text(lang.find("extInfo_lang_port").text());
+			$("#properties_lang_sign").text(lang.find("properties_lang_sign").text());
+			document.getElementById('logoutBtn').value=lang.find("properties_lang_logoutBtn").text();
+
+			// dataSettingForm
+			$("#dataSetting_lang_title").text(lang.find("dataSetting_lang_title").text());
+			$("#dataSetting_lang").text(lang.find("dataSetting_lang").text());
+			
+			/*	toast	*/
+			toast_lang_dataUse = lang.find("toast_lang_dataUse").text();
+		},
+		error: function(xhr, status, error) {}
+	});
+</script>
+</head>
+
+<body onload="onBodyLoad()">
+	<!-- TOAST -->
+	<div id="toast">
+		<div>
+			<label id="toastContent"></label><span></span>
+		</div>
+	</div>
+
+	<!-- 설정 화면 -->
+	<div id="settingForm">
+		<!-- 환경설정 타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<img src="./img/backBtnWhite.png" onclick="BackExplorer()">
+				</td>
+				<td style="width: 70%; text-align: center;">
+					<label id="explorerSetting_lang_title"></label>
+				</td>
+				<td>
+					<div class="blankLine"></div>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 환경설정 목록 -->
+		<table id="settingListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="subheading" colspan="2"></td>
+			</tr>
+			<tr ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' onclick="getProperties()">
+				<td>
+					<label id="setting_lang_properties"></label>
+				</td>
+				<td>
+					<img src="./img/goBtn.png">
+				</td>
+			</tr>
+			<tr ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' onclick="logout()">
+				<td>
+					<label id="setting_lang_logout"></label></a>
+				</td>
+				<td>
+					<img src="./img/goBtn.png">
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<!-- 등록 정보 화면 -->
+	<div id="propertiesForm">
+		<!-- 등록 정보 타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="backFromPropertiesForm" onclick="exitPropertiesForm()">
+					<img src="./img/backBtnWhite.png">
+				</td>
+				<td style="width: 70%; text-align: center;">
+					<label id="properties_lang_title"></label>
+				</td>
+				<td>
+					<div class="blankLine"></div>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 등록 정보 목록 -->
+		<!-- 서버 정보 -->
+		<table id="serInfoListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="serInfoListTableTitle" class="subheading" colspan="2"><label id="serInfoList_lang_title" style="padding-left: 0;"></label></td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="serInfoList_lang_ip"></label>
+				</td>
+				<td>
+					<div id="serInfo_ip"></div>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="serInfoList_lang_port"></label>
+				</td>
+				<td>
+					<div id="serInfo_port"></div>
+				</td>
+			</tr>
+		</table>
+		<!-- 사용자 정보 -->
+		<table id="userInfoListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="userInfoListTableTitle" class="subheading" colspan="2"><label id="userInfo_lang_title" style="padding-left: 0;"></label></td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="userInfo_lang_id"></label>
+				</td>
+				<td>
+					<div id="userInfo_id"></div>
+				</td>
+			</tr>
+		</table>
+		<!-- 디바이스 정보 -->
+		<table id="devInfoListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="devInfoListTableTitle" class="subheading" colspan="2"><label id="devInfo_lang_title" style="padding-left: 0;"></label></td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="devInfo_lang_model"></label>
+				</td>
+				<td>
+					<div id="devInfo_model"></div>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="devInfo_lang_id"></label>
+				</td>
+				<td>
+					<div id="devInfo_id"></div>
+				</td>
+			</tr>
+		</table>
+		<!-- 외부접속 정보 -->
+		<table id="extInfoListTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="extInfoListTableTitle" class="subheading" colspan="2"><label id="extInfo_lang_title" style="padding-left: 0;"></label></td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="extInfo_lang_ip"></label>
+				</td>
+				<td>
+					<div id="extInfo_ip"></div>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 45%;">
+					<label id="extInfo_lang_port"></label>
+				</td>
+				<td>
+					<div id="extInfo_port"></div>
+				</td>
+			</tr>
+		</table>
+
+		<!-- 안내문구 & 로그아웃 버튼 -->
+		<div id="propertiesBottom">
+			<div id="sign_mold">
+				<label id="properties_lang_sign"></label>
+			</div>
+			
+			<div id="logoutBtn_mold"  onclick="logout()">
+				<a href="login.html"><input id="logoutBtn" type="button"></a>
+			</div>
+		</div>
+	</div>
+
+	<!-- 데이터 사용 설정 화면 -->
+	<div id="dataSettingForm">
+		<!-- 데이터 사용 설정 타이틀 -->
+		<table id="titleTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="backFromPropertiesForm">
+					<img id="backFromDataSettingForm" src="./img/backBtnWhite.png" onclick="saveDataUse()">
+				</td>
+				<td style="width: 70%; text-align: center;">
+					<label id="dataSetting_lang_title"></label>
+				</td>
+				<td>
+					<div class="blankLine"></div>
+				</td>
+			</tr>
+		</table>
+
+		<table id="dataSettingTable" cellpadding="0" cellspacing="0">
+			<tr>
+				<td style="width: 90%;">
+					<label id="dataSetting_lang"></label>
+				</td>
+				<td>
+					<div class="onoffswitch">
+					    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="data">
+					    <label class="onoffswitch-label" for="data"></label>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id='log' style="position: fixed; top: 0; left: 0; background-color: black; color: white;">
+	</div>
+</body>
+</html>

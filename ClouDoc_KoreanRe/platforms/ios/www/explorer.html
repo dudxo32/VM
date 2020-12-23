@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+<meta name="format-detection" content="telephone=no">
+<title>CentralECM</title>
+
+<!-- external css files -->
+<link type="text/css" rel="stylesheet" href="css/autoTextResize.css" />
+
+<!-- internal css files -->
+<link type="text/css" rel="stylesheet" href="css/common.css" />
+<link type="text/css" rel="stylesheet" href="css/explorer.css" />
+<link type="text/css" rel="stylesheet" href="css/progress.css" />
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<script type="text/javascript" src="js/explorer.js"></script>
+<script type="text/javascript" src="js/util/hammer.js"></script>
+<script type="text/javascript" src="js/util/childbrowser.js"></script>
+<script type="text/javascript" src="js/util/utilsocket.js"></script>
+<script type="text/javascript" src="js/util/webstorage.js"></script>
+<script type="text/javascript" src="js/plugin/UpDownManager.js"></script>
+<script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+<script type="text/javascript" src="js/plugin/CryptUtil.js"></script>
+<script type="text/javascript" src="js/plugin/AppManager.js"></script>
+<script type="text/javascript" src="js/plugin/DeviceStatus.js"></script>
+<script type="text/javascript" src="js/plugin/DeviceUtil.js"></script>
+<script type="text/javascript" src="js/plugin/Entertainment.js"></script>
+<script type="text/javascript" src="js/plugin/ActivityView.js"></script>
+<script type="text/javascript" src="js/plugin/ProxyConnect.js"></script>
+<script type="text/javascript" src="js/plugin/ProxyPlugin.js"></script>
+<script type="text/javascript" src="js/manager/getdrivelist.js"></script>
+<script type="text/javascript" src="js/manager/mobile/getlist.js"></script>
+<script type="text/javascript" src="js/manager/mobile/LocalFSManager.js"></script>
+<script type="text/javascript" src="js/manager/alertMessage.js"></script>
+<script type="text/javascript" src="js/manager/sort.js"></script>
+<script type="text/javascript" src="js/manager/getserverinfo.js"></script>
+<script type="text/javascript" src="js/manager/mobile/loginmanager.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+	// 화면 오픈시 fade효과
+	$('#explorerForm').fadeIn(300);
+	
+	// 화면 사이즈 조정
+	document.getElementById('explorerForm').style.width = $(window).width() + 'px';
+	document.getElementById('explorerForm').style.height = $(window).height() + 'px';
+	
+	// 새폴더 생성, 폴더명 변경
+	$('.singleDialogForm').css('width', $(window).width()*0.7 + 'px');
+	$('.singleDialogForm').css('height', $(window).height()*0.2 + 'px');
+	$('.singleDialogForm').css('left', ($(window).width() - $('.singleDialogForm').width())/2 + 'px');
+	$('.singleDialogForm').css('top', ($(window).height() - $('.singleDialogForm').height())/2 + 'px');
+	
+	$('.multipleDialogForm').css('width', $(window).width()*0.8 + 'px');
+	$('.multipleDialogForm').css('height', $(window).height()*0.4 + 'px');
+	$('.multipleDialogForm').css('left', ($(window).width() -$('.multipleDialogForm').width())/2 + 'px');
+	$('.multipleDialogForm').css('top', ($(window).height() -$('.multipleDialogForm').height())/2 + 'px');
+
+	$('#toast').css('left', ($(window).width() -$('#toast').width())/2 + 'px');
+	$('#toast').css('top', ($(window).height() -$('#toast').height())*0.85 + 'px');
+
+	// progressBar
+	document.getElementById('updown_progressbar').style.width= $(window).height()*0.421+ 'px';
+	document.getElementById('updown_progressbar').style.height= $(window).width()*0.521+ 'px';
+	document.getElementById('updown_progressbar').style.marginLeft= ($(window).width()-$('#updown_progressbar').width())/2+ 'px';
+	document.getElementById('updown_progressbar').style.marginTop= ($(window).height()-$('#updown_progressbar').height())/2+ 'px';
+
+	// 파일 목록 높이 조정
+	document.getElementById('explorerList').style.height=	$(window).height()- ($(explorerTitle).height()+ $(explorerDir).height())+ 'px';
+	document.getElementById('localList').style.height=		$(window).height()- ($(explorerTitle).height()+ $(explorerDir).height())+ 'px';
+	
+                  
+                  // 앱델리게이트에서 값을 받아옴
+                  var arguments = new Array();
+                  arguments = window.location.hash;
+                  var argument = "";
+                  authKey = "";
+                  for(i = 1; i < arguments.length; i++) {
+                    argument += arguments[i];
+                  }
+                  
+                  var argArr = argument.split('&');
+                  
+                  accountID = argArr[0];
+                  authKey = argArr[1];
+                  mac = argArr[2];
+
+                  SetlocalStorage("UserID", accountID);
+                  SetlocalStorage("AuthKey", authKey);
+                  SetlocalStorage("mac", mac);
+                  SetlocalStorage("useProxy", "false");
+                  SetlocalStorage("firstSort", 0);
+    // 모든 클릭 이벤트 id 받기
+   // $(window).on('click', clickFunc);
+                  
+    
+                  document.getElementById('renameName').onfocus = function (e) {
+                        e.preventDefault(); e.stopPropagation();
+                        setTimeout(function(){window.scrollTo(0,-100);}, 0); //the second 0 marks the Y scroll pos. Setting this to i.e. 100 will push the screen up by 100px.
+                  }
+                  
+                  document.getElementById('newFolderName').onfocus = function (e) {
+                        e.preventDefault(); e.stopPropagation();
+                        setTimeout(function(){window.scrollTo(0,-100);}, 0); //the second 0 marks the Y scroll pos. Setting this to i.e. 100 will push the screen up by 100px.
+                  }
+});
+
+// 모든 클릭 이벤트 id 받기
+/*
+function clickFunc(obj) {
+    alert(obj.target.id);
+}
+*/
+
+// 새폴더 생성 & 폴더명 변경 시, 엔터키로 자동 실행
+window.document.onkeydown= function(e){
+	if(e.keyCode == 13) {
+		if($('#newFolderName').is(':focus')) {
+			$('#newFolderName').blur();
+			newFolderCreate();
+		}
+		else if($('#renameName').is(':focus')) {
+			$('#renameName').blur();
+            rename();
+		}
+	}
+}
+
+// <body>로드시 호출 함수
+function onBodyLoad() {
+	document.addEventListener("deviceready", init, false);
+}
+
+// onBodyLoad() -> init() 호출
+function init() {
+	document.addEventListener("backbutton", onBackKeyDown, false);
+    deviceUtil = new DeviceUtil();
+    deviceUtil.langID(function(r) {
+                      retValueArr = new Array();
+                      retValueArr = r.split("\t");
+                      SetlocalStorage("OSLang", retValueArr[0]);
+                      if(retValueArr[1] != "" && retValueArr[1] != null) SetlocalStorage("Officesuite", retValueArr[1]);
+                      else            SetlocalStorage("Officesuite", "nonexistent");
+                      getLoginLang();
+                      }, function(r) {alert("init ERR: "+ r);});
+                      
+                      
+    SetlocalStorage("DeviceID", device.uuid); // 기기 고유 번호
+    deviceUtil.DevicePlatform(SetDeviceInfo, function(r){alert("Set deivce info ERR: "+ r)});
+    regDevice();
+}
+
+/* onBodyLoad() -> init() -> SetDeviceInfo()
+ * 디바이스 정보 저장
+ */
+function SetDeviceInfo(r) {
+    RetArr = new Array();
+    RetArr = r.split("\t");
+    SetlocalStorage("Platform", RetArr[0]); // 값이 '12'로 고정되었다.
+    SetlocalStorage("PUSHID", RetArr[1]); // CommonPack.java의 RegID값
+    
+}
+
+//디바이스 등록
+function regDevice() {
+    protocol= "http";
+    // npdocapp.koreanre.co.kr
+    var server= "npdocapp.koreanre.co.kr";
+    var id= accountID;
+    var password= " ";
+    // setting port
+    
+    if(server.indexOf(":") == -1) {
+        port= "80";
+        SSLPort= "443";
+    } else {
+        port= server.substring(server.lastIndexOf(":")+ 1);
+        SSLPort= server.substring(server.lastIndexOf(":")+ 1);
+        server= server.substring(0, server.lastIndexOf(":"));
+    }
+    
+    tmpAgent = GetlocalStorage("Platform");
+    tmpDeviceID = GetlocalStorage("DeviceID");
+    tmpServerIP= GetlocalStorage("webserver");
+    tmpUserID= GetlocalStorage("id");
+    
+    
+    if(tmpAgent == "11")  tmpAgent= "IPhone";
+    else if(tmpAgent == "12") tmpAgent= "AndroidPhone";
+    else if(tmpAgent == "13") tmpAgent= "Windows";
+    else       tmpAgent= "Tablet";
+    tmpAgent = "11";
+    
+    tmpDeviceID1= tmpDeviceID.substr(0, 25);
+    tmpDeviceID2= tmpDeviceID.substr(25);
+    tmpDeviceID= tmpDeviceID1 + " " + tmpDeviceID2;
+    
+    SetlocalStorage("useProxy", "false");
+    getserverinfo(protocol, port, server);
+    tmpDeviceID= GetlocalStorage("DeviceID");
+    pushid= GetlocalStorage("PUSHID");
+    DeviceInfo= device.name + "\t" + device.platform +"\t" + tmpDeviceID + "\t" + device.version +"\t"+tmpAgent;
+    value= DeviceInfo+"\t"+id+"\t"+password+"\t"+pushid;
+    SetlocalStorage("webserver", server);
+    SetlocalStorage("id", id);
+    cryptutil= new CryptUtil();
+    cryptutil.call(function(r) {
+                   loginRetArr= new Array();
+                   loginRetArr= r.split("\t");
+                   
+                   authID = GetlocalStorage("UserID");
+                   AuthKey = GetlocalStorage("AuthKey");
+                   AuthMac = GetlocalStorage("mac");
+                   serviceID = GetlocalStorage("serviceID");
+                   
+                   tmpparaData= "DeviceName=" + loginRetArr[0] + ";DevicePlatform=" + loginRetArr[1] + ";DeviceID=" + loginRetArr[2] + ";SofewareVer=" + loginRetArr[3]+";ModelName="+loginRetArr[4]
+                   + ";UserID=" + loginRetArr[5] + ";Password=" + loginRetArr[6]+ ";PushRegID=" + loginRetArr[7];
+                   tmpCookie= "PlusVersion=version 1.0"+ ";RegSession="+ loginRetArr[8];
+                   LoginparaData= "Server="+server+"&Port="+port+"&Url="+"/webapp/device_reg_request.jsp"+"&CookieData="+tmpCookie+"&ParamData="+tmpparaData+"&AccountId="+authID+"&AuthKey="+AuthKey+"&mac="+AuthMac+"&serviceID="+serviceID;
+                   if(useProxy == "true"){
+                        us = new ProxyConnect();
+                        us.proxyconn(success_reg, function(){alert('fail');}, protocol, port, server, "POST", "/webapp/protocal_mgmt.jsp", LoginparaData);
+                   } else {
+                        LoginRetVal= AjaxRequest(protocol, port, server, "POST", "/webapp/protocal_mgmt.jsp", LoginparaData);
+                        var checkretvalArr= new Array();
+                        checkretvalArr= LoginRetVal.split("\r\n");
+                        if("version 1.0" == checkretvalArr[0].toLowerCase()) {
+                                if("success" == checkretvalArr[1].toLowerCase()
+                                    || "Already Exist" == checkretvalArr[1]
+                                    || "Incorrect Password" == checkretvalArr[1]) {
+                                logincheck();
+                                } else if(checkretvalArr[1].toLowerCase() != "Auth Fail"){
+                                    alert(checkretvalArr[1].toLowerCase());
+                                    AM = new AppManager();
+                   setTimeout(function(){
+                              AM.auth_get();
+                              AM.finishapp();
+                              }, 1000);
+                                }
+                        } else if(checkretvalArr[1].toLowerCase() != "Auth Fail"){
+                            navigator.notification.alert(LoginRetVal, null, 'Login', 'OK');
+                            AM = new AppManager();
+                   setTimeout(function(){
+                              AM.auth_get();
+                              AM.finishapp();
+                              }, 1000);
+                        }
+                   }
+                   }, function(e){alert("Device regist ERR: "+ e)}, value, GetlocalStorage("SiteID"));
+}
+
+
+function success_reg(LoginRetVal){
+    var checkretvalArr= new Array();
+    checkretvalArr= LoginRetVal.split("\r\n");
+    if("version 1.0" == checkretvalArr[0].toLowerCase()) {
+        if("success" == checkretvalArr[1].toLowerCase()
+           || "Already Exist" == checkretvalArr[1]
+           || "Incorrect Password" == checkretvalArr[1]) {
+            logincheck();
+        } else {
+            alert(checkretvalArr[1].toLowerCase());
+        }
+    } else
+    navigator.notification.alert(LoginRetVal, null, 'Login', 'OK');
+}
+// 로그인 진행
+function logincheck() {
+    var secure = GetlocalStorage("secureStatus");
+    var auto = GetlocalStorage("auto");
+    var server = "npdocapp.koreanre.co.kr";
+    var id = accountID;
+    var password = " ";
+    // Login type 확인
+    LoginType = "Normal";
+    /* sel = document.getElementById('login_type');
+     if(sel.options[sel.selectedIndex].value != "login") {
+     if(GetlocalStorage("auto") == "true") {
+     navigator.notification.alert(login_alert_not_support_auto, null, login_alert_title, 'OK');
+     SetlocalStorage("auto", "false");
+     }
+     if(sel.options[sel.selectedIndex].value == "guest") LoginType= "GuestID";
+     else if(sel.options[sel.selectedIndex].value == "offline") {
+     // explorer.html의 타이틀 로드 시간이 걸리기 때문에, setTimeout 설정
+     setTimeout(function() {offlineLogin(id, password);}, 400);
+     return;
+     }
+     } */
+    // 보안접속 여부 확인
+    if(secure == "true") secure= "yes";
+    else     secure= "no";
+    protocol= "http";
+    port= GetlocalStorage("port");
+    SSLPort= GetlocalStorage("securityPort");
+    var clientconfigs= GetlocalStorage("nClientConfigs");
+    var hide_ssl= "";
+    if(clientconfigs != null && clientconfigs != "") {
+        clientconfigArr= clientconfigs.split(",");
+        hide_ssl= clientconfigArr[0] & 1024;
+        if(hide_ssl != 0 && hide_ssl != "" && hide_ssl != null)
+        SetlocalStorage("SSL", "no");
+        else if(secure == "yes") {
+            SetlocalStorage("SSL", "yes");
+            SetlocalStorage("SSLPort", SSLPort);
+        } else
+        SetlocalStorage("SSL", "no");
+    } else
+    SetlocalStorage("SSL", "no");
+    
+    gettabletinfo(protocol, port, server);
+    getserverinfo(protocol, port, server);
+    login(id, password, LoginType);
+    
+}
+
+//'취소'키 입력시, 디렉토리 이동/앱 종료 다이얼로그
+function onBackKeyDown() {
+    nowFunc = "none";
+    
+    // 문서함 선택 창 닫기
+    if($('#document_select').css('display') != "none") {
+		closeDocumentSelect();
+		return;
+	}
+
+	// 좌측 메뉴 닫기
+	if($('#menu').css('display') != "none") {
+		closeMenu();
+		return;
+	}
+	
+	// 파일 목록 정렬창 닫기
+	if(($('#sortModal').css('display')) != "none") {
+		closeSortDialog();
+		return;
+	}
+	
+	// 단일 파일 작업창 닫기
+	if(($('#fileFuncModal').css('display')) != "none") {
+		closeFileFuncDialog();
+		return;
+	}
+	
+	// 사진 업로드 작업창 닫기
+	if(($('#cameraUploadDialog').css('display')) != "none") {
+		closeCameraDialog();
+		return;
+	}
+	
+	// 새폴더 생성 화면 시, 화면 종료
+	if(($('#newFolderForm').css('display')) != "none") {
+		closeNewFolderDialog();
+		return;
+	}
+	
+	// 이름 변경 화면 시, 화면 종료
+	if(($('#renameForm').css('display')) != "none") {
+		closeRenameDialog();
+		return;
+	}
+	
+	// 다중 파일 선택모드일 시, 다중선택 모드 취소
+	if(($('#explorerTitle_select').css('display')) != "none") {
+		singleMode();
+		return;
+	}
+	
+	// 상위폴더가 존재할 시, 상위폴더로 이동
+	// 최상위 폴더일 시, App 종료
+	if(nowPage == "server") {
+		if(tmpUserPath == "")	navigator.notification.confirm(lang_alert_closeApp, onBackKeyDownMsg, lang_alert_closeApp_title, ['Cancel', 'OK']);
+		else					back();
+	}
+	else if(nowPage == "local") {
+		if(nowPath == localRootPath) {
+			navigator.notification.confirm(lang_alert_closeApp, onBackKeyDownMsg, lang_alert_closeApp_title, ['Cancel', 'OK']);
+		} else {
+			back();
+		}
+	}
+}
+
+// 앱 종료
+function onBackKeyDownMsg(button) {
+	if(button == 2) {
+    AppManager = new AppManager();
+		AppManager.finishapp("", "");
+    }
+}
+
+// '취소'키 입력시, 디렉토리 이동
+function back() {
+	if(nowPage == "server") {
+		if(tmpUserPath == "/" || tmpUserPath == "")	getDriveList();
+		else	upFolder();
+	}
+    else if(nowPage == "local")	{
+            upLocalFolder();
+    }
+}
+
+// 언어 불러오기
+function getLoginLang() {
+	langfile = "./lang/kor.xml";
+	
+	OSLang= GetlocalStorage("OSLang");
+	if(OSLang == "eng") langfile = "./lang/eng.xml";
+	else if(OSLang == "jpn") langfile = "./lang/jpn.xml";
+	else if(OSLang == "chn") langfile = "./lang/chn.xml";
+	
+	$.ajax({
+		type: "get",
+		dataType: "xml",
+		url: langfile,
+		success: function(xml) {
+			lang = $(xml).find("lang");
+			
+			/*	UI	*/
+			// 새폴더 생성
+			$('#newFd_lang_cancel').text(lang.find("newFd_lang_cancel").text());
+			$('#newFd_lang_title').text(lang.find("newFd_lang_title").text());
+			$('#newFd_lang_create').text(lang.find("newFd_lang_create").text());
+			// 폴더명 변경
+			$('#rename_lang_cancel').text(lang.find("rename_lang_cancel").text());
+			$('#rename_lang_title').text(lang.find("rename_lang_title").text());
+			$('#rename_lang_change').text(lang.find("rename_lang_change").text());
+			// explorerForm
+			explorer_lang_title_server= lang.find("explorer_lang_title_server").text();
+			explorer_lang_title_local= lang.find("explorer_lang_title_local").text();
+			$("#multiple_lang_cancel").text(lang.find("multiple_lang_cancel").text());
+			$("#multiple_lang_sign").text(lang.find("multiple_lang_sign").text());
+			$("#multiple_lang_allSelcet").text(lang.find("multiple_lang_allSelcet").text());
+			$("#work_lang_cancel").text(lang.find("work_lang_cancel").text());
+			$("#work_lang_apply").text(lang.find("work_lang_apply").text());
+			$("#documentSel_lang_server").text(explorer_lang_title_server);
+			$("#documentSel_lang_local").text(explorer_lang_title_local);
+			//좌측메뉴
+			$("#serverDocumentBox_lang_title").text(lang.find("serverDocumentBox_lang_title").text());
+			$("#localDocumentBox_lang_title").text(lang.find("localDocumentBox_lang_title").text());
+			$("#ldb_lang_local").text(lang.find("ldb_lang_local").text());
+			// 정렬 다이얼로그
+			$("#sort_lang_title").text(lang.find("sort_lang_title").text());
+			$("#sort_lang_LtH").text(lang.find("sort_lang_LtH").text());
+			$("#sort_lang_HtL").text(lang.find("sort_lang_HtL").text());
+			$("#sort_lang_new").text(lang.find("sort_lang_new").text());
+			$("#sort_lang_old").text(lang.find("sort_lang_old").text());
+			// 단일 파일 작업 다이얼로그
+			$("#fileFunc_lang_copy").text(lang.find("fileFunc_lang_copy").text());
+			$("#fileFunc_lang_move").text(lang.find("fileFunc_lang_move").text());
+			$("#fileFunc_lang_chName").text(lang.find("fileFunc_lang_chName").text());
+			$("#fileFunc_lang_delete").text(lang.find("fileFunc_lang_delete").text());
+			// 하단 작업 창
+			$("#singleTool_lang_cameraOn").text(lang.find("singleTool_lang_camera").text());
+			$("#singleTool_lang_cameraOff").text(lang.find("singleTool_lang_camera").text());
+			$("#singleTool_lang_newFolderOn").text(lang.find("singleTool_lang_newFolder").text());
+			$("#singleTool_lang_newFolderOff").text(lang.find("singleTool_lang_newFolder").text());
+			$("#multipleTool_lang_move").text(lang.find("multipleTool_lang_move").text());
+			$("#multipleTool_lang_copy").text(lang.find("multipleTool_lang_copy").text());
+			$("#multipleTool_lang_newFolder").text(lang.find("multipleTool_lang_newFolder").text());
+			$("#multipleTool_lang_delete").text(lang.find("multipleTool_lang_delete").text());
+			$("#workTool_lang_newFolder").text(lang.find("workTool_lang_newFolder").text());
+			// 사진 업로드 다이얼로그
+			$("#picture_lang_title").text(lang.find("picture_lang_title").text());
+			$("#picture_lang_pictureUpload").text(lang.find("picture_lang_pictureUpload").text());
+			$("#picture_lang_videoUpload").text(lang.find("picture_lang_videoUpload").text());
+			$("#piture_lang_pictureLoad").text(lang.find("piture_lang_pictureLoad").text());
+			$("#picture_lang_videoLoad").text(lang.find("picture_lang_videoLoad").text());
+			
+			/*	alert	*/
+			lang_alert_closeApp_title= lang.find("lang_alert_closeApp_title").text();
+			lang_alert_not_exists_path= lang.find("lang_alert_not_exists_path").text();
+			lang_alert_overwrite= lang.find("lang_alert_overwrite").text();
+			lang_alert_offset= lang.find("lang_alert_offset").text();
+			lang_alert_not_support_format= lang.find("lang_alert_not_support_format").text();
+			lang_alert_path_exists_err= lang.find("lang_alert_path_exists_err").text();
+			lang_alert_create_folder_fail= lang.find("lang_alert_create_folder_fail").text();
+			lang_parameter_missing= lang.find("lang_parameter_missing").text();
+			lang_server_error= lang.find("lang_server_error").text();
+			lang_status_stop= lang.find("lang_status_stop").text();
+			lang_login_incorrect_password= lang.find("lang_login_incorrect_password").text();
+			lang_login_password_expire= lang.find("lang_login_password_expire").text();
+			lang_login_domain_disk_overflow= lang.find("lang_login_domain_disk_overflow").text();
+			lang_not_exists= lang.find("lang_not_exists").text();
+			lang_login_guest_expire= lang.find("lang_login_guest_expire").text();
+			lang_login_not_allowed_agent= lang.find("lang_login_not_allowed_agent").text();
+			lang_exception_error= lang.find("lang_exception_error").text();
+			lang_ip_filtered= lang.find("lang_ip_filtered").text();
+			lang_server_busy= lang.find("lang_server_busy").text();
+			lang_user_busy= lang.find("lang_user_busy").text();
+			lang_access_denied= lang.find("lang_access_denied").text();
+			lang_invalid_parameter= lang.find("lang_invalid_parameter").text();
+			lang_disk_overflow= lang.find("lang_disk_overflow").text();
+			lang_already_folder_exists= lang.find("lang_already_folder_exists").text();
+			lang_already_file_error= lang.find("lang_already_file_error").text();
+			lang_guest_root= lang.find("lang_guest_root").text();
+			lang_sharing_violation= lang.find("lang_sharing_violation").text();
+			lang_guest_data_root= lang.find("lang_guest_data_root").text();
+			lang_already_file_exists= lang.find("lang_already_file_exists").text();
+			lang_already_folder_error= lang.find("lang_already_folder_error").text();
+			lang_has_acl_folder= lang.find("lang_has_acl_folder").text();
+			lang_has_share_folder= lang.find("lang_has_share_folder").text();
+			lang_substree_exists= lang.find("lang_substree_exists").text();
+			lang_filename_filtered= lang.find("lang_filename_filtered").text();
+			lang_upload_limit= lang.find("lang_upload_limit").text();
+			lang_upload_busy= lang.find("lang_upload_busy").text();
+			lang_partial_success= lang.find("lang_partial_success").text();
+			lang_download_busy= lang.find("lang_download_busy").text();
+			lang_license_expired= lang.find("lang_license_expired").text();
+			lang_download_limit= lang.find("lang_download_limit").text();
+			lang_login_not_exist_device= lang.find("lang_login_not_exist_device").text();
+			lang_login_stop_device= lang.find("lang_login_stop_device").text();
+			lang_login_lost_device= lang.find("lang_login_lost_device").text();
+			lang_alert_not_exists_Officesuite= lang.find("lang_alert_not_exists_Officesuite").text();
+			lang_alert_check_network= lang.find("lang_alert_check_network").text();
+			network_alert_title= lang.find("network_alert_title").text();
+			lang_alert_same_dir= lang.find("lang_alert_same_dir").text();
+			lang_alert_closeApp= lang.find("lang_alert_closeApp").text();
+			lang_alert_not_found_err= lang.find("lang_alert_not_found_err").text();
+			lang_alert_security_err= lang.find("lang_alert_security_err").text();
+			lang_alert_abort_err= lang.find("lang_alert_abort_err").text();
+			lang_alert_not_readable_err= lang.find("lang_alert_not_readable_err").text();
+			lang_alert_encoding_err= lang.find("lang_alert_encoding_err").text();
+			lang_alert_no_modification_allowed_err= lang.find("lang_alert_no_modification_allowed_err").text();
+			lang_alert_invalid_state_err= lang.find("lang_alert_invalid_state_err").text();
+			lang_alert_syntax_err= lang.find("lang_alert_syntax_err").text();
+			lang_alert_invalid_modification_err= lang.find("lang_alert_invalid_modification_err").text();
+			lang_alert_quota_exceeded_err= lang.find("lang_alert_quota_exceeded_err").text();
+			lang_alert_type_mismatch_err= lang.find("lang_alert_type_mismatch_err").text();
+			lang_alert_valid_folder_name= lang.find("lang_alert_valid_folder_name").text();
+			lang_alert_valid_folder_name_close= lang.find("lang_alert_valid_folder_name_close").text();
+			lang_confrim_wifi = lang.find("lang_confrim_wifi").text();
+           
+           /* Toast */
+           
+           
+           toast_lang_move = lang.find("toast_lang_move").text();
+           toast_lang_copy = lang.find("toast_lang_copy").text();
+           toast_lang_upload = lang.find("toast_lang_upload").text();
+           toast_lang_download = lang.find("toast_lang_download").text();
+           toast_lang_delete = lang.find("toast_lang_delete").text();
+
+		},
+		error: function(xhr, status, error) {
+	        navigator.notification.alert("Get language ERR: "+ status, null, 'Explorer', 'OK');
+	        navigator.notification.alert("Get language ERR: "+ error, null, 'Explorer', 'OK');
+		}
+	});
+}
+
+function log(context) {
+	$('#log').html(context);
+}
+</script>
+</head>
+
+<body onload="onBodyLoad()">
+	<!-- 좌측 메뉴 -->
+	<div id="menu">
+		<!-- 알림 & 옵션 버튼, 구름 이미지 -->
+		<div id="menuTop" >
+            <!-- 알림 버튼 -->
+            <div id="alarm">
+            </div>
+			<!-- 구름 이미지 -->
+			<div id="cloudImg_mold">
+				<img src="img/menu_cloud.png"><span></span>
+			</div>
+			<!-- 설정 버튼 -->
+			<div id="settingBtn_mold">
+				<a href="explorer_setting.html"><img id="settingBtn" src="img/menu_setting.png"></a>
+			</div>
+		</div>
+		<div id="menuLine"></div>
+		
+		<!-- 서버 문서함 -->
+		<table id="serverDocumentBox" cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="serverDocumentBox_title" onclick="menuSelectServer()">
+					<label id="serverDocumentBox_lang_title"></label>
+				</td>
+				<td id="serverDocumentBox_btn" onclick="serverDocumentBoxFunction()">
+					<img src="img/upsortBtn.png"><span></span>
+				</td>
+			</tr>
+		</table>
+		<div id="serverDocumentList">
+			<ul id="menu_explorerList"></ul>
+		</div>
+	</div>
+	
+	<!-- 목록 정렬 선택 창 -->
+	<div class="multipleDialogForm" id="sortModal">
+		<div class="multipleDialogFormTitle">
+			<div style="width: 80%;">
+				<label id="sort_lang_title"></label><span></span>
+			</div>
+			<div style="width: 20%; text-align: right;" onclick="closeSortDialog()">
+				<img src="img/closeBtnWhite.png"><span></span>
+			</div>
+		</div>
+		<div class='multipleDialogFormContent'>
+			<div ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' onclick="sort_LtH()">
+				<label id="sort_lang_LtH"></label><span></span>
+			</div>
+			<div ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' onclick="sort_HtL()">
+				<label id="sort_lang_HtL"></label><span></span>
+			</div>
+			<div ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' onclick="sort_new()">
+				<label id="sort_lang_new"></label><span></span>
+			</div>
+			<div ontouchstart='touchStart(this)' ontouchend='touchEnd(this)' style="border: none;" onclick="sort_old()">
+				<label id="sort_lang_old"></label><span></span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 단일 파일 작업 창 -->
+	<div class="multipleDialogForm" id="fileFuncModal">
+		<div class="multipleDialogFormTitle">
+			<div id="maxFileNameWidth" style="width: 80%;">
+				<label id="fileFunc_lang_title"></label><span></span>
+			</div>
+			<div style="width: 20%; text-align: right;" onclick="closeFileFuncDialog()">
+				<img src="img/closeBtnWhite.png"><span></span>
+			</div>
+		</div>
+		<div class='multipleDialogFormContent'>
+			<div onclick="f_copy()">
+				<label id="fileFunc_lang_copy"></label><span></span>
+			</div>
+			<div onclick="snip()">
+				<label id="fileFunc_lang_move"></label><span></span>
+			</div>
+			<div onclick="openRenameDialog()">
+				<label id="fileFunc_lang_chName"></label><span></span>
+			</div>
+			<div style="border: none;" onclick="deleteFile()">
+				<label id="fileFunc_lang_delete" style="color: red;"></label><span></span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 새폴더 생성 화면 -->
+	<div class="singleDialogForm" id="newFolderForm">
+		<div class='singleDialogFormContent'>
+			<div style="height: 55%;">
+				<label id="newFd_lang_title"></label>
+				<span></span>
+			</div>
+			<div style="height: 45%;">
+				<input id="newFolderName" type="text" placeholder=" 새 폴더" onkeyup="resizeTextSize()"/>
+				<span></span>
+			</div>
+		</div>
+		<div class='singleDialogFormButton'>
+			<div onclick="closeNewFolderDialog()" style="border-right: 1px solid #D6D6DA;">
+				<label id="newFd_lang_cancel"></label><span></span>
+			</div>
+			<div onclick="newFolderCreate()">
+				<label id="newFd_lang_create"></label><span></span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 파일명 변경 화면 -->
+	<div class="singleDialogForm" id="renameForm">
+		<div class='singleDialogFormContent'>
+			<div style="height: 55%;">
+				<label id="rename_lang_title"></label>
+				<span></span>
+			</div>
+			<div style="height: 45%;">
+				<input id="renameName" type="text" onkeyup="resizeTextSize_rename()"/>
+				<input id="renameExtension" type="hidden">
+				<span></span>
+			</div>
+		</div>
+		<div class='singleDialogFormButton'>
+			<div onclick="closeRenameDialog()" style="border-right: 1px solid #D6D6DA;">
+				<label id="rename_lang_cancel"></label><span></span>
+			</div>
+			<div onclick="rename()">
+				<label id="rename_lang_change"></label><span></span>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 사진 업로드 창 -->
+	<div id='cameraUploadDialog'>
+		<div id='cameraUploadDialogBlank' onclick="closeCameraDialog()"></div>
+		<div id='cameraUploadDialogTitle'>
+			<div id='cameraUploadDialogTitleLabel'>
+				<label id='picture_lang_title'></label><span></span>
+			</div>
+			<div id='cameraUploadDialogTitleImg'>
+				<img src="img/closeBtnBlack.png" onclick="closeCameraDialog()"><span></span>
+			</div>
+		</div>
+		<table id='cameraUploadDialogContent' cellpadding="0" cellspacing="0">
+			<tr><td onclick="CallCamera()">
+					<img src="img/cameraOn.png"/>
+					<label id="picture_lang_pictureUpload"></label>
+					<span></span>
+			</td></tr>
+			<tr><td onclick="CallVideo()">
+					<img src="img/callVideo.png"/>
+					<label id="picture_lang_videoUpload"></label>
+					<span></span>
+			</td></tr>
+			<tr><td onclick="GetGalleryPhoto()">
+					<img src="img/callPictureGallery.png"/>
+					<label id="piture_lang_pictureLoad"></label>
+					<span></span>
+			</td></tr>
+			<tr><td style="border-bottom: none;" onclick="GetGalleryVideo()">
+					<img src="img/callVideoGallery.png"/>
+					<label id="picture_lang_videoLoad"></label>
+					<span></span>
+			</td></tr>
+		</table>
+	</div>
+
+	<!-- Dialog 오픈 시 배경을 어둡게 -->
+	<div id="blank" style="width: 100%; height: 100%; position: fixed; background-color: black; opacity: 0.3; z-index: 2; display: none;">
+	</div>
+	
+	<!-- TOAST -->
+<!--	<div id="toast" style="width: 80%; height: 5%; position: fixed; background-color: black; opacity: 0.6; border-radius: 10px; z-index: 2; display: flex; color: #FFFFFF; display: none;">-->
+<!--		<div style="width: 100%; height: 100%; border-right: 1px solid #FFFFFF;">-->
+<!--			<label id="toastContent" style="vertical-align: middle; padding-left: 5%;">-->
+<!--				CONTENT-->
+<!--			</label><span></span>-->
+<!--		</div>-->
+<!--	</div>-->
+    <div id="toast">
+        <div>
+            <label id="toastContent"></label><span></span>
+        </div>
+    </div>
+
+	<!-- Progress Bar -->
+	<div id="updown_progressbar" style="border-radius: 5px; z-index:3; position: absolute; top: 0; left: 0; display: none;">
+		<div id="pwidget">
+			<div id="ProgressbarCurrent">
+				<div id="IndicatorCurrent"></div>
+			</div>
+			<div id="ProgressnumCurrent">0</div>
+			<div id="progressbar">
+				<div id="indicator"></div>
+			</div>
+			<div id="progressnum">0</div>
+			
+			<div style="text-align:right; padding-top:21px; padding-right:10px;">
+				<a id="updowncancel" class="button" style="margin:-2px 0 0;width:60px; height:25px" onclick="updownCancel()" >Cancel</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- 문서함 화면 -->
+	<div id="explorerForm">
+		<!-- 문서함 타이틀 -->
+		<table id="explorerTitle" cellpadding="0" cellspacing="0">
+			<!-- 단일 파일 모드 -->
+			<tr id="explorerTitle_normal">
+				<td id="treeBtn" align="center" onclick="openMenu()">
+					<img src="img/treeBtn.png" style="vertical-align: sub;">
+				</td>
+				<td class="explorer_title" align="center">
+					<label id="explorer_lang_title"></label>
+				</td>
+				<td id="multipleBtn" align="center">
+				</td>
+			</tr>
+			<!-- 다중 파일 모드 -->
+			<tr id="explorerTitle_select" style="background-color: #000000; display: none;">
+				<td id="cancel_multiple" style="width: 25%;" align="center" onclick="singleMode()">
+					<label id="multiple_lang_cancel"></label>
+				</td>
+				<td id="multiple_title" align="center">
+					<label id="multiple_lang_sign"></label>
+				</td>
+				<td id="all_multiple" align="center">
+					<label id="multiple_lang_allSelcet" onclick="multipleAll()"></label>
+				</td>
+			</tr>
+			<!-- 파일 작업 모드 -->
+			<tr id="explorerTitle_work" style="display: none;">
+				<td id="cancel_multiple" align="center" onclick="singleMode()">
+					<div><label id="work_lang_cancel"></label></div>
+				</td>
+				<td class="explorer_title" align="center">
+					<label id="work_lang_title"></label>
+				</td>
+				<td id="multipleBtn" align="center">
+					<label id="work_lang_apply" onclick="paste()"></label>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 문서함 변경 선택창 -->
+		<div id="document_select">
+			<div style="border-bottom: 1px solid #C6C6C6;" onclick="selectServer()">
+				<label id="documentSel_lang_server"></label><span></span>
+			</div>
+			<div onclick="selectLocal()">
+				<label id="documentSel_lang_local"></label><span></span>
+			</div>
+		</div>
+		
+		<!-- 현재 디렉토리 -->
+		<table id="explorerDir" cellpadding="0" cellspacing="0">
+			<tr>
+				<td style="width: 15%;" align="center" valign="middle" onclick="back()">
+					<img src="img/upFolder.png" style="vertical-align: middle;">
+				</td>
+				<td align="left">
+					: / <label id="currentFolder"></label>
+				</td>
+				<td id="sortBtn_modal" style="width: 15%;" align="center" valign="middle" onclick="openSortDialog()">
+					<img src="img/sortBtn.png"><span></span>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 서버 파일 목록 -->
+		<ul id="explorerList"></ul>
+		<!-- 로컬 파일 목록 -->
+		<ul id="localList" style="display: none;"></ul>
+		
+		<!-- 작업 툴 -->
+		<!-- 단일 파일 모드 -->
+		<!-- 다중 파일 모드 -->
+		<div class="explorerTool" id="explorerTool_selected">
+			<!-- 파일들 이동 -->
+			<div class="multipleBottomFunc" onclick="snip()">
+				<div class='bottomFuncImg'>
+					<img src="img/move.png"><span></span>
+				</div>
+				<div class='bottomFuncLabel'>
+					<label id='multipleTool_lang_move'></label><span></span>
+				</div>
+			</div>
+			<!-- 파일들 복사 -->
+			<div class="multipleBottomFunc" onclick="f_copy()">
+				<div class='bottomFuncImg'>
+					<img src="img/copy.png"><span></span>
+				</div>
+				<div class='bottomFuncLabel'>
+					<label id='multipleTool_lang_copy'></label><span></span>
+				</div>
+			</div>
+			<!-- 새폴더 생성 -->
+			<div class="multipleBottomFunc" onclick="openNewFolderDialog()">
+				<div class='bottomFuncImg'>
+					<img src="img/newFolderOn.png"><span></span>
+				</div>
+				<div class='bottomFuncLabel'>
+					<label id='multipleTool_lang_newFolder'></label><span></span>
+				</div>
+			</div>
+			<!-- 파일들 삭제 -->
+			<div class="multipleBottomFunc" onclick="deleteFile()">
+				<div class='bottomFuncImg'>
+					<img src="img/delete.png"><span></span>
+				</div>
+				<div class='bottomFuncLabel'>
+					<label id='multipleTool_lang_delete'></label><span></span>
+				</div>
+			</div>
+		</div>
+		<!-- 파일 작업 모드 -->
+		<div class="explorerTool" id="explorerTool_work">
+			<!-- 새폴더 생성 -->
+			<div class="workBottomFunc" onclick="openNewFolderDialog()">
+				<div class='bottomFuncImg'>
+					<img src="img/newFolderOn.png"><span></span>
+				</div>
+				<div class='bottomFuncLabel'>
+					<label id='workTool_lang_newFolder'></label><span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id='log' style="position: fixed; top: 0; left: 0; background-color: black; color: white;">
+	</div>
+</body>
+</html>

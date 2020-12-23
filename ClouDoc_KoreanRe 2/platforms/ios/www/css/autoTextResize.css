@@ -1,0 +1,210 @@
+@media (max-width:360px) {
+	html {
+		font-size:17px;
+	}
+	#loginBtn {
+		font-size:22px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:13px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:20px;
+	}
+}
+@media (min-width:361px) and (max-width:399px) {
+	html {
+		font-size:19px;
+	}
+	#loginBtn {
+		font-size:23px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:14px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:21px;
+	}
+}
+@media (min-width:400px) and (max-width:439px) {
+	html {
+		font-size:20px;
+	}
+	#loginBtn {
+		font-size:24px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:15px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:22px;
+	}
+}
+@media (min-width:440px) and (max-width:479px) {
+	html {
+		font-size:21px;
+	}
+	#loginBtn {
+		font-size:25px;
+	}
+	#file_info_date, #file_info_date, .subheading, #drive_info_date {
+		font-size:16px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:23px;
+	}
+}
+@media (min-width:480px) and (max-width:519px) {
+	html {
+		font-size:22px;
+	}
+	#loginBtn {
+		font-size:26px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:17px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:24px;
+	}
+}
+@media (min-width:520px) and (max-width:559px) {
+	html {
+		font-size:23px;
+	}
+	#loginBtn {
+		font-size:27px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:18px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:25px;
+	}
+}
+@media (min-width:560px) and (max-width:599px) {
+	html {
+		font-size:24px;
+	}
+	#loginBtn {
+		font-size:28px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:19px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:26px;
+	}
+}
+@media (min-width:600px) and (max-width:639px) {
+	html {
+		font-size:25px;
+	}
+	#loginBtn {
+		font-size:29px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:20px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:27px;
+	}
+}
+@media (min-width:640px) and (max-width:679px) {
+	html {
+		font-size:26px;
+	}
+	#loginBtn {
+		font-size:30px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:21px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:28px;
+	}
+}
+@media (min-width:680px) and (max-width:719px) {
+	html {
+		font-size:27px;
+	}
+	#loginBtn {
+		font-size:31px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:22px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:29px;
+	}
+}
+@media (min-width:720px) and (max-width:759px) {
+	html {
+		font-size:28px;
+	}
+	#loginBtn {
+		font-size:32px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:23px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:30px;
+	}
+}
+@media (min-width:760px) and (max-width:799px) {
+	html {
+		font-size:29px;
+	}
+	#loginBtn {
+		font-size:33px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:24px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:31px;
+	}
+}
+@media (min-width:800px) and (max-width:839px) {
+	html {
+		font-size:30px;
+	}
+	#loginBtn {
+		font-size:34px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:25px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:32px;
+	}
+}
+@media (min-width:840px) and (max-width:879px) {
+	html {
+		font-size:31px;
+	}
+	#loginBtn {
+		font-size:35px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:26px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:33px;
+	}
+}
+@media (min-width:880px) {
+	html {
+		font-size:32px;
+	}
+	#loginBtn {
+		font-size:36px;
+	}
+	#file_info_date, .subheading, #drive_info_date {
+		font-size:27px;
+	}
+	#explorerTitle, #alarm_lang_title {
+		font-size:34px;
+	}
+}

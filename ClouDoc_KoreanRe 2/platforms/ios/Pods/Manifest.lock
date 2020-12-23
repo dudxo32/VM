@@ -1,0 +1,51 @@
+PODS:
+  - CocoaAsyncSocket (7.4.3):
+    - CocoaAsyncSocket/All (= 7.4.3)
+  - CocoaAsyncSocket/All (7.4.3):
+    - CocoaAsyncSocket/GCD
+    - CocoaAsyncSocket/RunLoop
+  - CocoaAsyncSocket/GCD (7.4.3)
+  - CocoaAsyncSocket/RunLoop (7.4.3)
+  - CocoaLumberjack (2.2.0):
+    - CocoaLumberjack/Default (= 2.2.0)
+    - CocoaLumberjack/Extensions (= 2.2.0)
+  - CocoaLumberjack/Core (2.2.0)
+  - CocoaLumberjack/Default (2.2.0):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.2.0):
+    - CocoaLumberjack/Default
+  - MQTTClient/Core (0.7.4):
+    - CocoaLumberjack
+  - MQTTClient/Websocket (0.7.4):
+    - MQTTClient/Core
+    - SocketRocket
+  - ProxyKit (1.1.0):
+    - ProxyKit/standard (= 1.1.0)
+  - ProxyKit/Client (1.1.0):
+    - ProxyKit/common
+  - ProxyKit/common (1.1.0):
+    - CocoaAsyncSocket (~> 7.4)
+    - CocoaLumberjack (~> 2.2)
+  - ProxyKit/Server (1.1.0):
+    - ProxyKit/common
+  - ProxyKit/standard (1.1.0):
+    - ProxyKit/Client
+    - ProxyKit/Server
+  - SocketRocket (0.5.0)
+
+DEPENDENCIES:
+  - CocoaAsyncSocket
+  - CocoaLumberjack
+  - MQTTClient/Websocket
+  - ProxyKit
+
+SPEC CHECKSUMS:
+  CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
+  CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  MQTTClient: 1c1bedf87249a317ee9324b93252867bbc443ec7
+  ProxyKit: 1f35adc913debc7ca6748c02487361dabaaea532
+  SocketRocket: 2c51efccd2d73c99a923407ca4b06e7e9da95dbf
+
+PODFILE CHECKSUM: 4a633b792434c614b585ddd20de9f0fc8c24205f
+
+COCOAPODS: 1.0.0.rc.2

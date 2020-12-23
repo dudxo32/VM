@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<lang>
+	<!-- login.html -->
+	<login_lang_server>서버정보</login_lang_server>
+	<login_lang_id>아이디</login_lang_id>
+	<login_lang_pw>패스워드</login_lang_pw>
+	<login_lang_type>로그인 유형</login_lang_type>
+	<login_lang_preference>로그인 환경 설정</login_lang_preference>
+	<login_lang_loginBtn>로그인</login_lang_loginBtn>
+
+	<login_alert_title>로그인</login_alert_title>
+	<login_alert_insert_server>서버가 입력되지 않았습니다.&#xA;&#xA;서버입력창으로 이동하시겠습니까?</login_alert_insert_server>
+	<login_alert_insert_id>아이디를 입력해주세요.</login_alert_insert_id>
+	<login_alert_insert_password>비밀번호를 입력해주세요.</login_alert_insert_password>
+	<login_alert_not_exist>존재하지 않는 아이디입니다.</login_alert_not_exist>
+	<login_alert_input_server>서버정보는 '로그인 환경 설정 > 서버 정보'에서 입력이 가능합니다.&#xA;&#xA;서버입력창으로 이동하시겠습니까?</login_alert_input_server>
+	<login_alert_change_server>서버정보는 '로그인 환경 설정 > 서버 정보'에서 변경이 가능합니다.&#xA;&#xA;서버입력창으로 이동하시겠습니까?</login_alert_change_server>
+	<login_alert_not_support_auto>자동 접속은 online 로그인만 지원됩니다. 자동 접속 설정을 해제합니다.</login_alert_not_support_auto>
+	
+	<!-- login_setting.html -->
+	<subscribe>신청</subscribe>
+	<!-- settingForm -->
+	<setting_lang_title>설정</setting_lang_title>
+	<setting_lang_logSet>로그인 설정</setting_lang_logSet>
+	<setting_lang_serInfo>서버 정보</setting_lang_serInfo>
+	<setting_lang_regDevice>디바이스 등록</setting_lang_regDevice>
+	<setting_lang_extConfo>외부접속 정보</setting_lang_extConfo>
+	<!-- logSettingForm -->
+	<logSetting_lang_title>로그인 설정</logSetting_lang_title>
+	<logSetting_lang_auto>자동 로그인</logSetting_lang_auto>
+	<logSetting_lang_security>보안접속</logSetting_lang_security>
+	<logSetting_lang_online>온라인</logSetting_lang_online>
+	<logSetting_lang_offline>오프라인</logSetting_lang_offline>
+	<logSetting_lang_guest>게스트</logSetting_lang_guest>
+	<!-- serInfoForm -->
+	<serInfo_lang_title>서버 정보</serInfo_lang_title>
+	<serInfo_lang_ip>서버</serInfo_lang_ip>
+	<serInfo_lang_port>포트</serInfo_lang_port>
+	<serInfo_lang_securityPort>보안접속 포트</serInfo_lang_securityPort>
+	<!-- regDeviceForm -->
+	<regDevice_lang_title>디바이스 등록</regDevice_lang_title>
+	<regDevice_lang_devSetTitle>디바이스 설정</regDevice_lang_devSetTitle>
+	<regDevice_lang_ip>서버주소</regDevice_lang_ip>
+	<regDevice_lang_id>아이디</regDevice_lang_id>
+	<regDevice_lang_passwd>패스워드</regDevice_lang_passwd>
+	<regDevice_lang_devInfoTitle>디바이스 정보</regDevice_lang_devInfoTitle>
+	<deviceInfo_lang_model>모델명</deviceInfo_lang_model>
+	<deviceInfo_lang_id>디바이스 아이디</deviceInfo_lang_id>
+	<regDev_alert_insert_server>서버가 입력되지 않았습니다.</regDev_alert_insert_server>
+	<regDev_alert_insert_id>아이디를 입력해주세요.</regDev_alert_insert_id>
+	<regDev_alert_insert_password>비밀번호를 입력해주세요.</regDev_alert_insert_password>
+	<regDev_alert_success>등록 신청이 완료되었습니다.</regDev_alert_success>
+	<regDev_alert_needs_approval>관라자가 승인 후 디바이스를 사용 할 수 있습니다.</regDev_alert_needs_approval>
+	<regDev_alert_already_exist>이미 등록된 디바이스입니다.</regDev_alert_already_exist>
+	<regDev_alert_not_exist_user>등록되지 않은 아이디입니다.</regDev_alert_not_exist_user>
+	<regDev_alert_exceeds_number>등록 가능한 디바이스 수를 초과하였습니다.</regDev_alert_exceeds_number>
+	<regDev_alert_wrong_user_iofo>사용자 아이디의 암호가 일치하지 않습니다.</regDev_alert_wrong_user_iofo>
+	<!-- extConfoForm -->
+	<extConfo_lang_title>외부접속 정보</extConfo_lang_title>
+	<extConfo_lang_extConfoSet>외부접속 설정</extConfo_lang_extConfoSet>
+	<extConfo_lang_ip>서버</extConfo_lang_ip>
+	<extConfo_lang_port>포트</extConfo_lang_port>
+	<extConfo_alert_save_success>외부접속 설정이 저장되었습니다.</extConfo_alert_save_success>
+	<extConfo_alert_save_fail>외부접속 설정 저장실패</extConfo_alert_save_fail>
+	<extConfo_alert_load_fail>외부접속 설정값 불러오기 실패</extConfo_alert_load_fail>
+	
+	<!-- explorer.html -->
+	<!-- 새폴더 생성 -->
+	<newFd_lang_cancel>취소</newFd_lang_cancel>
+	<newFd_lang_title>폴더명을 입력해 주세요.</newFd_lang_title>
+	<newFd_lang_create>생성</newFd_lang_create>
+	<lang_alert_valid_folder_name>폴더명을 입력해 주세요.</lang_alert_valid_folder_name>
+	<!-- 폴더명 변경 -->
+	<rename_lang_cancel>취소</rename_lang_cancel>
+	<rename_lang_title>변경할 파일 이름을 입력해 주세요.</rename_lang_title>
+	<rename_lang_change>변경</rename_lang_change>
+	<lang_alert_valid_folder_name_close>폴더명이 비었습니다. 작업을 취소합니다.</lang_alert_valid_folder_name_close>
+	<!-- explorerForm -->
+	<explorer_lang_title_server>문서중앙화</explorer_lang_title_server>
+	<explorer_lang_title_local>로컬문서함</explorer_lang_title_local>
+	<work_lang_cancel>취소</work_lang_cancel>
+	<work_lang_apply>확인</work_lang_apply>
+	<multiple_lang_cancel>취소</multiple_lang_cancel>
+	<multiple_lang_sign>파일을 선택하세요</multiple_lang_sign>
+	<multiple_lang_allSelcet>전체선택</multiple_lang_allSelcet>
+	<!-- 좌측 메뉴 -->
+	<serverDocumentBox_lang_title>문서중앙화</serverDocumentBox_lang_title>
+	<localDocumentBox_lang_title>로컬문서함</localDocumentBox_lang_title>
+	<ldb_lang_local>Local drive</ldb_lang_local>
+	<!-- 정렬 다이얼로그 -->
+	<sort_lang_title>정렬 기준</sort_lang_title>
+	<sort_lang_LtH>파일명 오름차순</sort_lang_LtH>
+	<sort_lang_HtL>파일명 내림차순</sort_lang_HtL>
+	<sort_lang_new>최신 항목 우선</sort_lang_new>
+	<sort_lang_old>오래된 항목 우선</sort_lang_old>
+	<!-- 단일 파일 작업 다이얼로그 -->
+	<fileFunc_lang_copy>복사</fileFunc_lang_copy>
+	<fileFunc_lang_move>이동</fileFunc_lang_move>
+	<fileFunc_lang_chName>이름변경</fileFunc_lang_chName>
+	<fileFunc_lang_delete>삭제</fileFunc_lang_delete>
+	<!-- 하단 작업 창 -->
+	<singleTool_lang_camera>사진 업로드</singleTool_lang_camera>
+	<singleTool_lang_newFolder>새폴더</singleTool_lang_newFolder>
+	<multipleTool_lang_move>이동</multipleTool_lang_move>
+	<multipleTool_lang_copy>복사</multipleTool_lang_copy>
+	<multipleTool_lang_newFolder>새폴더</multipleTool_lang_newFolder>
+	<multipleTool_lang_delete>삭제</multipleTool_lang_delete>
+	<workTool_lang_newFolder>새폴더</workTool_lang_newFolder>
+	<!-- 사진 업로드 다이얼로그 -->
+	<picture_lang_title>사진 업로드</picture_lang_title>
+	<picture_lang_pictureUpload>사진 촬영 후 업로드</picture_lang_pictureUpload>
+	<picture_lang_videoUpload>동영상 촬영 후 업로드</picture_lang_videoUpload>
+	<piture_lang_pictureLoad>사진 불러오기</piture_lang_pictureLoad>
+	<picture_lang_videoLoad>동영상 불러오기</picture_lang_videoLoad>
+	<!-- alert -->
+	<lang_alert_not_exists_path>존재하지 않는 경로명입니다.</lang_alert_not_exists_path>
+	<lang_alert_overwrite>같은 이름의 파일이 존재합니다.기존 파일을 새로운 파일로 바꾸시겠습니까?</lang_alert_overwrite>
+	<lang_alert_offset></lang_alert_offset>
+	<lang_alert_not_support_format>전송 중 중단된 파일이 있습니다. 이어서 전송 하시겠습니까?</lang_alert_not_support_format>
+	<lang_alert_path_exists_err>복사(이동) 할 수 없습니다. 대상 폴더와 원본폴더가 같습니다.</lang_alert_path_exists_err>
+	<lang_alert_create_folder_fail>폴더를 생성하지 못했습니다.같은 이름의 폴더가 이미 존재하거나 권한이 없습니다.</lang_alert_create_folder_fail>
+	<lang_alert_same_dir>작업 대상폴더와 목적폴더가 같습니다. 작업을 취소합니다.</lang_alert_same_dir>
+	<lang_confrim_wifi>데이터 통화료가 부과될 수 있습니다.계속 하시겠습니까?</lang_confrim_wifi>
+	
+	<!-- explorer_setting.html -->
+	<!-- settingForm -->
+	<explorerSetting_lang_title>설정</explorerSetting_lang_title>
+	<setting_lang_properties>등록 정보</setting_lang_properties>
+	<setting_lang_dataSetting>데이터 설정</setting_lang_dataSetting>
+	<setting_lang_logout>로그아웃</setting_lang_logout>
+	<!-- propertiesForm -->
+	<properties_lang_title>등록 정보</properties_lang_title>
+	<serInfoList_lang_title>서버 정보</serInfoList_lang_title>
+	<serInfoList_lang_ip>서버주소</serInfoList_lang_ip>
+	<serInfoList_lang_port>포트정보</serInfoList_lang_port>
+	<userInfo_lang_title>사용자 정보</userInfo_lang_title>
+	<userInfo_lang_id>아이디</userInfo_lang_id>
+	<devInfo_lang_title>디바이스 정보</devInfo_lang_title>
+	<devInfo_lang_model>모델명</devInfo_lang_model>
+	<devInfo_lang_id>디바이스 아이디</devInfo_lang_id>
+	<extInfo_lang_title>외부접속 정보</extInfo_lang_title>
+	<extInfo_lang_ip>서버주소</extInfo_lang_ip>
+	<extInfo_lang_port>포트정보</extInfo_lang_port>
+	<properties_lang_sign>서버, 사용자 정보 변경이 필요한 경우 로그아웃 후 로그인 화면에서 재설정 해주시기 바랍니다.</properties_lang_sign>
+	<properties_lang_logoutBtn>로그아웃</properties_lang_logoutBtn>
+	<!-- dataSettingForm -->
+	<dataSetting_lang_title>데이터 설정</dataSetting_lang_title>
+	<dataSetting_lang>데이터 사용 유무</dataSetting_lang>
+	
+	<!-- login.html & explorer.html -->
+	<lang_alert_closeApp_title>종료</lang_alert_closeApp_title>
+	<lang_parameter_missing>정보가 부족합니다.</lang_parameter_missing>
+	<lang_server_error>서버 오류입니다. 잠시 후 다시 이용하여 주세요.</lang_server_error>
+	<lang_status_stop>사용이 중지 되었습니다. 관리자에게 문의해 주세요.</lang_status_stop>
+	<lang_login_incorrect_password>사용자 아이디의 암호가 일치하지 않습니다.</lang_login_incorrect_password>
+	<lang_login_password_expire>비밀번호 사용기간이 만료 되었습니다. 웹페이지에서 비밀번호를 갱신해 주세요.</lang_login_password_expire>
+	<lang_login_domain_disk_overflow>도메인에 할당된 용량을 초과하여 로그인 할 수 없습니다. 관리자에게 문에 문의해주세요.</lang_login_domain_disk_overflow>
+	<lang_not_exists>존재하지 않는 파일명입니다.</lang_not_exists>
+	<lang_login_guest_expire>사용기간이 만료되었습니다.</lang_login_guest_expire>
+	<lang_login_not_allowed_agent>사용이 제한된 에이전트입니다.</lang_login_not_allowed_agent>
+	<lang_exception_error>알수 없는 오류입니다.</lang_exception_error>
+	<lang_ip_filtered>IP가 차단되었습니다.</lang_ip_filtered>
+	<lang_server_busy>작업량이 많아 응답할 수 없습니다. 잠시 후 다시 시도해 주세요.</lang_server_busy>
+	<lang_user_busy>다른 곳에서 사용중인 아이디입니다. 다른 연결을 모두 해제합니다.</lang_user_busy>
+	<lang_access_denied>권한이 없습니다.</lang_access_denied>
+	<lang_invalid_parameter>유효하지 않은 파라미터 값입니다.</lang_invalid_parameter>
+	<lang_disk_overflow>디스크 용량이 초과하였습니다.</lang_disk_overflow>
+	<lang_already_folder_exists>같은 이름의 폴더가 존재합니다.</lang_already_folder_exists>
+	<lang_already_file_error>같은 이름의 파일이 존재합니다.</lang_already_file_error>
+	<lang_guest_root>GUEST 시스템폴더에서는 이 작업을 할수 없습니다.</lang_guest_root>
+	<lang_sharing_violation>다른사용자가 파일을 사용중입니다.</lang_sharing_violation>
+	<lang_guest_data_root>게스트 데이터 루트를 복사할수 없습니다.</lang_guest_data_root>
+	<lang_already_file_exists>같은 이름의 파일이 존재합니다.</lang_already_file_exists>
+	<lang_already_folder_error>이미 존재하는 폴더 명입니다.</lang_already_folder_error>
+	<lang_has_acl_folder>해당 폴더내 권한 설정이 제거됩니다.</lang_has_acl_folder>
+	<lang_has_share_folder>해당 폴더내 공유 설정이 제거됩니다.</lang_has_share_folder>
+	<lang_substree_exists>하위 폴더가 존재합니다.</lang_substree_exists>
+	<lang_filename_filtered>파일명이 차단되었습니다.</lang_filename_filtered>
+	<lang_upload_limit>업로드 가능한 파일크기를 초과하였습니다.</lang_upload_limit>
+	<lang_upload_busy>다른 곳에서 사용중인 아이디입니다.</lang_upload_busy>
+	<lang_partial_success>전체 파일중 일부 파일 업로드 완료하였습니다.</lang_partial_success>
+	<lang_download_busy>동시 다운로드 최대치 초과하였습니다.</lang_download_busy>
+	<lang_license_expired>라이선스가 만료 되었습니다.</lang_license_expired>
+	<lang_download_limit>다운로드 가능 파일 크기를 초과하였습니다.</lang_download_limit>
+	<lang_login_need_approval>관라자가 승인 후 디바이스를 사용 할 수 있습니다.</lang_login_need_approval>
+	<lang_login_not_exist_device>등록되지 않은 디바이스입니다.</lang_login_not_exist_device>
+	<lang_login_stop_device>사용이 중지된 디바이스입니다.</lang_login_stop_device>
+	<lang_login_lost_device>분실 신고된 디바이스입니다.</lang_login_lost_device>
+	<lang_alert_not_exists_Officesuite>전용 문서 뷰어가 설치되어 있지 않습니다.</lang_alert_not_exists_Officesuite>
+	<lang_alert_check_network>네트워크 연결상태를 확인해주세요.</lang_alert_check_network>
+	<network_alert_title>네트워크</network_alert_title>
+	<lang_alert_closeApp>프로그램을 종료하시겠습니까?</lang_alert_closeApp>
+	<lang_alert_not_found_err>파일 또는 디렉터리를 찾을 수 없습니다.</lang_alert_not_found_err>
+	<lang_alert_security_err>Insecure or directory not found.</lang_alert_security_err>
+	<lang_alert_abort_err>실행 중단 되었습니다.</lang_alert_abort_err>
+	<lang_alert_not_readable_err>파일 또는 디렉토리를 읽을수 없습니다.</lang_alert_not_readable_err>
+	<lang_alert_encoding_err>잘못된 인코딩입니다.</lang_alert_encoding_err>
+	<lang_alert_no_modification_allowed_err>파일이나 디렉토리를 수정할수 없습니다.</lang_alert_no_modification_allowed_err>
+	<lang_alert_invalid_state_err>잘못된 상태입니다.</lang_alert_invalid_state_err>
+	<lang_alert_syntax_err>구문 오류입니다.</lang_alert_syntax_err>
+	<lang_alert_invalid_modification_err>잘못된 실행입니다.</lang_alert_invalid_modification_err>
+	<lang_alert_quota_exceeded_err>저장 할당량을 초과했습니다.</lang_alert_quota_exceeded_err>
+	<lang_alert_type_mismatch_err>잘못된 파일 형식입니다.</lang_alert_type_mismatch_err>
+	
+	<!-- Toast - login_setting -->
+	<toast_lang_logSetting>로그인 설정이 저장되었습니다.</toast_lang_logSetting>
+	<toast_lang_serInfo>서버 정보가 저장되었습니다.</toast_lang_serInfo>
+	<!-- Toast - explorer -->
+	<toast_lang_move>이동이 완료되었습니다.</toast_lang_move>
+	<toast_lang_copy>복사가 완료되었습니다.</toast_lang_copy>
+	<toast_lang_upload>업로드가 완료되었습니다.</toast_lang_upload>
+	<toast_lang_download>다운로드가 완료되었습니다.</toast_lang_download>
+    <toast_lang_delete>삭제가 완료되었습니다.</toast_lang_delete>
+	<!-- Toast - explorer_setting -->
+	<toast_lang_dataUse>데이터 사용여부가 저장되었습니다.</toast_lang_dataUse>
+</lang>

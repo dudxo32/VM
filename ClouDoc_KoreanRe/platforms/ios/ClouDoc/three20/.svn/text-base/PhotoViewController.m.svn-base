@@ -1,0 +1,334 @@
+
+#import "PhotoViewController.h"
+#import "MockPhotoSource.h"
+#import "CentralECMAppDelegate.h"
+#import "FileUtil.h"
+#import "ServerCmd.h"
+#import "ActivityViewController.h"
+#import "ModalAlert.h"
+#import "ClientViewController.h"
+#import "ServerViewController.h"
+#import "TabBarController.h"
+
+extern CentralECMAppDelegate	*g_appDelegate;
+extern FileUtil					*g_FileUtil;
+
+@implementation PhotoViewController
+
+@synthesize m_nPhotoIndex;
+
+- (void) cancel
+{
+	UIAlertView	*av = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"Request Canceld.", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK",nil) otherButtonTitles:nil] autorelease];
+	[av show];
+
+	m_bCancel = TRUE;
+}
+
+// 이미지 다운로드 후 결과 처리
+- (void) didFinishGetFile: (NSString *) errmsg
+{
+	if (errmsg)
+	{
+		UIAlertView	*av = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(errmsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK",nil) otherButtonTitles:nil] autorelease];
+		[av show];
+	}
+
+	m_bFinished = YES;
+}
+
+// 파일 업로드 후 결과 처리
+- (void) didFinishPutFile: (NSString *) errmsg 
+				 fileInfo: (CFileInfo *) recvFileInfo
+{
+	if (!errmsg)
+		errmsg = NSLocalizedString(@"file saved", nil);
+	
+	UIAlertView	*av = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(errmsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] autorelease];
+	[av show];
+	
+	m_bFinished = YES;
+}
+
+// 사진 뷰어에서 저장 버튼을 누른 경우 호출된다.
+-(void)onSave:(id)sender
+{
+	NSUInteger	row = [sender tag];
+	NSString	*filePath = [g_appDelegate.sourceImage objectAtIndex:row];
+
+	NSLog(@"row:%d, path:%@", row, filePath);
+	
+	if (g_appDelegate.targetType == SERVER)
+	{
+		NSString * dstPath = [[NSString alloc] initWithFormat:@"%@/%@", [g_FileUtil getDocumentFolder], [filePath lastPathComponent]];
+		NSString * errmsg;
+		
+		if ([g_FileUtil copyFile:filePath dstPath:dstPath])
+			errmsg = NSLocalizedString(@"file saved", nil);
+		else
+			errmsg = NSLocalizedString(@"file save failed", nil);
+		
+		UIAlertView	*av = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(errmsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] autorelease];
+		[av show];
+		return;
+	}
+	else
+	{
+		NSLog(@"onSave: filePath: %@", filePath);
+		
+		NSString *srcName = [NSString stringWithFormat:@"/%@", [filePath lastPathComponent]];
+		
+		NSString	*errmsg;
+		NSInteger	filesize;
+		
+		ServerCmd	*serverCmd = [[ServerCmd alloc] init];
+
+		if (![serverCmd PutFileCheck:0 srcName:srcName srcPath:filePath fileInfo:nil sharePath:nil sender: self errmsg:&errmsg filesize:&filesize])
+		{
+			UIAlertView	*av = [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(errmsg, nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] autorelease];
+			[av show];
+			return;
+		}
+		
+		if (filesize != -1)
+		{
+			int idx = -1;
+			
+			idx = [ModalActionSheet ask:[NSString stringWithFormat: NSLocalizedString(@"%@ 파일이 이미 존재합니다.\n 덮어쓰시겠습니까?", nil), srcName]
+							   withCancel:NSLocalizedString(@"취소", nil) 
+						  withDestructive:nil
+							  withButtons: [NSArray arrayWithObjects:NSLocalizedString(@"예", nil), 
+											NSLocalizedString(@"아니오", nil), nil]
+									where:g_appDelegate.rootViewController.tabBar];
+			
+			// 예가 아니면
+			if (idx != 0)
+			{
+				return;
+			}
+		}
+		
+		if (![g_appDelegate check3G:UPLOAD])
+		{
+			return;
+		}
+		
+		m_bFinished = NO;
+		g_appDelegate.m_bClientTab = FALSE;
+
+		[serverCmd PutFile: 0
+				   srcName: srcName 
+				   srcPath: filePath
+				  fileInfo: nil
+				 sharePath: nil 
+					  view: g_appDelegate.navClientController.view 
+					 order: 1 
+				 totalfile: 1
+					sender: self 
+				  selector: @selector(didFinishPutFile:fileInfo:)];
+		
+		while (!m_bFinished && !m_bCancel)
+			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+		
+		g_appDelegate.m_bClientTab = TRUE;
+	}
+}
+
+- (void) getFile: (NSUInteger) index
+{
+	if (g_appDelegate.targetType == CART)
+		return;
+	
+	NSString	*filePath = [g_appDelegate.sourceImage objectAtIndex:index];
+	
+	if (![g_FileUtil isExist:filePath])
+	{
+		ServerViewController *controller = g_appDelegate.sourceServerViewController;
+		
+		filePath = [controller.currentFolder stringByAppendingPathComponent:[[g_appDelegate.sourceImage objectAtIndex:index] lastPathComponent]];
+		
+		m_bCancel = NO;
+		m_bFinished = NO;
+		
+		ServerCmd	*serverCmd = [[ServerCmd alloc] init];
+		[serverCmd GetFile: controller.m_nSelectedDrive 
+					tmpDir: nil 
+				   srcName: filePath 
+				  fileInfo: [controller getShareFolder] 
+				 sharePath: [controller getSharePath] 
+					  view: g_appDelegate.navServerController.view 
+					 order: 1 
+				 totalfile: 1
+					sender: self 
+				  selector: @selector(didFinishGetFile:)];
+		
+		while (!m_bFinished && !m_bCancel)
+			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+	}
+}
+
+// 서버의 경우 이미지가 .tmp/ 폴더에 없으면 다운받는다.
+- (void)moveToPhotoAtIndex:(NSInteger)photoIndex withDelay:(BOOL)withDelay
+{
+	_centerPhotoIndex = photoIndex == TT_NULL_PHOTO_INDEX ? 0 : photoIndex;
+	m_nPhotoIndex = photoIndex;
+	
+	if (m_nPhotoIndex > 0)
+		[self getFile: m_nPhotoIndex-1];
+	
+	if (m_nPhotoIndex < [g_appDelegate.sourceImage count]-1)
+		[self getFile: m_nPhotoIndex+1];
+	
+	[self moveToPhoto:[_photoSource photoAtIndex:_centerPhotoIndex]];
+	_delayLoad = withDelay;
+}
+
+- (id)init
+{
+	if (self = [super init])
+	{
+		CentralECMAppDelegate *appDelegate = (CentralECMAppDelegate *)[[UIApplication sharedApplication] delegate];
+ 
+		self.navigationItem.backBarButtonItem =	
+		[[[UIBarButtonItem alloc] initWithTitle: TTLocalizedString(@"Photo", @"Title for back button that returns to photo browser")
+										  style: UIBarButtonItemStylePlain
+										 target: nil
+										 action: nil] autorelease];
+
+		if (appDelegate.targetType == SERVER)
+			appDelegate.navServerController.navigationBar.translucent=YES;
+		else
+			appDelegate.navClientController.navigationBar.translucent=YES;
+		 
+		self.navigationItem.rightBarButtonItem = nil;
+ 		self.statusBarStyle = UIStatusBarStyleBlackTranslucent;
+
+		if (appDelegate.targetType == SERVER)
+			self.navigationBarStyle =  appDelegate.navServerController.navigationBar.barStyle;	//UIBarStyleBlackTranslucent;
+		else
+			self.navigationBarStyle =  appDelegate.navClientController.navigationBar.barStyle;	//UIBarStyleBlackTranslucent;
+		
+		self.navigationBarTintColor = nil;
+		self.wantsFullScreenLayout = YES;
+		self.hidesBottomBarWhenPushed = YES;
+		
+		self.defaultImage = TTIMAGE(@"bundle://Three20.bundle/images/photoDefault.png");
+
+		m_photoArray = [[NSMutableArray alloc] init];
+		
+		NSArray		*paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		NSString	*documents = [[NSString alloc] initWithString:[paths objectAtIndex:0]];
+		
+		for (int i = 0; i < [g_appDelegate.sourceImage count] ; i++)
+		{
+			NSString	*path = [g_appDelegate.sourceImage objectAtIndex:i];
+			
+			NSArray *pathComponents = [path pathComponents];
+			
+			NSRange range = NSMakeRange ( documents.length+1, (path.length  -(documents.length+1)));
+			
+			[m_photoArray addObject: [[[MockPhoto alloc] initWithURL:[NSString stringWithFormat:@"documents://%@", [((NSString *)[g_appDelegate.sourceImage objectAtIndex:i]) substringWithRange:range]]
+															smallURL:[NSString stringWithFormat:@"documents://%@", [((NSString *)[g_appDelegate.sourceImage objectAtIndex:i]) substringWithRange:range]]
+																size:CGSizeMake(0, 0)
+															 caption:[pathComponents lastObject]] autorelease]];
+		}
+		
+		[documents release];
+	}
+	
+	return self;
+}
+
+// 툴바 영역을 설정한다.
+- (void)updateChrome
+{
+	if (_photoSource.numberOfPhotos < 2)
+	{
+		self.title = _photoSource.title;
+	}
+	else
+	{
+		self.title = [NSString stringWithFormat:
+					  TTLocalizedString(@"%d of %d", @"Current page in photo browser (1 of 10)"),
+					  _centerPhotoIndex+1, _photoSource.numberOfPhotos];
+	}
+	
+	if (g_appDelegate.targetType == SERVER)
+	{
+		UIBarButtonItem *barItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(onSave:)];
+		barItem.tag = _centerPhotoIndex;
+		self.navigationItem.rightBarButtonItem = barItem;
+		[barItem release];
+	}
+	
+//	UIBarButtonItem* playButton = [_toolbar itemWithTag:1];
+//	playButton.enabled = _photoSource.numberOfPhotos > 1;
+	_previousButton.enabled = _centerPhotoIndex > 0;
+	_nextButton.enabled = _centerPhotoIndex >= 0 && _centerPhotoIndex < _photoSource.numberOfPhotos-1;
+}
+
+- (void)viewWillDisappear: (BOOL)animated
+{
+	[super viewWillDisappear:animated];
+	
+	[UIApplication sharedApplication].statusBarOrientation = UIInterfaceOrientationPortrait;
+	CentralECMAppDelegate *appDelegate = (CentralECMAppDelegate *)[[UIApplication sharedApplication] delegate];
+	
+	if (appDelegate.targetType == SERVER)
+	{
+		appDelegate.navServerController.navigationBar.translucent = NO;
+		
+#ifdef KDISK
+		appDelegate.navServerController.navigationBar.tintColor =
+			[UIColor colorWithRed:153.0/255.0 green:51.0/255.0 blue:153.0/255.0 alpha:1];
+#endif
+	}
+	else
+	{
+		appDelegate.navClientController.navigationBar.translucent = NO;
+
+#ifdef KDISK
+		appDelegate.navClientController.navigationBar.tintColor =
+			[UIColor colorWithRed:153.0/255.0 green:51.0/255.0 blue:153.0/255.0 alpha:1];
+#endif
+	}
+
+	appDelegate.isRotate = NO;
+}
+
+- (void) preLoad
+{
+	if (m_nPhotoIndex > 0)
+		[self getFile: m_nPhotoIndex-1];
+	
+	if (m_nPhotoIndex < [m_photoArray count]-1)
+		[self getFile: m_nPhotoIndex+1];
+}
+
+- (void) viewDidLoad
+{
+	self.photoSource = [[[MockPhotoSource alloc]
+						 // initWithType:MockPhotoSourceNormal
+						 initWithType:MockPhotoSourceDelayed
+						 // initWithType:MockPhotoSourceLoadError
+						 // initWithType:MockPhotoSourceDelayed|MockPhotoSourceLoadError
+						 title: @"Photo"
+						 photos: m_photoArray
+						 photos2: nil 
+						 index: m_nPhotoIndex
+						 ] autorelease];
+}
+
+- (void)setPhotoSource:(id<TTPhotoSource>)photoSource
+{
+	if (_photoSource != photoSource)
+	{
+		[_photoSource release];
+		_photoSource = [photoSource retain];
+		
+		[self moveToPhotoAtIndex:m_nPhotoIndex withDelay:NO];
+		self.model = _photoSource;
+	}
+}
+
+@end

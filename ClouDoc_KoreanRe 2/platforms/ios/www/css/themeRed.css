@@ -1,0 +1,42 @@
+@charset "utf-8";
+
+input[type=button] { background-color: #EA1D22; }
+/********** Header **********/
+    header { background-color: #EA1D22; }
+/********** /Header **********/
+
+/********** Contents **********/
+    /********** Left menu **********/
+        section > nav { background-color: #000000; }
+        /* Menu title */
+            .nav-title { background-color: #D3080C; }
+
+        /* Menu contents */
+        /* Menu contents : Tree area */
+        /* Menu contents : Bookmark area */
+            /* selected list */
+                .tree-drive-selected,
+                .tree-selected,
+                .BM-selected { background-color: #696D70; }
+    /********** /Left menu **********/
+
+    /********** Main contents(file lists) **********/
+        /* Contents title */
+            .contents-title { background-color: #E3EAF1; }
+            .BM-list input:checked { background-color: #EA1D22; }
+    /********** /Main contents(file lists) **********/
+
+    /* Bookmark edit bottom button */
+        .BM-bottom { background-color: #E3EAF2; }
+/********** /Contents **********/
+
+/********** Dialog **********/
+    .dialog-title { background-color: #000000; }
+
+    .dialog-setting > div:nth-child(1) { background-color: #000000; }
+
+    .dialog-BM { background-color: #F0F8FF; }
+
+.dialog-BM-edit li > img:nth-child(4) { content: url("../images/icon/arrow_down_red.png"); }
+.dialog-BM-edit li > img:nth-child(5) { content: url("../images/icon/arrow_up_red.png"); }
+/**********        **********/
